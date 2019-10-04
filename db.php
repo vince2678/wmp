@@ -97,4 +97,39 @@ function delete_row($table, $key, $value)
     return $res;
 }
 
+/* Count the number of rows returned by query
+*/
+function count_rows($table, $kv_pair)
+{
+    $db = connect_to_db();
+
+    $query = "SELECT * FROM " . $db->escape_string($table);
+
+    $k = array_keys($kv_pair);
+
+    if (count($kv_pair) > 0)
+    {
+        $query .= " WHERE ";
+        for ($i = 0; $i < count($k) - 1; $i++)
+        {
+            $query .= $db->escape_string($k[$i]) . '='
+                . "'" . $db->escape_string($kv_pair[$k[$i]]) . "' AND ";
+        }
+        $query .= $db->escape_string($k[$i]) . '='
+            . "'" . $db->escape_string($kv_pair[$k[$i]]) . "'";
+    }
+    $query .= ";";
+
+    $count = -1;
+
+    if (false !== ($result = $db->query($query)))
+    {
+        $count = $result->num_rows;
+        $result->free();
+    }
+    $db->close();
+
+    return $count;
+}
+
 ?>
