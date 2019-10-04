@@ -18,7 +18,6 @@ CREATE TABLE media(
     library_id int NOT NULL,
     CONSTRAINT FOREIGN KEY (library_id) REFERENCES library(library_id)
         ON DELETE CASCADE ON UPDATE CASCADE,
-    title varchar(128) DEFAULT NULL,
     added_on timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
     last_update timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     relative_path varchar(1024) NOT NULL,
@@ -64,6 +63,7 @@ CREATE TABLE track(
     media_id int NOT NULL,
     album_id int NOT NULL,
     artist_id int DEFAULT NULL,
+    title varchar(128) DEFAULT NULL,
     track_number int DEFAULT NULL,
     play_count int NOT NULL DEFAULT 0,
     rating int NOT NULL DEFAULT 0, 
@@ -91,6 +91,7 @@ CREATE TABLE photo(
     photo_id int NOT NULL AUTO_INCREMENT,
     media_id int NOT NULL,
     album_id int DEFAULT NULL,
+    title varchar(128) DEFAULT NULL,
     CONSTRAINT FOREIGN KEY (media_id) REFERENCES media (media_id)
         ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT FOREIGN KEY (album_id) REFERENCES photo_album (album_id)
@@ -104,6 +105,7 @@ CREATE TABLE video(
     video_id int NOT NULL AUTO_INCREMENT,
     media_id int NOT NULL,
     genre_id int DEFAULT NULL,
+    title varchar(128) DEFAULT NULL,
     play_count int NOT NULL DEFAULT 0,
     duration int NOT NULL,
     CONSTRAINT FOREIGN KEY (media_id) REFERENCES media (media_id)
