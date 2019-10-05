@@ -27,6 +27,17 @@ CREATE TABLE media(
     INDEX USING BTREE (relative_path)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+CREATE VIEW library_media AS
+    SELECT
+        library.library_id,
+        library.name,
+        library.type,
+        media.media_id,
+        library.full_path,
+        media.relative_path
+    FROM library JOIN media
+        ON media.library_id=library.library_id;
+
 CREATE TABLE genre(
     genre_id int NOT NULL AUTO_INCREMENT,
     name varchar(128) NOT NULL,
