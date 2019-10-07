@@ -59,12 +59,9 @@ CREATE TABLE music_album(
     album_id int NOT NULL AUTO_INCREMENT,
     artist_id int,
     name varchar(128) NOT NULL,
-    genre_id int DEFAULT NULL,
     track_count int DEFAULT NULL,
     CONSTRAINT FOREIGN KEY (artist_id) REFERENCES artist (artist_id)
         ON DELETE CASCADE ON UPDATE CASCADE,
-    CONSTRAINT FOREIGN KEY (genre_id) REFERENCES genre (genre_id)
-        ON DELETE SET NULL ON UPDATE CASCADE,
     PRIMARY KEY (album_id),
     INDEX USING BTREE (name)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -74,6 +71,7 @@ CREATE TABLE track(
     media_id int NOT NULL,
     album_id int NOT NULL,
     artist_id int DEFAULT NULL,
+    genre_id int DEFAULT NULL,
     title varchar(128) DEFAULT NULL,
     track_number int DEFAULT NULL,
     play_count int NOT NULL DEFAULT 0,
@@ -83,6 +81,8 @@ CREATE TABLE track(
         ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT FOREIGN KEY (artist_id) REFERENCES artist (artist_id)
         ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT FOREIGN KEY (genre_id) REFERENCES genre (genre_id)
+        ON DELETE SET NULL ON UPDATE CASCADE,
     CONSTRAINT FOREIGN KEY (album_id) REFERENCES music_album (album_id)
         ON DELETE CASCADE ON UPDATE CASCADE,
     PRIMARY KEY (track_id)
