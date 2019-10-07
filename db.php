@@ -32,6 +32,9 @@ function insert_row($table, $kv_pair)
 
     $k = array_keys($kv_pair);
 
+    $keys = "";
+    $values = "";
+
     for ($i = 0; $i < count($k) - 1; $i++)
     {
         $key = $k[$i];
