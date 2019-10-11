@@ -135,4 +135,84 @@ function count_rows($table, $kv_pair)
     return $count;
 }
 
+function get_row($table, $constraint)
+{
+    static $result = null;
+    static $db = null;
+
+    if (!isset($db))
+        $db = connect_to_db();
+
+    if (!isset($result))
+    {
+        $keys = array_keys($constraint);
+
+        $query = "SELECT * FROM " . $table;
+
+        if (count($keys) > 0)
+        {
+            $query .= " WHERE";
+            for ($i = 0; $i < count($keys) - 1; $i++)
+            {
+                $k = $db->escape_string($keys[$i]);
+                $v = $db->escape_string($_GET[$keys[$i]]);
+
+                $query .= " {$k}='{$v}' AND";
+            }
+            $k = $db->escape_string($keys[$i]);
+            $v = $db->escape_string($_GET[$keys[$i]]);
+
+            $query .= " {$k}='{$v}';";
+        }
+        else
+        {
+            $query .= ";";
+        }
+
+        if (false == ($result = $db->query($query)))
+        {
+            printf("Error %s\n", $db->error);
+            $result = null;
+            return null;
+        }
+    }
+
+    if (null == ($row = $result->fetch_assoc()))
+    {
+        $result->free();
+        $db->close();
+
+        $result = null;
+        $db = null;
+    }
+
+    return $row;
+
+}
+
+function get_rows($table, $constraint)
+{
+    $rows = [];
+
+    while (null !== ($row = get_row($table, $constraint)))
+    {
+        $rows[] = $row;
+    }
+
+    return $rows;
+
+}
+
+function get_rows_json($table, $constraint)
+{
+    $rows = get_rows($table, $constraint);
+
+    if (isset($rows))
+        $encoded = json_encode($rows);
+    else
+        $encoded = "[]" . PHP_EOL;
+
+    return $encoded;
+}
+
 ?>
