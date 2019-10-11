@@ -1,5 +1,7 @@
 <?php
 
+require_once(__DIR__ . "../lib/getid3/getid3.php");
+
 /* Get raw media output
 */
 function get_raw_media($id)
