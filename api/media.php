@@ -75,6 +75,82 @@ function delete_media($id)
 {
 
 }
+*/
+
+/* create media record given k/v pairs in $kv_pair */
+function _add_media($kv_pair)
+{
+    if (false == insert_row("media", $kv_pair))
+        return null;
+
+    $db = connect_to_db();
+
+    $k = array_keys($kv_pair);
+
+    // get media id
+    $query = "SELECT * FROM media WHERE ";
+
+    for ($i = 0; $i < count($k) - 1; $i++)
+    {
+        $query .= $db->escape_string($k[$i]) . '='
+            . "'" . $db->escape_string($kv_pair[$k[$i]]) . "' AND ";
+    }
+    $query .= $db->escape_string($k[$i]) . '='
+        . "'" . $db->escape_string($kv_pair[$k[$i]]) . "'";;
+
+    if (false == ($result = $db->query($query)))
+    {
+        printf("Query failed: %s\n", $db->error);
+        return null;
+    }
+
+    $m_row = $result->fetch_assoc();
+
+    $result->free();
+
+    $db->close();
+
+    return $m_row;
+}
+
+function add_media($library, $files)
+{
+    $db = connect_to_db();
+
+    while (null !== ($file = array_pop($files)))
+    {
+        $data = array(
+            "library_id" => $library['library_id'],
+            "relative_path" => $file
+        );
+
+        /* TODO: Check file timestamp and update db metadata
+                 if timestamp on disk is newer than db last update
+        */
+
+        if (count_rows("media", $data) > 0)
+        {
+            update_media_timestamp($data);
+        }
+        // no rows, we need to create new ones for media
+        elseif (null !== ($m_row = _add_media($data)))
+        {
+            switch($library['type'])
+            {
+                case "music":
+                    add_music($m_row);
+                    break;
+                case "photo":
+                    add_photo($m_row);
+                    break;
+                case "video":
+                    add_video($m_row);
+                    break;
+            }
+        }
+    }
+    $db->close();
+}
 
 function get_media_metadata($kv_pair)
 {
