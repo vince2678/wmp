@@ -76,6 +76,55 @@ function delete_media($id)
 
 }
 
+function get_media_metadata($kv_pair)
+{
+    $db = connect_to_db();
+
+    $k = array_keys($kv_pair);
+
+    // get media id
+    $query = "SELECT * FROM library_media";
+
+    if (isset($kv_pair) && (count($kv_pair) > 0))
+    {
+        $query .= " WHERE ";
+        for ($i = 0; $i < count($k) - 1; $i++)
+        {
+            $query .= $db->escape_string($k[$i]) . '='
+                . "'" . $db->escape_string($kv_pair[$k[$i]]) . "' AND ";
+        }
+        $query .= $db->escape_string($k[$i]) . '='
+            . "'" . $db->escape_string($kv_pair[$k[$i]]) . "'";;
+    }
+    $query .= ";";
+
+    if (false == ($result = $db->query($query)))
+    {
+        printf("Query failed: %s\n", $db->error);
+        return null;
+    }
+
+    $metadata = null;
+
+    $id3 = new getID3;
+
+    while (null !== ($m_row = $result->fetch_assoc()))
+    {
+        $path = $m_row['full_path'] . "/" . $m_row['relative_path'];
+
+        $meta = $id3->analyze($path);
+        getid3_lib::CopyTagsToComments($meta);
+
+        $metadata[$m_row['media_id']] = $meta;
+    }
+
+    $result->free();
+
+    $db->close();
+
+    return $metadata;
+}
+
 function update_media_timestamp($kv_pair)
 {
     $db = connect_to_db();
