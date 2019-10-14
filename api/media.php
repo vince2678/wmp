@@ -76,4 +76,32 @@ function delete_media($id)
 
 }
 
+function update_media_timestamp($kv_pair)
+{
+    $db = connect_to_db();
+
+    $k = array_keys($kv_pair);
+
+    $constraint = null;
+
+    for ($i = 0; $i < count($k) - 1; $i++)
+    {
+        $constraint .= $db->escape_string($k[$i]) . '='
+            . "'" . $db->escape_string($kv_pair[$k[$i]]) . "' AND ";
+    }
+    $constraint .= $db->escape_string($k[$i]) . '='
+        . "'" . $db->escape_string($kv_pair[$k[$i]]) . "';";
+
+    $query = "UPDATE media SET last_update=CURRENT_TIMESTAMP WHERE "
+        . $constraint;
+
+    if (false == $result = $db->query($query))
+        printf("Failed to update: %s\n", $db->error);
+
+    //continue;
+    $db->close();
+
+    return $result;
+}
+
 ?>
