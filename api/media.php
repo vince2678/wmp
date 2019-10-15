@@ -63,14 +63,13 @@ function get_raw_media($kv_pair)
 
 /* 
 Remove media from database
-*/
 function remove_media($id)
 {
 
 }
+*/
 
 /* Delete media from disk
-*/
 function delete_media($id)
 {
 
