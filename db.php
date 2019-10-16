@@ -192,7 +192,7 @@ function get_row($table, $constraint, $persist = false)
 
 function get_rows($table, $constraint)
 {
-    $rows = [];
+    $rows = array();
 
     while (null !== ($row = get_row($table, $constraint, true)))
     {
