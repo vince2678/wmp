@@ -5,7 +5,7 @@ require_once(__DIR__ . "/../lib/getid3/getid3.php");
 /* Get raw media output */
 function get_raw_media($kv_pair)
 {
-    if (null == ($row = get_row("library_media", $kv_pair)))
+    if (null == ($row = get_row("library_media", $kv_pair, true)))
     {
         printf("No rows in query\n");
         return;
@@ -109,7 +109,7 @@ function get_media_metadata($kv_pair)
 
     $id3 = new getID3;
 
-    while (null !== ($m_row = get_row("library_media", $kv_pair)))
+    while (null !== ($m_row = get_row("library_media", $kv_pair, true)))
     {
         $path = $m_row['full_path'] . "/" . $m_row['relative_path'];
 

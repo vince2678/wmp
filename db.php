@@ -135,7 +135,7 @@ function count_rows($table, $kv_pair)
     return $count;
 }
 
-function get_row($table, $constraint)
+function get_row($table, $constraint, $persist = false)
 {
     static $result = null;
     static $db = null;
@@ -177,7 +177,7 @@ function get_row($table, $constraint)
         }
     }
 
-    if (null == ($row = $result->fetch_assoc()))
+    if ((null == ($row = $result->fetch_assoc())) || !$persist)
     {
         $result->free();
         $db->close();
@@ -194,7 +194,7 @@ function get_rows($table, $constraint)
 {
     $rows = [];
 
-    while (null !== ($row = get_row($table, $constraint)))
+    while (null !== ($row = get_row($table, $constraint, true)))
     {
         $rows[] = $row;
     }
