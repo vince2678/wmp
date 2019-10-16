@@ -372,7 +372,7 @@ $register_handlers = function ()
     . "get[/]+"
     . "(?<type>(metadata|raw))[/]*"
     . "((?<section>(tags|comments|video))[/]*){0,1}"
-    . "(?<table>media)[/]*"
+    . "((?<table>media)[/]*){0,1}"
     . "((?<column>id)[/]*){0,1}"
     //. "((?<like>like)[/]+){0,1}"
     . "(?<value>[^/]*)"
