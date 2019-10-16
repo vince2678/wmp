@@ -18,21 +18,10 @@ function get_artist_id($name)
 {
     $id = -1;
 
-    $db = connect_to_db();
-
-    $query = "SELECT * from artist WHERE"
-        . " name='"  . $db->escape_string($name) . "';";
-    
-    if (false == ($result = $db->query($query)))
-        return $id;
-    
-    if (null == ($row = $result->fetch_assoc()))
+    if (null == ($row = get_row("artist", array("name" => $name))))
         return $id;
 
     $id = $row['artist_id'];
-
-    $result->free();
-    $db->close();
 
     return $id;
 }
