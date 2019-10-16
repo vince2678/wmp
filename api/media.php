@@ -330,7 +330,7 @@ function media_url_handler($data)
 
     if (isset($rows))
     {
-        $encoded = json_encode($rows);
+        $encoded = json_encode($rows, JSON_INVALID_UTF8_SUBSTITUTE);
 
         if (false != $encoded)
         {
@@ -339,9 +339,7 @@ function media_url_handler($data)
         }
         else
         {
-            echo "<pre>\n";
-            var_dump($rows);
-            echo "</pre>\n";
+            echo "Could not display data\n";
         }
         die();
     }
