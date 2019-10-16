@@ -300,6 +300,9 @@ function media_url_handler($data)
         }
         case 'metadata':
         {
+            if (!isset($data['section']))
+                $data['section'] = 'tags';
+
             $meta = get_media_metadata($constraint);
 
             if (isset($meta))
