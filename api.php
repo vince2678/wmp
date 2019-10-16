@@ -10,8 +10,16 @@ include __DIR__ . "/api/" . "music.php";
 include __DIR__ . "/api/" . "photo.php";
 include __DIR__ . "/api/" . "video.php";
 
+function register_api_url_handler($regexp, $handler)
+{
+    global $url_regexps;
+    $url_regexps[] = array("regexp" => $regexp, "handler" => $handler);
+}
+
 function api_request_handler()
 {
+    global $url_regexps;
+
     if (isset($_SERVER["PATH_INFO"]))
         $request_path = $_SERVER['PATH_INFO'];
     else
@@ -20,121 +28,29 @@ function api_request_handler()
         $request_path = substr($_SERVER['REQUEST_URI'], $s);
     }
 
-    $split = explode("/", $request_path);
+    $matched = false;
 
-    if ($split[1] != "api")
-        return;
-
-    switch($split[2])
+    for ($i = 0; $i < count($url_regexps); $i++)
     {
-        case "get":
-        {
-            $tables = array("genre", "library", "playlist", "media");
+        $regexp = $url_regexps[$i]["regexp"];
+        $handler = $url_regexps[$i]["handler"];
 
-            if(false !== ($key = array_search($split[3], $tables)))
-            {
-                $rows = get_rows($tables[$key], $_GET);
+        $ret = preg_match("#$regexp#", $request_path, $matches, PREG_UNMATCHED_AS_NULL);
 
-                if (false == ($json = json_encode($rows)))
-                {
-                    echo "<pre>\n";
-                    var_dump($rows);
-                    echo "</pre>\n";
-                }
-                else
-                {
-                    header('Content-Type: application/json');
-                    echo $json;
-                }
-            }
-            else
-            {
-                header('Content-Type: application/json');
-                echo "[ \"Invalid query\" ]\n";
-            }
-            die();
-        }
-        case "download":
+        if ($ret)
         {
-            get_raw_media($_GET);
-            die();
-        }
-        case "scan":
-        {
-            header('Content-Type: application/json');
-
-            if (scan_libraries($_GET))
-            {
-                echo "{\"status\": \"success\"}\n";
-            }
-            else
-            {
-                echo "{\"status\": \"failed\"}\n";
-            }
-            die();
+            $handler($matches);
+            $matched = true;
             break;
         }
-        case "create":
-        {
-            $tables = array("library", "playlist");
-
-            if(null !== ($key = array_search($split[3], $tables)))
-            {
-                header('Content-Type: application/json');
-
-                if (insert_row($key, $_GET))
-                {
-                    echo "{\"status\": \"success\"}\n";
-                }
-                else
-                {
-                    echo "{\"status\": \"failed\"}\n";
-                }
-                die();
-            };
-            break;
-        }
-        case "metadata":
-        {
-            if(isset($split[3]))
-            {
-                $meta = get_media_metadata($_GET);
-
-                if (isset($meta))
-                {
-                    $m_new = array();
-                    foreach (array_keys($meta) as $key)
-                    {
-                        if (array_key_exists($split[3], $meta[$key]))
-                        {
-                            $m_new[$key] = $meta[$key][$split[3]];
-                        }
-                    }
-                    if (false == ($json = json_encode($m_new)))
-                    {
-                        echo "<pre>\n";
-                        var_dump($m_new);
-                        echo "</pre>\n";
-                    }
-                    else
-                    {
-                        header('Content-Type: application/json');
-                        echo $json;
-                    }
-
-                    die();
-                }
-            }
-            echo "<pre>\n";
-            var_dump(get_media_metadata($_GET));
-            echo "</pre>\n";
-            die();
-        }
-        default:
-            break;
     }
-    // use a tree to store api commands and actions (functions)
-    // as leaves
+
+    if (!$matched)
+    {
+        echo "Invalid api request\n";
+    }
+
+    die();
 }
 
 api_request_handler();
