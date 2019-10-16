@@ -149,4 +149,84 @@ function get_libraries()
 }
 */
 
+function library_url_handler($data)
+{
+
+    $constraint = array();
+
+    switch($data['column'])
+    {
+        case 'id':
+        {
+            if (isset($data['value']) && ("" !== $data['value']))
+            {
+                $constraint = array(
+                    $data['table'] . "_id" => $data['value'],
+                );
+            }
+            break;
+        }
+        case 'name':
+        {
+            if (isset($data['value']) && ("" !== $data['value']))
+            {
+                $constraint = array(
+                    $data['column'] => htmlspecialchars_decode($data['value']),
+                );
+            }
+            break;
+        }
+        case null:
+            break;
+        default:
+        {
+            echo "Invalid column specified\n";
+            die();
+        }
+    }
+
+    switch($data['type'])
+    {
+        case 'scan':
+        {
+            header("Content-Type: application/json");
+            if(scan_libraries($constraint))
+                echo '{"status" : "success"}' . PHP_EOL;
+            else
+                echo '{"status" : "failure",'
+                    .' "message": "Invalid id/name"}' . PHP_EOL;
+
+            die();
+        }
+        case null:
+        default:
+        {
+            echo "Invalid request specified\n";
+            die();
+        }
+    }
+}
+
+$register_handlers = function ()
+{
+    // make sure to order regexp conditions with precedence
+    // to avoid greedy matching, e.g photo_album|photo instead of photo|photo_album
+
+    $regexp =
+    "^[/]*api[/]+"
+    . "(?<table>library)[/]+"
+    . "(?<type>(scan))[/]*"
+    . "((?<column>(id|name))[/]*){0,1}"
+    //. "((?<like>like)[/]+){0,1}"
+    . "(?<value>[^/]*)"
+    . "$";
+
+    $func = "library_url_handler";
+
+    register_api_url_handler($regexp, $func);
+
+};
+
+$register_handlers();
+
 ?>
