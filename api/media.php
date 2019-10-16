@@ -251,32 +251,6 @@ function media_url_handler($data)
             }
             break;
         }
-        case 'name':
-        case 'title':
-        {
-            if (($data['table'] == "track")
-                OR ($data['table'] == "photo")
-                OR ($data['table'] == "video")
-               )
-            {
-                $column = "title";
-            }
-            else
-            {
-                $column = "name";
-            }
-
-            if (isset($data['value']) && ("" !== $data['value']))
-            {
-                $constraint = array(
-                    $column => htmlspecialchars_decode($data['value']),
-                );
-                break;
-            }
-
-            echo "Requested column does not exist in table\n";
-            die();
-        }
         case null:
         {
             //if (0 == strncmp($data['type'],"row", 3))
@@ -292,12 +266,6 @@ function media_url_handler($data)
 
     switch($data['type'])
     {
-        case 'row':
-        case 'rows':
-        {
-            $rows = get_rows($data['table'], $constraint);
-            break;
-        }
         case 'metadata':
         {
             if (!isset($data['section']))
@@ -356,21 +324,6 @@ $register_handlers = function ()
     $regexp =
     "^[/]*api[/]+"
     . "get[/]+"
-    . "(?<type>row([s]{0,1}))[/]*"
-    . "(?<table>(genre|library|playlist|track|"
-     . "music_album|photo_album|photo|video|media))[/]*"
-    . "((?<column>(id|title|name))[/]*){0,1}"
-    //. "((?<like>like)[/]+){0,1}"
-    . "(?<value>[^/]*)"
-    . "$";
-
-    $func = "media_url_handler";
-
-    register_api_url_handler($regexp, $func);
-
-    $regexp =
-    "^[/]*api[/]+"
-    . "get[/]+"
     . "(?<type>(metadata|raw))[/]*"
     . "((?<section>(tags|comments|video))[/]*){0,1}"
     . "((?<table>media)[/]*){0,1}"
@@ -378,6 +331,8 @@ $register_handlers = function ()
     //. "((?<like>like)[/]+){0,1}"
     . "(?<value>[^/]*)"
     . "$";
+
+    $func = "media_url_handler";
 
     register_api_url_handler($regexp, $func);
 

@@ -53,6 +53,115 @@ function api_request_handler()
     die();
 }
 
+function row_url_handler($data)
+{
+
+    $constraint = array();
+
+    switch($data['column'])
+    {
+        case 'id':
+        {
+            if (isset($data['value']) && ("" !== $data['value']))
+            {
+                $constraint = array(
+                    $data['table'] . "_id" => $data['value'],
+                );
+            }
+            break;
+        }
+        case 'name':
+        case 'title':
+        {
+            if (($data['table'] == "track")
+                OR ($data['table'] == "photo")
+                OR ($data['table'] == "video")
+               )
+            {
+                $column = "title";
+            }
+            else
+            {
+                $column = "name";
+            }
+
+            if (isset($data['value']) && ("" !== $data['value']))
+            {
+                $constraint = array(
+                    $column => htmlspecialchars_decode($data['value']),
+                );
+                break;
+            }
+
+            echo "Requested column does not exist in table\n";
+            die();
+        }
+        case null:
+            break;
+        default:
+        {
+            echo "Invalid column specified\n";
+            die();
+        }
+    }
+
+    switch($data['type'])
+    {
+        case 'row':
+        case 'rows':
+        {
+            $rows = get_rows($data['table'], $constraint);
+            break;
+        }
+        case null:
+        default:
+        {
+            echo "Invalid request specified\n";
+            die();
+        }
+    }
+
+    if (isset($rows))
+    {
+        $encoded = json_encode($rows, JSON_INVALID_UTF8_SUBSTITUTE);
+
+        if (false != $encoded)
+        {
+            header("Content-Type: application/json");
+            echo $encoded;
+        }
+        else
+        {
+            echo "Could not display data\n";
+        }
+        die();
+    }
+}
+
+$register_handlers = function ()
+{
+    // make sure to order regexp conditions with precedence
+    // to avoid greedy matching, e.g photo_album|photo instead of photo|photo_album
+
+    $regexp =
+    "^[/]*api[/]+"
+    . "get[/]+"
+    . "(?<type>row([s]{0,1}))[/]*"
+    . "(?<table>(genre|library|playlist|track|"
+     . "music_album|photo_album|photo|video|media))[/]*"
+    . "((?<column>(id|title|name))[/]*){0,1}"
+    //. "((?<like>like)[/]+){0,1}"
+    . "(?<value>[^/]*)"
+    . "$";
+
+    $func = "row_url_handler";
+
+    register_api_url_handler($regexp, $func);
+
+};
+
+$register_handlers();
+
 api_request_handler();
 
 ?>
