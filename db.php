@@ -155,12 +155,12 @@ function get_row($table, $constraint)
             for ($i = 0; $i < count($keys) - 1; $i++)
             {
                 $k = $db->escape_string($keys[$i]);
-                $v = $db->escape_string($_GET[$keys[$i]]);
+                $v = $db->escape_string($constraint[$keys[$i]]);
 
                 $query .= " {$k}='{$v}' AND";
             }
             $k = $db->escape_string($keys[$i]);
-            $v = $db->escape_string($_GET[$keys[$i]]);
+            $v = $db->escape_string($constraint[$keys[$i]]);
 
             $query .= " {$k}='{$v}';";
         }
