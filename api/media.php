@@ -228,4 +228,160 @@ function update_media_timestamp($kv_pair)
     return $result;
 }
 
+function media_url_handler($data)
+{
+
+    $constraint = array();
+
+    switch($data['column'])
+    {
+        case 'id':
+        {
+            if (isset($data['value']) && ("" !== $data['value']))
+            {
+                $constraint = array(
+                    $data['table'] . "_id" => $data['value'],
+                );
+            }
+            //elseif (0 !== strncmp($data['type'],"row", 3))
+            elseif ($data['type'] == "raw")
+            {
+                echo "No id value specified\n";
+                die();
+            }
+            break;
+        }
+        case 'name':
+        case 'title':
+        {
+            if (($data['table'] == "track")
+                OR ($data['table'] == "photo")
+                OR ($data['table'] == "video")
+               )
+            {
+                $column = "title";
+            }
+            else
+            {
+                $column = "name";
+            }
+
+            if (isset($data['value']) && ("" !== $data['value']))
+            {
+                $constraint = array(
+                    $column => htmlspecialchars_decode($data['value']),
+                );
+                break;
+            }
+
+            echo "Requested column does not exist in table\n";
+            die();
+        }
+        case null:
+        {
+            //if (0 == strncmp($data['type'],"row", 3))
+            if ($data['type'] != "raw")
+                break;
+        }
+        default:
+        {
+            echo "Invalid column specified\n";
+            die();
+        }
+    }
+
+    switch($data['type'])
+    {
+        case 'row':
+        case 'rows':
+        {
+            $rows = get_rows($data['table'], $constraint);
+            break;
+        }
+        case 'metadata':
+        {
+            $meta = get_media_metadata($constraint);
+
+            if (isset($meta))
+            {
+                $rows = array();
+                foreach (array_keys($meta) as $key)
+                {
+                    if (array_key_exists($data['section'], $meta[$key]))
+                    {
+                        $rows[$key] = $meta[$key][$data['section']];
+                    }
+                }
+            }
+            break;
+        }
+        case 'raw':
+        {
+            get_raw_media($constraint);
+            break;
+        }
+        case null:
+        default:
+        {
+            echo "Invalid request specified\n";
+            die();
+        }
+    }
+
+    if (isset($rows))
+    {
+        $encoded = json_encode($rows);
+
+        if (false != $encoded)
+        {
+            header("Content-Type: application/json");
+            echo $encoded;
+        }
+        else
+        {
+            echo "<pre>\n";
+            var_dump($rows);
+            echo "</pre>\n";
+        }
+        die();
+    }
+}
+
+$register_handlers = function ()
+{
+    // make sure to order regexp conditions with precedence
+    // to avoid greedy matching, e.g photo_album|photo instead of photo|photo_album
+
+    $regexp =
+    "^[/]*api[/]+"
+    . "get[/]+"
+    . "(?<type>row([s]{0,1}))[/]*"
+    . "(?<table>(genre|library|playlist|track|"
+     . "music_album|photo_album|photo|video|media))[/]*"
+    . "((?<column>(id|title|name))[/]*){0,1}"
+    //. "((?<like>like)[/]+){0,1}"
+    . "(?<value>[^/]*)"
+    . "$";
+
+    $func = "media_url_handler";
+
+    register_api_url_handler($regexp, $func);
+
+    $regexp =
+    "^[/]*api[/]+"
+    . "get[/]+"
+    . "(?<type>(metadata|raw))[/]*"
+    . "((?<section>(tags|comments|video))[/]*){0,1}"
+    . "(?<table>media)[/]*"
+    . "((?<column>id)[/]*){0,1}"
+    //. "((?<like>like)[/]+){0,1}"
+    . "(?<value>[^/]*)"
+    . "$";
+
+    register_api_url_handler($regexp, $func);
+
+};
+
+$register_handlers();
+
 ?>
