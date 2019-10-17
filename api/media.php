@@ -11,7 +11,7 @@ function get_raw_media($kv_pair)
         return;
     }
 
-    $path = $row['full_path'] . "/". $row['relative_path'];
+    $path = $row['full_path'];
 
     $finfo = new \finfo(FILEINFO_MIME_TYPE, "/usr/lib/file/magic.mgc");
 
@@ -111,7 +111,7 @@ function get_media_metadata($kv_pair)
 
     while (null !== ($m_row = get_row("library_media", $kv_pair, true)))
     {
-        $path = $m_row['full_path'] . "/" . $m_row['relative_path'];
+        $path = $m_row['full_path'];
 
         $meta = $id3->analyze($path);
         getid3_lib::CopyTagsToComments($meta);

@@ -33,8 +33,9 @@ CREATE VIEW library_media AS
         library.name,
         library.type,
         media.media_id,
-        library.full_path,
-        media.relative_path
+        library.full_path as library_path,
+        media.relative_path,
+        CONCAT(library.full_path, "/", relative_path) as full_path
     FROM library JOIN media
         ON media.library_id=library.library_id;
 
