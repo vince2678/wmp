@@ -110,8 +110,28 @@ function row_url_handler($data)
         case 'row':
         case 'rows':
         {
-            $rows = get_rows($data['table'], $constraint);
-            break;
+            if ($data['action'] == "get")
+            {
+                $rows = get_rows($data['table'], $constraint);
+                break;
+            }
+            elseif ($data['action'] == 'delete')
+            {
+                foreach($constraint as $key => $value)
+                {
+                    $res = delete_row($data['table'], $key, $value);
+                    break;
+                }
+
+                header("Content-Type: application/json");
+
+                if ($res)
+                    echo '{"status" : "success"}' . PHP_EOL;
+                else
+                    echo '{"status" : "failure"}' . PHP_EOL;
+
+                die();
+            }
         }
         case null:
         default:
@@ -145,9 +165,9 @@ $register_handlers = function ()
 
     $regexp =
     "^[/]*api[/]+"
-    . "get[/]+"
+    . "(?<action>(get|delete))[/]+"
     . "(?<type>row([s]{0,1}))[/]*"
-    . "(?<table>(genre|library|playlist|track|"
+    . "(?<table>(genre|library|artist|playlist|track|"
      . "music_album|photo_album|photo|video|media))[/]*"
     . "((?<column>(id|title|name))[/]*){0,1}"
     //. "((?<like>like)[/]+){0,1}"

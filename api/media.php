@@ -46,11 +46,19 @@ function remove_media($id)
 */
 
 /* Delete media from disk
-function delete_media($id)
-{
-
-}
 */
+function delete_media($kv_pair)
+{
+    $res = false;
+
+    if (null !== ($row = get_row("library_media", $kv_pair)))
+    {
+        if ($res = unlink($row['full_path']))
+            $res = delete_row("media", "media_id", $row['media_id']);
+    }
+
+    return $res;
+}
 
 /* create media record given k/v pairs in $kv_pair */
 function _add_media($kv_pair)
@@ -166,7 +174,7 @@ function media_url_handler($data)
                 );
             }
             //elseif (0 !== strncmp($data['type'],"row", 3))
-            elseif ($data['type'] == "raw")
+            elseif (($data['type'] == "raw") || ($data['action'] == "delete"))
             {
                 echo "No id value specified\n";
                 die();
@@ -176,7 +184,7 @@ function media_url_handler($data)
         case null:
         {
             //if (0 == strncmp($data['type'],"row", 3))
-            if ($data['type'] != "raw")
+            if (($data['type'] == "raw") || ($data['action'] == "delete"))
                 break;
         }
         default:
@@ -213,6 +221,22 @@ function media_url_handler($data)
             get_raw_media($constraint);
             break;
         }
+        case 'file':
+        {
+            if ($data['action'] == 'delete')
+            {
+                $res = delete_media($constraint);
+
+                header("Content-Type: application/json");
+
+                if ($res)
+                    echo '{"status" : "success"}' . PHP_EOL;
+                else
+                    echo '{"status" : "failure"}' . PHP_EOL;
+
+                die();
+            }
+        }
         case null:
         default:
         {
@@ -245,7 +269,7 @@ $register_handlers = function ()
 
     $regexp =
     "^[/]*api[/]+"
-    . "get[/]+"
+    . "(?<action>get)[/]+"
     . "(?<type>(metadata|raw))[/]*"
     . "((?<section>(tags|playtime_seconds|comments|video))[/]*){0,1}"
     . "((?<table>media)[/]*){0,1}"
@@ -255,6 +279,18 @@ $register_handlers = function ()
     . "$";
 
     $func = "media_url_handler";
+
+    register_api_url_handler($regexp, $func);
+
+    $regexp =
+    "^[/]*api[/]+"
+    . "(?<action>delete)[/]+"
+    . "(?<type>(file))[/]*"
+    . "(?<table>(media))[/]*"
+    . "((?<column>(id))[/]*){0,1}"
+    //. "((?<like>like)[/]+){0,1}"
+    . "(?<value>[^/]*)"
+    . "$";
 
     register_api_url_handler($regexp, $func);
 
