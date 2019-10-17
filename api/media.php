@@ -5,7 +5,7 @@ require_once(__DIR__ . "/../lib/getid3/getid3.php");
 /* Get raw media output */
 function get_raw_media($kv_pair)
 {
-    if (null == ($row = get_row("library_media", $kv_pair, true)))
+    if (null == ($row = get_row("library_media", $kv_pair)))
     {
         printf("No rows in query\n");
         return;
