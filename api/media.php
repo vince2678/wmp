@@ -96,10 +96,12 @@ function add_media($library, $files)
             if ($diff > 0)
             {
                 //Update metadata
+                $constraint = array("media_id" => $m_row['media_id']);
                 switch($library['type'])
                 {
+
                     case "music":
-                        add_music($m_row);
+                        add_music($constraint);
                         break;
                     case "photo":
                         add_photo($m_row);
@@ -115,10 +117,11 @@ function add_media($library, $files)
         // no rows, we need to create new ones for media
         elseif (null !== ($m_row = _add_media($data)))
         {
+            $constraint = array("media_id" => $m_row['media_id']);
             switch($library['type'])
             {
                 case "music":
-                    add_music($m_row);
+                    add_music($constraint);
                     break;
                 case "photo":
                     add_photo($m_row);
