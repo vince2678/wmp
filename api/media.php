@@ -110,18 +110,6 @@ function clean_media_records($library_id)
     return true;
 }
 
-/* create media record given k/v pairs in $data */
-function _add_media($data)
-{
-    if (false == insert_row("media", $data))
-        return null;
-
-    // get media id
-    $m_row = get_row("media", $data);
-
-    return $m_row;
-}
-
 function add_media($library_id, $files)
 {
     while (null !== ($file = array_pop($files)))
@@ -159,9 +147,15 @@ function add_media($library_id, $files)
             }
 
             update_media_timestamp($m_row['media_id']);
+
+            continue;
         }
+
+        if (false == insert_row("media", $data))
+            continue;
+
         // no rows, we need to create new ones for media
-        elseif (null !== ($m_row = _add_media($data)))
+        if (null !== ($m_row = get_row("media", $data)))
         {
             $library = get_row("library", array("library_id" => $library_id));
 
