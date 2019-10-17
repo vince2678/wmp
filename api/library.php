@@ -170,7 +170,7 @@ function library_url_handler($data)
         }
     }
 
-    switch($data['type'])
+    switch($data['action'])
     {
         case 'scan':
         {
@@ -199,8 +199,8 @@ $register_handlers = function ()
 
     $regexp =
     "^[/]*api[/]+"
+    . "(?<action>(scan))[/]*"
     . "(?<table>library)[/]+"
-    . "(?<type>(scan))[/]*"
     . "((?<column>(id|name))[/]*){0,1}"
     //. "((?<like>like)[/]+){0,1}"
     . "(?<value>[^/]*)"
