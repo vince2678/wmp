@@ -32,7 +32,9 @@ CREATE VIEW library_media AS
         library.library_id,
         library.name,
         library.type,
+        library.update_interval,
         media.media_id,
+        media.last_update,
         library.full_path as library_path,
         media.relative_path,
         CONCAT(library.full_path, "/", relative_path) as full_path
