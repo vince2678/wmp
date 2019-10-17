@@ -26,11 +26,4 @@ function get_genre_id($name)
     return $id;
 }
 
-/*
-function get_genres()
-{
-
-}
-*/
-
 ?>

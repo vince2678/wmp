@@ -37,14 +37,6 @@ function get_raw_media($kv_pair)
     fclose($fh);
 }
 
-/* 
-Remove media from database
-function remove_media($id)
-{
-
-}
-*/
-
 /* Delete media from disk
 */
 function delete_media($kv_pair)

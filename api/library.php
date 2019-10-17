@@ -14,13 +14,6 @@ function update_library($id, $path, $type, $interval)
 }
 */
 
-/*
-function remove_library($key, $value)
-{
-
-}
-*/
-
 /* take in a library $row */
 function scan_library($row)
 {
@@ -135,20 +128,6 @@ function scan_libraries($kv_pair)
 
     return true;
 }
-
-/*
-function get_library($key, $value)
-{
-
-}
-*/
-
-/*
-function get_libraries()
-{
-
-}
-*/
 
 function library_url_handler($data)
 {
