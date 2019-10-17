@@ -15,7 +15,7 @@ function update_library($id, $path, $type, $interval)
 */
 
 /* take in a library $row */
-function scan_library($row)
+function scan_library($library_id)
 {
     $mimes['music'] =
         array(
@@ -40,14 +40,19 @@ function scan_library($row)
             "image/gif"
         );
 
-    $group_mimes = $mimes[$row['type']];
+    $library = get_row("library", array("library_id" => $library_id));
+
+    if (!isset($library))
+        return false;
+
+    $group_mimes = $mimes[$library['type']];
 
     $finfo = new \finfo(FILEINFO_MIME_TYPE, "/usr/lib/file/magic.mgc");
 
     $d_stack = array();
     $f_stack = array();
 
-    $d_stack[] = $row['full_path'];
+    $d_stack[] = $library['full_path'];
 
     //  add files to file stack
     while (null !== ($dir = array_pop($d_stack)))
@@ -72,7 +77,7 @@ function scan_library($row)
             {
                 if (false !== array_search($finfo->file($path), $group_mimes))
                 {
-                    $rpath = substr($path, strlen($row['full_path']));
+                    $rpath = substr($path, strlen($library['full_path']));
 
                     while ($rpath[0] == "/")
                         $rpath = substr($rpath, 1);
@@ -84,14 +89,14 @@ function scan_library($row)
         closedir($dh);
     }
 
-    add_media($row, $f_stack);
+    add_media($library_id, $f_stack);
 
     return true;
 }
 
-function scan_libraries($kv_pair)
+function scan_libraries($constraint)
 {
-    $rows = get_rows("library", $kv_pair);
+    $rows = get_rows("library", $constraint);
 
     if ($rows == null) //no rows
         return false;
@@ -119,7 +124,7 @@ function scan_libraries($kv_pair)
                 continue;
         }
 
-        scan_library($row);
+        scan_library($row['library_id']);
         clean_media_records($row['library_id']);
 
         $result->free();

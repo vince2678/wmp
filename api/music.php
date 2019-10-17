@@ -1,8 +1,8 @@
 <?php
 
-function add_music($m_row)
+function add_music($media_id)
 {
-    $meta = get_media_metadata($m_row)[$m_row['media_id']];
+    $meta = get_media_metadata($media_id)[$media_id];
     
     /*
     if (isset($meta['tags']['id3v2']))
@@ -19,7 +19,7 @@ function add_music($m_row)
     $track_data = array();
     $album_data = array();
 
-    $track_data["media_id"] = $m_row['media_id'];
+    $track_data["media_id"] = $media_id;
 
     if (isset($meta['playtime_seconds']))
         $track_data['duration'] = (int) $meta['playtime_seconds'];
@@ -82,10 +82,10 @@ function add_music($m_row)
             $track_data['genre_id'] = get_genre_id($genre);
     }
 
-    if (count_rows("track", array("media_id" => $m_row['media_id'])) < 1)
+    if (count_rows("track", array("media_id" => $media_id)) < 1)
         return insert_row("track", $track_data);
     else
-        return update_row("track", "media_id", $m_row['media_id'], $track_data);
+        return update_row("track", "media_id", $media_id, $track_data);
 
     return true;
 }

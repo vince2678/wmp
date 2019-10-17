@@ -3,9 +3,11 @@
 require_once(__DIR__ . "/../lib/getid3/getid3.php");
 
 /* Get raw media output */
-function get_raw_media($kv_pair)
+function get_raw_media($media_id)
 {
-    if (null == ($row = get_row("library_media", $kv_pair)))
+    $constraint = array("media_id" => $media_id);
+
+    if (null == ($row = get_row("library_media", $constraint)))
     {
         printf("No rows in query\n");
         return;
@@ -39,14 +41,16 @@ function get_raw_media($kv_pair)
 
 /* Delete media from disk
 */
-function delete_media($kv_pair)
+function delete_media($media_id)
 {
     $res = false;
 
-    if (null !== ($row = get_row("library_media", $kv_pair)))
+    $constraint = array("media_id" => $media_id);
+
+    if (null !== ($row = get_row("library_media", $constraint)))
     {
         if ($res = unlink($row['full_path']))
-            $res = delete_row("media", "media_id", $row['media_id']);
+            $res = delete_row("media", "media_id", $media_id);
     }
 
     return $res;
@@ -106,26 +110,24 @@ function clean_media_records($library_id)
     return true;
 }
 
-/* create media record given k/v pairs in $kv_pair */
-function _add_media($kv_pair)
+/* create media record given k/v pairs in $data */
+function _add_media($data)
 {
-    if (false == insert_row("media", $kv_pair))
+    if (false == insert_row("media", $data))
         return null;
 
     // get media id
-    $m_row = get_row("media", $kv_pair);
+    $m_row = get_row("media", $data);
 
     return $m_row;
 }
 
-function add_media($library, $files)
+function add_media($library_id, $files)
 {
-    $db = connect_to_db();
-
     while (null !== ($file = array_pop($files)))
     {
         $data = array(
-            "library_id" => $library['library_id'],
+            "library_id" => $library_id,
             "relative_path" => $file
         );
 
@@ -142,52 +144,62 @@ function add_media($library, $files)
             if ($diff > 0)
             {
                 //Update metadata
-                $constraint = array("media_id" => $m_row['media_id']);
-                switch($library['type'])
+                switch($m_row['type'])
                 {
-
                     case "music":
-                        add_music($constraint);
+                        add_music($m_row['media_id']);
                         break;
                     case "photo":
-                        add_photo($m_row);
+                        add_photo($m_row['media_id']);
                         break;
                     case "video":
-                        add_video($m_row);
+                        add_video($m_row['media_id']);
                         break;
                 }
             }
 
-            update_media_timestamp($data);
+            update_media_timestamp($m_row['media_id']);
         }
         // no rows, we need to create new ones for media
         elseif (null !== ($m_row = _add_media($data)))
         {
-            $constraint = array("media_id" => $m_row['media_id']);
+            $library = get_row("library", array("library_id" => $library_id));
+
+            if (!isset($library))
+            {
+                delete_row("media", array("media_id" => $m_row['media_id']));
+                continue;
+            }
+
             switch($library['type'])
             {
                 case "music":
-                    add_music($constraint);
+                    add_music($m_row['media_id']);
                     break;
                 case "photo":
-                    add_photo($m_row);
+                    add_photo($m_row['media_id']);
                     break;
                 case "video":
-                    add_video($m_row);
+                    add_video($m_row['media_id']);
                     break;
             }
         }
     }
-    $db->close();
 }
 
-function get_media_metadata($kv_pair)
+function get_media_metadata($media_id = -1)
 {
+
+    if ($media_id < 0)
+        $constraint = array();
+    else
+        $constraint = array("media_id" => $media_id);
+
     $metadata = null;
 
     $id3 = new getID3;
 
-    while (null !== ($m_row = get_row("library_media", $kv_pair, true)))
+    while (null !== ($m_row = get_row("library_media", $constraint, true)))
     {
         $path = $m_row['full_path'];
 
@@ -200,24 +212,12 @@ function get_media_metadata($kv_pair)
     return $metadata;
 }
 
-function update_media_timestamp($kv_pair)
+function update_media_timestamp($media_id)
 {
     $db = connect_to_db();
 
-    $k = array_keys($kv_pair);
-
-    $constraint = null;
-
-    for ($i = 0; $i < count($k) - 1; $i++)
-    {
-        $constraint .= $db->escape_string($k[$i]) . '='
-            . "'" . $db->escape_string($kv_pair[$k[$i]]) . "' AND ";
-    }
-    $constraint .= $db->escape_string($k[$i]) . '='
-        . "'" . $db->escape_string($kv_pair[$k[$i]]) . "';";
-
     $query = "UPDATE media SET last_update=CURRENT_TIMESTAMP WHERE "
-        . $constraint;
+        . "media_id=" . $media_id . ";";
 
     if (false == $result = $db->query($query))
         printf("Failed to update: %s\n", $db->error);
@@ -231,7 +231,7 @@ function update_media_timestamp($kv_pair)
 function media_url_handler($data)
 {
 
-    $constraint = array();
+    $media_id= -1;
 
     switch($data['column'])
     {
@@ -239,9 +239,7 @@ function media_url_handler($data)
         {
             if (isset($data['value']) && ("" !== $data['value']))
             {
-                $constraint = array(
-                    $data['table'] . "_id" => $data['value'],
-                );
+                $media_id = $data['value'];
             }
             //elseif (0 !== strncmp($data['type'],"row", 3))
             elseif (($data['type'] == "raw") || ($data['action'] == "delete"))
@@ -271,7 +269,7 @@ function media_url_handler($data)
             if (!isset($data['section']))
                 $data['section'] = 'tags';
 
-            $meta = get_media_metadata($constraint);
+            $meta = get_media_metadata($media_id);
 
             if (isset($meta))
             {
@@ -288,14 +286,14 @@ function media_url_handler($data)
         }
         case 'raw':
         {
-            get_raw_media($constraint);
-            break;
+            get_raw_media($media_id);
+            die();
         }
         case 'file':
         {
             if ($data['action'] == 'delete')
             {
-                $res = delete_media($constraint);
+                $res = delete_media($media_id);
 
                 header("Content-Type: application/json");
 
