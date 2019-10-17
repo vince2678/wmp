@@ -15,7 +15,7 @@ function update_library($id, $path, $type, $interval)
 */
 
 /* take in a library $row */
-function scan_library($library_id = -1)
+function scan_library($library_id = -1, $force_scan = false)
 {
     $mimes['music'] =
         array(
@@ -53,28 +53,31 @@ function scan_library($library_id = -1)
 
     foreach ($libraries as $library)
     {
-        $query = "SELECT MAX(last_update) as last FROM media WHERE"
-            . " library_id='" . $library['library_id'] . "';";
-
-        $result = $db->query($query);
-
-        if (isset($result) && $result->num_rows > 0)
-            $mru_row = $result->fetch_assoc();
-
-        if (isset($mru_row['last']))
+        if (!$force_scan)
         {
-            $current_time = new \DateTime();
-            $update_time = new \DateTime($mru_row['last']);
-            $diff = $current_time->getTimestamp() - $update_time->getTimestamp();
+            $query = "SELECT MAX(last_update) as last FROM media WHERE"
+                . " library_id='" . $library['library_id'] . "';";
 
-            // don't rescan if the update interval hasn't passed yet
-            if ($diff < $library['update_interval'])
+            $result = $db->query($query);
+
+            if (isset($result) && $result->num_rows > 0)
+                $mru_row = $result->fetch_assoc();
+
+            if (isset($mru_row['last']))
             {
-                $result->free();
-                continue;
+                $current_time = new \DateTime();
+                $update_time = new \DateTime($mru_row['last']);
+                $diff = $current_time->getTimestamp() - $update_time->getTimestamp();
+
+                // don't rescan if the update interval hasn't passed yet
+                if ($diff < $library['update_interval'])
+                {
+                    $result->free();
+                    continue;
+                }
             }
+            $result->free();
         }
-        $result->free();
 
         $d_stack = array();
         $f_stack = array();
@@ -167,11 +170,17 @@ function library_url_handler($data)
 
     switch($data['action'])
     {
+        case 'force-scan':
         case 'scan':
         {
             header("Content-Type: application/json");
 
-            if(scan_library($library_id))
+            if ($data['action'] == "force-scan")
+                $force = true;
+            else
+                $force = false;
+
+            if(scan_library($library_id, $force))
                 echo '{"status" : "success"}' . PHP_EOL;
             else
                 echo '{"status" : "failure",'
@@ -195,7 +204,7 @@ $register_handlers = function ()
 
     $regexp =
     "^[/]*api[/]+"
-    . "(?<action>(scan))[/]*"
+    . "(?<action>(force-scan|scan))[/]*"
     . "(?<table>library)[/]+"
     . "((?<column>(id|name))[/]*){0,1}"
     //. "((?<like>like)[/]+){0,1}"
