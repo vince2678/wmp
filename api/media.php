@@ -208,7 +208,7 @@ function media_url_handler($data)
         case null:
         {
             //if (0 == strncmp($data['type'],"row", 3))
-            if (($data['type'] == "raw") || ($data['action'] == "delete"))
+            if (($data['type'] !== "raw") && ($data['action'] !== "delete"))
                 break;
         }
         default:
