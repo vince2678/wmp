@@ -83,12 +83,33 @@ function add_media($library, $files)
             "relative_path" => $file
         );
 
-        /* TODO: Check file timestamp and update db metadata
-                 if timestamp on disk is newer than db last update
-        */
-
-        if (count_rows("media", $data) > 0)
+        if (null !== $m_row = get_row("library_media", $data))
         {
+            /* Check file timestamp and update db metadata
+               if timestamp on disk is newer than db last update
+            */
+            $mtime = filemtime($m_row['full_path']);
+
+            $update_time = new \DateTime($m_row['last_update']);
+            $diff = $mtime - $update_time->getTimestamp();
+
+            if ($diff > 0)
+            {
+                //Update metadata
+                switch($library['type'])
+                {
+                    case "music":
+                        add_music($m_row);
+                        break;
+                    case "photo":
+                        add_photo($m_row);
+                        break;
+                    case "video":
+                        add_video($m_row);
+                        break;
+                }
+            }
+
             update_media_timestamp($data);
         }
         // no rows, we need to create new ones for media
