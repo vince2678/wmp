@@ -127,6 +127,7 @@ function scan_libraries($kv_pair)
         }
 
         scan_library($row);
+        clean_media_records($row['library_id']);
 
         $result->free();
     }

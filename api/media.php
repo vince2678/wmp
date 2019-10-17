@@ -60,6 +60,60 @@ function delete_media($kv_pair)
     return $res;
 }
 
+/* go through the library's media and check media row's
+    update time and compare to latest update time.
+    if diff > library update interval, the record's associated file
+    was missing on a previous update, so remove the record
+*/
+function clean_media_records($library_id)
+{
+    $constraint = array("library_id" => $library_id);
+
+    $library = get_row("library", $constraint);
+
+    if ($library == null) //no rows
+        return false;
+
+    $db = connect_to_db();
+
+    $query = "SELECT MAX(last_update) as last FROM media WHERE"
+        . " library_id='" . $library_id . "';";
+
+    $result = $db->query($query);
+
+    if (isset($result) && $result->num_rows > 0)
+        $mru_row = $result->fetch_assoc();
+
+    $result->free();
+    $db->close();
+
+    if (isset($mru_row['last']))
+    {
+        $library_update_time = new \DateTime($mru_row['last']);
+        $interval = $library['update_interval'];
+    }
+    else
+    {
+        return false;
+    }
+
+    /* go through library's associated media records */
+    while (null !== $m_row = get_row("library_media", $constraint, true))
+    {
+        $row_update_time = new \DateTime($m_row['last_update']);
+
+        $diff = $library_update_time->getTimestamp()
+            - $row_update_time->getTimestamp();
+
+        if ($diff > $interval)
+        {
+            delete_row("media", "media_id", $m_row['media_id']);
+        }
+    }
+
+    return true;
+}
+
 /* create media record given k/v pairs in $kv_pair */
 function _add_media($kv_pair)
 {
