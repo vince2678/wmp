@@ -1,5 +1,6 @@
 <?php
 
+include __DIR__ . "/api/" . "album.php";
 include __DIR__ . "/api/" . "artist.php";
 include __DIR__ . "/api/" . "genre.php";
 include __DIR__ . "/api/" . "library.php";
