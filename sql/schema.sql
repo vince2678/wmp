@@ -134,6 +134,7 @@ CREATE TABLE video(
 CREATE TABLE playlist(
     playlist_id int NOT NULL AUTO_INCREMENT,
     name varchar(128) NOT NULL,
+    type enum("music", "video", "photo", "none") NOT NULL DEFAULT 'music',
     PRIMARY KEY (playlist_id),
     INDEX USING BTREE (name)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
