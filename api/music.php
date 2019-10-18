@@ -82,10 +82,12 @@ function add_music($media_id)
             $track_data['genre_id'] = get_genre_id($genre);
     }
 
-    if (count_rows("track", array("media_id" => $media_id)) < 1)
+    $constraint = array("media_id" => $media_id);
+
+    if (count_rows("track", $constraint) < 1)
         return insert_row("track", $track_data);
     else
-        return update_row("track", "media_id", $media_id, $track_data);
+        return update_row("track", $constraint, $track_data);
 
     return true;
 }

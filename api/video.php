@@ -37,7 +37,7 @@ function add_video($media_id)
     if (count_rows("video", $constraint) < 1)
         return insert_row("video", $data);
     else
-        return update_row("video", "media_id", $media_id, $data);
+        return update_row("video", $constraint, $data);
     
     return true;
 }

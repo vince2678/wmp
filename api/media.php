@@ -50,7 +50,7 @@ function delete_media($media_id)
     if (null !== ($row = get_row("library_media", $constraint)))
     {
         if ($res = unlink($row['full_path']))
-            $res = delete_row("media", "media_id", $media_id);
+            $res = delete_row("media", $constraint);
     }
 
     return $res;
@@ -103,7 +103,7 @@ function clean_media_records($library_id)
 
         if ($diff > $interval)
         {
-            delete_row("media", "media_id", $m_row['media_id']);
+            delete_row("media", array("media_id" => $m_row['media_id']));
         }
     }
 
@@ -161,7 +161,7 @@ function add_media($library_id, $files)
 
             if (!isset($library))
             {
-                delete_row("media", "media_id", $m_row['media_id']);
+                delete_row("media", array("media_id" => $m_row['media_id']));
                 continue;
             }
 

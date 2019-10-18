@@ -118,11 +118,7 @@ function row_url_handler($data)
             }
             elseif ($data['action'] == 'delete')
             {
-                foreach($constraint as $key => $value)
-                {
-                    $res = delete_row($data['table'], $key, $value);
-                    break;
-                }
+                $res = delete_row($data['table'], $constraint);
 
                 header("Content-Type: application/json");
 

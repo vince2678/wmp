@@ -16,7 +16,7 @@ function add_photo($media_id)
     if (count_rows("photo", $constraint) < 1)
         return insert_row("photo", $data);
     else
-        return update_row("photo", "media_id", $media_id, $data);
+        return update_row("photo", $constraint, $data);
     
     return true;
 }
