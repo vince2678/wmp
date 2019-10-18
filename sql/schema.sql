@@ -139,12 +139,14 @@ CREATE TABLE playlist(
     INDEX USING BTREE (name)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE playlist_track(
+CREATE TABLE playlist_media(
     playlist_id int NOT NULL,
     media_id int NOT NULL,
+    rank int NOT NULL DEFAULT 1,
     CONSTRAINT FOREIGN KEY (playlist_id) REFERENCES playlist (playlist_id)
         ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT FOREIGN KEY (media_id) REFERENCES media (media_id)
         ON DELETE CASCADE ON UPDATE CASCADE,
-    CONSTRAINT UNIQUE INDEX playlist_media_id (playlist_id, media_id)
+    CONSTRAINT UNIQUE INDEX playlist_media_id (playlist_id, media_id),
+    INDEX USING BTREE (rank)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
