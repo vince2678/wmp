@@ -59,7 +59,7 @@ CREATE TABLE artist(
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
-CREATE TABLE music_album(
+CREATE TABLE r_music_album(
     album_id int NOT NULL AUTO_INCREMENT,
     artist_id int,
     name varchar(128) NOT NULL,
@@ -69,6 +69,16 @@ CREATE TABLE music_album(
     PRIMARY KEY (album_id),
     INDEX USING BTREE (name)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE VIEW music_album AS
+    SELECT
+        r_music_album.album_id,
+        r_music_album.artist_id,
+        r_music_album.name as album,
+        r_music_album.track_count as track_count,
+        artist.name as artist
+    FROM r_music_album
+        JOIN artist ON r_music_album.artist_id=artist.artist_id;
 
 CREATE TABLE track(
     track_id int NOT NULL AUTO_INCREMENT,
@@ -87,7 +97,7 @@ CREATE TABLE track(
         ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT FOREIGN KEY (genre_id) REFERENCES genre (genre_id)
         ON DELETE SET NULL ON UPDATE CASCADE,
-    CONSTRAINT FOREIGN KEY (album_id) REFERENCES music_album (album_id)
+    CONSTRAINT FOREIGN KEY (album_id) REFERENCES r_music_album (album_id)
         ON DELETE CASCADE ON UPDATE CASCADE,
     PRIMARY KEY (track_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
