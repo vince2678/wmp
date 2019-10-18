@@ -161,7 +161,7 @@ function add_media($library_id, $files)
 
             if (!isset($library))
             {
-                delete_row("media", array("media_id" => $m_row['media_id']));
+                delete_row("media", "media_id", $m_row['media_id']);
                 continue;
             }
 
