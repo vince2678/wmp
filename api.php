@@ -29,6 +29,11 @@ function api_request_handler()
         $request_path = substr($_SERVER['REQUEST_URI'], $s);
     }
 
+    $regexp ="^[/]*api[/]+";
+
+    if (!preg_match("#$regexp#", $request_path))
+        return;
+
     $matched = false;
 
     for ($i = 0; $i < count($url_regexps); $i++)
