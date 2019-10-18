@@ -7,7 +7,7 @@ CREATE TABLE library(
     library_id int NOT NULL AUTO_INCREMENT,
     name varchar(100) NOT NULL,
     type enum("music", "video", "photo"),
-    full_path varchar(1024) NOT NULL,
+    path varchar(1024) NOT NULL,
     update_interval int NOT NULL DEFAULT 3600,
     PRIMARY KEY (library_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -35,9 +35,9 @@ CREATE VIEW library_media AS
         library.update_interval,
         media.media_id,
         media.last_update,
-        library.full_path as library_path,
+        library.path as library_path,
         media.relative_path,
-        CONCAT(library.full_path, "/", relative_path) as full_path
+        CONCAT(library.path, "/", relative_path) as full_path
     FROM library JOIN media
         ON media.library_id=library.library_id;
 

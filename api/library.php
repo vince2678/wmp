@@ -82,7 +82,7 @@ function scan_library($library_id = -1, $force_scan = false)
         $d_stack = array();
         $f_stack = array();
 
-        $d_stack[] = $library['full_path'];
+        $d_stack[] = $library['path'];
 
         //  add files to file stack
         while (null !== ($dir = array_pop($d_stack)))
@@ -107,7 +107,7 @@ function scan_library($library_id = -1, $force_scan = false)
                 {
                     if (false !== array_search($finfo->file($path), $mimes[$library['type']]))
                     {
-                        $rpath = substr($path, strlen($library['full_path']));
+                        $rpath = substr($path, strlen($library['path']));
 
                         while ($rpath[0] == "/")
                             $rpath = substr($rpath, 1);
