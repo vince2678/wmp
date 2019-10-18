@@ -7,7 +7,7 @@ function get_raw_media($media_id)
 {
     $constraint = array("media_id" => $media_id);
 
-    if (null == ($row = get_row("library_media", $constraint)))
+    if (null == ($row = get_row("media", $constraint)))
     {
         printf("No rows in query\n");
         return;
@@ -47,10 +47,10 @@ function delete_media($media_id)
 
     $constraint = array("media_id" => $media_id);
 
-    if (null !== ($row = get_row("library_media", $constraint)))
+    if (null !== ($row = get_row("media", $constraint)))
     {
         if ($res = unlink($row['full_path']))
-            $res = delete_row("media", $constraint);
+            $res = delete_row("r_media", $constraint);
     }
 
     return $res;
@@ -94,7 +94,7 @@ function clean_media_records($library_id)
     }
 
     /* go through library's associated media records */
-    while (null !== $m_row = get_row("library_media", $constraint, true))
+    while (null !== $m_row = get_row("r_media", $constraint, true))
     {
         $row_update_time = new \DateTime($m_row['last_update']);
 
@@ -103,7 +103,7 @@ function clean_media_records($library_id)
 
         if ($diff > $interval)
         {
-            delete_row("media", array("media_id" => $m_row['media_id']));
+            delete_row("r_media", array("media_id" => $m_row['media_id']));
         }
     }
 
@@ -119,7 +119,7 @@ function add_media($library_id, $files)
             "relative_path" => $file
         );
 
-        if (null !== $m_row = get_row("library_media", $data))
+        if (null !== $m_row = get_row("media", $data))
         {
             /* Check file timestamp and update db metadata
                if timestamp on disk is newer than db last update
@@ -132,7 +132,7 @@ function add_media($library_id, $files)
             if ($diff > 0)
             {
                 //Update metadata
-                switch($m_row['type'])
+                switch($m_row['library_type'])
                 {
                     case "music":
                         add_music($m_row['media_id']);
@@ -151,17 +151,17 @@ function add_media($library_id, $files)
             continue;
         }
 
-        if (false == insert_row("media", $data))
+        if (false == insert_row("r_media", $data))
             continue;
 
         // no rows, we need to create new ones for media
-        if (null !== ($m_row = get_row("media", $data)))
+        if (null !== ($m_row = get_row("r_media", $data)))
         {
             $library = get_row("library", array("library_id" => $library_id));
 
             if (!isset($library))
             {
-                delete_row("media", array("media_id" => $m_row['media_id']));
+                delete_row("r_media", array("media_id" => $m_row['media_id']));
                 continue;
             }
 
@@ -193,7 +193,7 @@ function get_media_metadata($media_id = -1)
 
     $id3 = new getID3;
 
-    while (null !== ($m_row = get_row("library_media", $constraint, true)))
+    while (null !== ($m_row = get_row("media", $constraint, true)))
     {
         $path = $m_row['full_path'];
 

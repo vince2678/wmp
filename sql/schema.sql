@@ -13,7 +13,7 @@ CREATE TABLE library(
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 # add a bool to indicate if metadata on file vs in db differs
-CREATE TABLE media(
+CREATE TABLE r_media(
     media_id int NOT NULL AUTO_INCREMENT,
     library_id int NOT NULL,
     CONSTRAINT FOREIGN KEY (library_id) REFERENCES library(library_id)
@@ -27,19 +27,20 @@ CREATE TABLE media(
     INDEX USING BTREE (relative_path)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE VIEW library_media AS
+CREATE VIEW media AS
     SELECT
         library.library_id,
-        library.name,
-        library.type,
-        library.update_interval,
-        media.media_id,
-        media.last_update,
+        library.name as library_name,
+        library.type as library_type,
         library.path as library_path,
-        media.relative_path,
+        library.update_interval,
+        r_media.media_id,
+        r_media.added_on,
+        r_media.last_update,
+        r_media.relative_path,
         CONCAT(library.path, "/", relative_path) as full_path
-    FROM library JOIN media
-        ON media.library_id=library.library_id;
+    FROM library JOIN r_media
+        ON r_media.library_id=library.library_id;
 
 CREATE TABLE genre(
     genre_id int NOT NULL AUTO_INCREMENT,
@@ -80,7 +81,7 @@ CREATE TABLE track(
     play_count int NOT NULL DEFAULT 0,
     rating int NOT NULL DEFAULT 0, 
     duration int NOT NULL,
-    CONSTRAINT FOREIGN KEY (media_id) REFERENCES media (media_id)
+    CONSTRAINT FOREIGN KEY (media_id) REFERENCES r_media (media_id)
         ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT FOREIGN KEY (artist_id) REFERENCES artist (artist_id)
         ON DELETE CASCADE ON UPDATE CASCADE,
@@ -106,7 +107,7 @@ CREATE TABLE photo(
     media_id int NOT NULL,
     album_id int DEFAULT NULL,
     title varchar(128) DEFAULT NULL,
-    CONSTRAINT FOREIGN KEY (media_id) REFERENCES media (media_id)
+    CONSTRAINT FOREIGN KEY (media_id) REFERENCES r_media (media_id)
         ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT FOREIGN KEY (album_id) REFERENCES photo_album (album_id)
         ON DELETE SET NULL ON UPDATE CASCADE,
@@ -122,7 +123,7 @@ CREATE TABLE video(
     title varchar(128) DEFAULT NULL,
     play_count int NOT NULL DEFAULT 0,
     duration int NOT NULL,
-    CONSTRAINT FOREIGN KEY (media_id) REFERENCES media (media_id)
+    CONSTRAINT FOREIGN KEY (media_id) REFERENCES r_media (media_id)
         ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT FOREIGN KEY (genre_id) REFERENCES genre (genre_id)
         ON DELETE SET NULL ON UPDATE CASCADE,
@@ -145,7 +146,7 @@ CREATE TABLE playlist_media(
     rank int NOT NULL DEFAULT 1,
     CONSTRAINT FOREIGN KEY (playlist_id) REFERENCES playlist (playlist_id)
         ON DELETE CASCADE ON UPDATE CASCADE,
-    CONSTRAINT FOREIGN KEY (media_id) REFERENCES media (media_id)
+    CONSTRAINT FOREIGN KEY (media_id) REFERENCES r_media (media_id)
         ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT UNIQUE INDEX playlist_media_id (playlist_id, media_id),
     INDEX USING BTREE (rank)
