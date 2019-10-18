@@ -57,7 +57,7 @@ function insert_row($table, $data)
     return $res;
 }
 
-function update_row($table, $key, $value, $data)
+function update_row($table, $constraints, $data)
 {
     $db = connect_to_db();
 
@@ -71,10 +71,30 @@ function update_row($table, $key, $value, $data)
     $row .= $db->escape_string($k[$i]) . '='
         . "'" . $db->escape_string($data[$k[$i]]) . "'";
 
-    $query = "UPDATE " . $db->escape_string($table) . " SET " . $row
-        . " WHERE "
-        . $db->escape_string($key)
-        . "='" . $db->escape_string($value) . "';";
+    $query = "UPDATE " . $db->escape_string($table) . " SET " . $row;
+
+    $keys = array_keys($constraints);
+
+    if (count($keys) > 0)
+    {
+        $query .= " WHERE";
+
+        for ($i = 0; $i < count($keys) - 1; $i++)
+        {
+            $k = $db->escape_string($keys[$i]);
+            $v = $db->escape_string($constraints[$keys[$i]]);
+
+            $query .= " {$k}='{$v}' AND";
+        }
+        $k = $db->escape_string($keys[$i]);
+        $v = $db->escape_string($constraints[$keys[$i]]);
+
+        $query .= " {$k}='{$v}';";
+    }
+    else
+    {
+        $query .= ";";
+    }
 
     if (false == ($res = $db->query($query)))
         printf("Failed to update: %s\n", $db->error);
@@ -84,13 +104,34 @@ function update_row($table, $key, $value, $data)
     return $res;
 }
 
-function delete_row($table, $key, $value)
+function delete_row($table, $constraints)
 {
     $db = connect_to_db();
 
-    $query = "DELETE FROM " . $db->escape_string($table) . " WHERE "
-        . $db->escape_string($key) . "="
-        . "'" . $db->escape_string($value) . "';";
+    $query = "DELETE FROM " . $db->escape_string($table);
+
+    $keys = array_keys($constraints);
+
+    if (count($keys) > 0)
+    {
+        $query .= " WHERE";
+
+        for ($i = 0; $i < count($keys) - 1; $i++)
+        {
+            $k = $db->escape_string($keys[$i]);
+            $v = $db->escape_string($constraints[$keys[$i]]);
+
+            $query .= " {$k}='{$v}' AND";
+        }
+        $k = $db->escape_string($keys[$i]);
+        $v = $db->escape_string($constraints[$keys[$i]]);
+
+        $query .= " {$k}='{$v}';";
+    }
+    else
+    {
+        $query .= ";";
+    }
 
     if (false == ($res = $db->query($query)))
         printf("Failed to delete: %s\n", $db->error);
