@@ -84,10 +84,10 @@ function add_music($media_id)
 
     $constraint = array("media_id" => $media_id);
 
-    if (count_rows("track", $constraint) < 1)
-        return insert_row("track", $track_data);
+    if (count_rows("r_track", $constraint) < 1)
+        return insert_row("r_track", $track_data);
     else
-        return update_row("track", $constraint, $track_data);
+        return update_row("r_track", $constraint, $track_data);
 
     return true;
 }

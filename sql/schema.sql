@@ -80,7 +80,7 @@ CREATE VIEW music_album AS
     FROM r_music_album
         JOIN artist ON r_music_album.artist_id=artist.artist_id;
 
-CREATE TABLE track(
+CREATE TABLE r_track(
     track_id int NOT NULL AUTO_INCREMENT,
     media_id int NOT NULL,
     album_id int NOT NULL,
@@ -101,6 +101,19 @@ CREATE TABLE track(
         ON DELETE CASCADE ON UPDATE CASCADE,
     PRIMARY KEY (track_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE VIEW track AS
+    SELECT
+        r_track.*,
+        music_album.artist_id AS album_artist_id,
+        artist.name AS artist,
+        music_album.artist AS album_artist,
+        music_album.album,
+        genre.name AS genre
+    FROM r_track
+    JOIN artist ON artist.artist_id=r_track.artist_id
+    JOIN music_album on music_album.album_id=r_track.album_id
+    JOIN genre ON genre.genre_id=r_track.genre_id;
 
 ### photos
 
