@@ -26,11 +26,11 @@ function connect_to_db()
     return $mysqli;
 }
 
-function insert_row($table, $kv_pair)
+function insert_row($table, $data)
 {
     $db = connect_to_db();
 
-    $k = array_keys($kv_pair);
+    $k = array_keys($data);
 
     $keys = "";
     $values = "";
@@ -39,11 +39,11 @@ function insert_row($table, $kv_pair)
     {
         $key = $k[$i];
         $keys .= $db->escape_string($key) . ",";
-        $values .= "'" . $db->escape_string($kv_pair[$key]) . "',";
+        $values .= "'" . $db->escape_string($data[$key]) . "',";
     }
     $key = $k[$i];
     $keys .= $db->escape_string($key);
-    $values .= "'" . $db->escape_string($kv_pair[$key]) . "'";
+    $values .= "'" . $db->escape_string($data[$key]) . "'";
 
     $query = "INSERT INTO " . $db->escape_string($table)
         . "(" . $keys . ")"
@@ -57,19 +57,19 @@ function insert_row($table, $kv_pair)
     return $res;
 }
 
-function update_row($table, $key, $value, $kv_pair)
+function update_row($table, $key, $value, $data)
 {
     $db = connect_to_db();
 
-    $k = array_keys($kv_pair);
+    $k = array_keys($data);
 
     for ($i = 0; $i < count($k) - 1; $i++)
     {
         $row .= $db->escape_string($k[$i]) . '='
-            . "'" . $db->escape_string($kv_pair[$k[$i]]) . "',";
+            . "'" . $db->escape_string($data[$k[$i]]) . "',";
     }
     $row .= $db->escape_string($k[$i]) . '='
-        . "'" . $db->escape_string($kv_pair[$k[$i]]) . "'";
+        . "'" . $db->escape_string($data[$k[$i]]) . "'";
 
     $query = "UPDATE " . $db->escape_string($table) . " SET " . $row
         . " WHERE "
@@ -102,24 +102,24 @@ function delete_row($table, $key, $value)
 
 /* Count the number of rows returned by query
 */
-function count_rows($table, $kv_pair)
+function count_rows($table, $constraints)
 {
     $db = connect_to_db();
 
     $query = "SELECT * FROM " . $db->escape_string($table);
 
-    $k = array_keys($kv_pair);
+    $k = array_keys($constraints);
 
-    if (count($kv_pair) > 0)
+    if (count($constraints) > 0)
     {
         $query .= " WHERE ";
         for ($i = 0; $i < count($k) - 1; $i++)
         {
             $query .= $db->escape_string($k[$i]) . '='
-                . "'" . $db->escape_string($kv_pair[$k[$i]]) . "' AND ";
+                . "'" . $db->escape_string($constraints[$k[$i]]) . "' AND ";
         }
         $query .= $db->escape_string($k[$i]) . '='
-            . "'" . $db->escape_string($kv_pair[$k[$i]]) . "'";
+            . "'" . $db->escape_string($constraints[$k[$i]]) . "'";
     }
     $query .= ";";
 
