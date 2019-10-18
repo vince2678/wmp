@@ -204,8 +204,8 @@ $register_handlers = function ()
 
     $regexp =
     "^[/]*api[/]+"
-    . "(?<action>(force-scan|scan))[/]*"
-    . "(?<table>library)[/]+"
+    . "(?<action>(force-scan|scan))[/]+"
+    . "(?<table>library)[/]*"
     . "((?<column>(id|name))[/]*){0,1}"
     //. "((?<like>like)[/]+){0,1}"
     . "(?<value>[^/]*)"
