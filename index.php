@@ -16,6 +16,42 @@ include "api.php";
     </head>
 
     <body>
+        <div id='left_nav' class='nav'>
+            <div id='media_groups'>
+                <p class='title'>Media</p>
+                <div id='listing'></div>
+            </div>
+            <div id='libraries'>
+                <p class='title'>Libraries</p>
+                <div id='listing'></div>
+            </div>
+            <div id='playlists'>
+                <p class='title'>Playlists</p>
+                <div id='listing'></div>
+            </div>
+        </div>
+
+        <div id='top_nav' class='sidenav'>
+            <a href="javascript:void(0)" class="leftnavbtn"></a>
+            <div id='search'>
+                <p class='placeholder'>Search</p>
+            </div>
+            <div id='user_area'>
+                <p class='placeholder'>User area</p>
+            </div>
+        </div>
+
+        <div id='content'>
+        </div>
+
+        <div id='media_player' class='nav'>
+            <div id='content_preview'>
+                <p class='placeholder'>Media preview</p>
+            </div>
+            <div id='media_controls'>
+                <p class='placeholder'>Media controls</p>
+            </div>
+        </div>
     </body>
 
 </html>
