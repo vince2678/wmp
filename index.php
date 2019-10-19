@@ -14,6 +14,7 @@ include "api.php";
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
         <link rel='stylesheet' href='css/theme/dark/default.css'>
+        <script src='js/ajax.js'></script>
         <script src='js/interface.js' type='module'></script>
     </head>
 
