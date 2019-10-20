@@ -100,6 +100,13 @@ function populateMediaLibraries(libraryJSON)
         types.add(library['type']);
     }
 
+    let entry = document.createElement('span');
+
+    entry.setAttribute('id', 'add_library');
+    entry.innerHTML = "&plus; Add Library";
+
+    libraryListing.appendChild(entry);
+
     for (let type of types)
     {
         let entry = document.createElement('span');
@@ -127,6 +134,13 @@ function populatePlaylists(playlistJSON)
 
         playlistListing.appendChild(entry);
     }
+
+    let entry = document.createElement('span');
+
+    entry.setAttribute('id', 'add_playlist');
+    entry.innerHTML = "&plus; Add playlist";
+
+    playlistListing.appendChild(entry);
 }
 
 (function()
