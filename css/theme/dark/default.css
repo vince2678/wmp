@@ -68,8 +68,9 @@ body {
     left: 0;
 }
 
-#left_nav div {
-    padding: 10px 10px;
+#left_nav div p {
+    padding-top: 2px;
+    padding-left: 10px;
     /*text-align: center;*/
 }
 
