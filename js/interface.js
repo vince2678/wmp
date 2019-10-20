@@ -116,6 +116,11 @@ function populateMediaLibraries(libraryJSON)
 
         mediaListing.appendChild(entry);
     }
+
+    /* hide media section in left nav */
+    if (mediaListing.childElementCount == 0)
+        mediaListing.parentElement.hidden = true;
+
 }
 
 /* populate the playlist sections */
