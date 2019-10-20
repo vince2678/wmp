@@ -19,7 +19,7 @@ include "api.php";
     </head>
 
     <body>
-        <div id='left_nav' class='nav'>
+        <div id='left_nav' class='sidenav'>
             <div id='media_groups'>
                 <p class='title'>Media</p>
                 <div id='listing'></div>
@@ -34,7 +34,7 @@ include "api.php";
             </div>
         </div>
 
-        <div id='top_nav' class='sidenav'>
+        <div id='top_nav' class='nav'>
             <a href="javascript:void(0)" class="leftnavbtn"></a>
             <div id='search'>
                 <p class='placeholder'>Search</p>

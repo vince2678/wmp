@@ -30,7 +30,6 @@ body {
 #top_nav {
     z-index: 1; /* Stay on top */
     background-color: var(--nav-bg-color);
-    overflow-y: hidden; /* Disable vertical scroll */
     top: 0;
     left: 0;
 }
