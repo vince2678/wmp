@@ -78,6 +78,57 @@ function resizeElems()
 
 }
 
+/* populate the media and library sections */
+function populateMediaLibraries(libraryJSON)
+{
+    var libraryListing = document.querySelector('#left_nav #libraries #listing');
+    var mediaListing = document.querySelector('#left_nav #media_groups #listing');
+
+    var types = new Set();
+
+    var libraries = JSON.parse(libraryJSON);
+
+    for (let library of libraries)
+    {
+        let entry = document.createElement('span');
+
+        entry.setAttribute('class', 'library');
+        entry.innerHTML = library['name'];
+
+        libraryListing.appendChild(entry);
+
+        types.add(library['type']);
+    }
+
+    for (let type of types)
+    {
+        let entry = document.createElement('span');
+
+        entry.setAttribute('class', 'media');
+        entry.innerHTML = type;
+
+        mediaListing.appendChild(entry);
+    }
+}
+
+/* populate the playlist sections */
+function populatePlaylists(playlistJSON)
+{
+    var playlistListing = document.querySelector('#left_nav #playlists #listing');
+
+    var playlists = JSON.parse(playlistJSON);
+
+    for(let playlist of playlists)
+    {
+        let entry = document.createElement('span');
+
+        entry.setAttribute('class', 'playlist');
+        entry.innerHTML = playlist['name'];
+
+        playlistListing.appendChild(entry);
+    }
+}
+
 (function()
 {
     if (isMobile())
@@ -86,5 +137,8 @@ function resizeElems()
         openLeftNav();
 
     window.onresize = resizeElems;
+
+    asyncGetUrlResponse("api/get/row/library", populateMediaLibraries);
+    asyncGetUrlResponse("api/get/row/playlist", populatePlaylists);
 
 })();
