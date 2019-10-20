@@ -13,7 +13,10 @@ include "api.php";
         <meta charset="utf8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <link rel='stylesheet' href='css/theme/dark/default.css'>
+        <?php $css = "css/theme/dark/default.css"?>
+        <?php $basedir = dirname($_SERVER['SCRIPT_FILENAME']) ?>
+        <?php $mtime = filemtime($basedir . '/' . $css)?> 
+        <link rel='stylesheet' href='<?php echo $css . "?" . $mtime?>'>
         <script src='js/ajax.js'></script>
         <script src='js/interface.js' type='module'></script>
     </head>
