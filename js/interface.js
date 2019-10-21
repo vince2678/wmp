@@ -292,7 +292,7 @@ function getVideoContent(ids)
 
 function getPhotoContent(ids)
 {
-    console.log("getPhotoContent: Unimplemented");
+    return getPhotoList(ids);
 }
 
 function getMusicList(media_ids)
@@ -449,6 +449,88 @@ function getVideoList(media_ids)
                 }
                 else
                     data.innerHTML = video[column];
+            }
+            row.appendChild(data);
+        }
+        media_table.appendChild(row);
+    }
+
+    /* return table only if there are tracks to list */
+    if (media_table.childElementCount > 1)
+        return media_table;
+
+    media_table.remove();
+    return null;
+}
+
+function getPhotoList(media_ids)
+{
+    var photo_json = syncGetUrlResponse("api/get/row/photo");
+    var photos = JSON.parse(photo_json);
+
+    var column_map = {
+                   'title': 'Title',
+                   'album': 'Album',
+                };
+
+    var columns = ['title', 'album'];
+
+    var media_table = document.createElement('table');
+    var header = document.createElement('tr');
+
+    media_table.setAttribute('class', 'content_table');
+    header.setAttribute('class', 'content_table_header');
+
+    media_table.appendChild(header);
+
+    /* play button */
+    let heading = document.createElement('th');
+    header.appendChild(heading);
+
+    for (let column of columns)
+    {
+        let heading = document.createElement('th');
+        heading.innerHTML = column_map[column];
+        header.appendChild(heading);
+    }
+
+    for (let photo of photos)
+    {
+        if (!media_ids.has(photo["media_id"]))
+            continue;
+
+        let row = document.createElement('tr');
+        row.setAttribute('class', 'content_table_row');
+
+        /* play button */
+        let link = document.createElement('a');
+        link.innerHTML = 'Play';
+        link.setAttribute('href', 'javascript:void(0)');
+
+        link.onclick = function(){
+            playMedia(photo['media_id']);
+        };
+
+        row.appendChild(link);
+
+        for (let column of columns)
+        {
+            let data = document.createElement('td');
+
+            if (photo[column] != null)
+            {
+                if (column == "album")
+                {
+                    if (!photo['album_id'])
+                        continue;
+
+                    let album_json = syncGetUrlResponse("api/get/row/photo_album/id/" + photo['album_id']);
+                    let album = JSON.parse(album_json);
+
+                    data.innerHTML = formatTime(album['name']);
+                }
+                else
+                    data.innerHTML = photo[column];
             }
             row.appendChild(data);
         }
