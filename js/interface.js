@@ -679,9 +679,9 @@ function playMedia(media_id)
     else
         openLeftNav();
 
-    media_overlay = document.querySelector('#media_overlay');
+    var close_overlay = document.querySelector('#media_overlay .closebtn');
 
-    media_overlay.onclick = hideMediaOverlay;
+    close_overlay.onclick = hideMediaOverlay;
 
     window.onresize = resizeElems;
 
