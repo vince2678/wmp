@@ -61,6 +61,8 @@ function resizeElems()
     var media_overlay = document.querySelector('#media_overlay');
     var overlay_close = document.querySelector('#media_overlay #media_close');
 
+    var media_element = document.querySelector('.media_element');
+
     top_nav.style.height = TOP_NAV_HEIGHT;
     media_player.style.height = MEDIA_PLAYER_HEIGHT;
 
@@ -88,6 +90,12 @@ function resizeElems()
     media_overlay.style.left = media_content.style.left;
     media_overlay.style.height = media_content.style.height;
     media_overlay.style.width = media_content.style.width;
+
+    if (media_element)
+    {
+        media_element.style.width = media_overlay.style.width;
+        media_element.style.height = media_overlay.style.height;
+    }
 
     overlay_close.style.top = top_nav.style.height;
     overlay_close.style.right = 0;
@@ -662,6 +670,9 @@ function playMedia(media_id)
 
     media_element.setAttribute('class', 'media_element');
     media_element.setAttribute('id', element + '_element');
+
+    media_element.style.width = media_overlay.style.width;
+    media_element.style.height = media_overlay.style.height;
 
     media_element.controls = true;
     media_element.autoplay = true;
