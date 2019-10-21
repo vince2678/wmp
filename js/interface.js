@@ -381,6 +381,56 @@ function getMusicList(media_ids)
     return null;
 }
 
+function playMedia(media_id)
+{
+    var media_json = syncGetUrlResponse("api/get/row/media/id/" + media_id);
+    var media = JSON.parse(media_json);
+
+    var element;
+
+    switch (media[0]['library_type'])
+    {
+        case "music":
+        {
+            element = 'audio';
+            break;
+        }
+        case "video":
+        {
+            element = 'video';
+        }
+        case "photo":
+        {
+            //TODO: Implement this
+        }
+        default:
+        {
+            console.log("Unimplemented support for type");
+            return;
+        }
+    }
+
+    var media_controls = document.querySelector('#media_controls');
+
+    clearChildren(media_controls);
+
+    var media_element = document.createElement(element);
+    var media_src = document.createElement('source');
+
+    media_element.setAttribute('id', element + '_controls');
+    media_element.controls = true;
+    media_element.autoplay = true;
+
+    media_element.onratechange = function() {
+        console.log('The playback rate changed.');
+    };
+
+    media_element.appendChild(media_src);
+    media_controls.appendChild(media_element);
+
+    media_src.setAttribute('src', 'api/get/raw/media/id/' + media_id);
+}
+
 (function()
 {
     if (isMobile())
