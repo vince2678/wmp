@@ -16,6 +16,7 @@ include "api.php";
         <?php $css = "css/theme/dark/default.css"?>
         <?php $basedir = dirname($_SERVER['SCRIPT_FILENAME']) ?>
         <?php $mtime = filemtime($basedir . '/' . $css)?> 
+        <link href="https://fonts.googleapis.com/css?family=Ubuntu&display=swap" rel="stylesheet">
         <link rel='stylesheet' href='<?php echo $css . "?" . $mtime?>'>
         <script src='js/misc.js'></script>
         <script src='js/ajax.js'></script>
