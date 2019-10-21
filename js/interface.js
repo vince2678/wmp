@@ -299,7 +299,7 @@ function getMusicContent(media_ids)
 
 function getVideoContent(ids)
 {
-    console.log("getVideoContent: Unimplemented");
+    return getVideoList(ids);
 }
 
 function getPhotoContent(ids)
@@ -372,6 +372,95 @@ function getMusicList(media_ids)
                     data.innerHTML = formatTime(track[column]);
                 else
                     data.innerHTML = track[column];
+            }
+            row.appendChild(data);
+        }
+        media_table.appendChild(row);
+    }
+
+    /* return table only if there are tracks to list */
+    if (media_table.childElementCount > 1)
+        return media_table;
+
+    media_table.remove();
+    return null;
+}
+
+function getVideoList(media_ids)
+{
+    var video_json = syncGetUrlResponse("api/get/row/video");
+    var videos = JSON.parse(video_json);
+
+    var column_map = {
+                   'title': 'Title',
+                   'genre': 'Genre',
+                   'play_count': 'Play Count',
+                   'duration': 'Length'
+                };
+
+    var columns = ['title', 'genre', 'play_count', 'duration'];
+
+    var media_table = document.createElement('table');
+    var header = document.createElement('tr');
+
+    media_table.setAttribute('class', 'content_table');
+    header.setAttribute('class', 'content_table_header');
+
+    media_table.appendChild(header);
+
+    /* play button */
+    let heading = document.createElement('th');
+    header.appendChild(heading);
+
+    for (let column of columns)
+    {
+        let heading = document.createElement('th');
+        heading.innerHTML = column_map[column];
+        header.appendChild(heading);
+    }
+
+    for (let video of videos)
+    {
+        if (!media_ids.has(video["media_id"]))
+            continue;
+
+        let row = document.createElement('tr');
+        row.setAttribute('class', 'content_table_row');
+
+        /* play button */
+        let link = document.createElement('a');
+        link.innerHTML = 'Play';
+        link.setAttribute('href', 'javascript:void(0)');
+
+        link.onclick = function(){
+            playMedia(video['media_id']);
+        };
+
+        row.appendChild(link);
+
+        for (let column of columns)
+        {
+            let data = document.createElement('td');
+
+            if (video[column] != null)
+            {
+
+                if (column == "duration")
+                {
+                    data.innerHTML = formatTime(video[column]);
+                }
+                else if (column == "genre")
+                {
+                    if (!video['genre_id'])
+                        continue;
+
+                    let genre_json = syncGetUrlResponse("api/get/row/genre/id/" + video['genre_id']);
+                    let genre = JSON.parse(genre_json);
+
+                    data.innerHTML = formatTime(genre['name']);
+                }
+                else
+                    data.innerHTML = video[column];
             }
             row.appendChild(data);
         }
