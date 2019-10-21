@@ -48,6 +48,8 @@ body {
 
 #top_nav .leftnavbtn {
     text-decoration: none;
+    border: none;
+    background-color: transparent;
     color: var(--left-nav-btn-color);
     font-size: 40px;
     top: 0;
@@ -120,6 +122,8 @@ body {
 
 #media_overlay .closebtn {
     text-decoration: none;
+    border: none;
+    background-color: transparent;
     color: var(--left-nav-btn-color);
     position: fixed;
     font-size: 40px;

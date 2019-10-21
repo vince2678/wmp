@@ -38,7 +38,7 @@ include "theme.php";
         </div>
 
         <div id='top_nav' class='nav'>
-            <a href="javascript:void(0)" class="leftnavbtn"></a>
+            <button class="leftnavbtn"></button>
             <div id='search'>
                 <p class='placeholder'>Search</p>
             </div>
@@ -51,7 +51,7 @@ include "theme.php";
         </div>
 
         <div id='media_overlay' hidden='true'>
-            <a href="javascript:void(0)" class="closebtn">&times;</a>
+            <button class="closebtn">&times;</button>
         </div>
 
         <div id='media_player' class='nav'>
