@@ -17,6 +17,7 @@ include "api.php";
         <?php $basedir = dirname($_SERVER['SCRIPT_FILENAME']) ?>
         <?php $mtime = filemtime($basedir . '/' . $css)?> 
         <link rel='stylesheet' href='<?php echo $css . "?" . $mtime?>'>
+        <script src='js/misc.js'></script>
         <script src='js/ajax.js'></script>
         <script src='js/interface.js' type='module'></script>
     </head>
