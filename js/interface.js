@@ -542,6 +542,7 @@ function playMedia(media_id)
         case "video":
         {
             element = 'video';
+            break;
         }
         case "photo":
         {
