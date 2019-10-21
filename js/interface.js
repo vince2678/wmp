@@ -8,18 +8,6 @@ const TOP_NAV_HEIGHT = '50px';
 const MEDIA_PLAYER_HEIGHT = '72px';
 const SEEK_BAR_HEIGHT = '10px';
 
-function isMobile()
-{
-    var mobile = false;
-
-    if (window.innerWidth < window.innerHeight)
-        mobile = true;
-    else if (window.innerWidth < 1024)
-        mobile = true;
-
-    return mobile;
-}
-
 function openLeftNav()
 {
     var nav = document.querySelector('#left_nav');

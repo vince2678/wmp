@@ -34,3 +34,15 @@ function formatTime(seconds)
 
     return ret;
 }
+
+function isMobile()
+{
+    var mobile = false;
+
+    if (window.innerWidth < window.innerHeight)
+        mobile = true;
+    else if (window.innerWidth < 1024)
+        mobile = true;
+
+    return mobile;
+}
