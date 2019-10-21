@@ -4,6 +4,7 @@ include "cfg.php";
 include "db.php";
 include "cookies.php";
 include "api.php";
+include "theme.php";
 ?>
 
 <!DOCTYPE html>
@@ -13,11 +14,8 @@ include "api.php";
         <meta charset="utf8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <?php $css = "css/theme/dark/default.css"?>
-        <?php $basedir = dirname($_SERVER['SCRIPT_FILENAME']) ?>
-        <?php $mtime = filemtime($basedir . '/' . $css)?> 
-        <link href="https://fonts.googleapis.com/css?family=Ubuntu&display=swap" rel="stylesheet">
-        <link rel='stylesheet' href='<?php echo $css . "?" . $mtime?>'>
+        <?php import_font('Ubuntu') ?> 
+        <?php import_theme() ?>
         <script src='js/misc.js'></script>
         <script src='js/ajax.js'></script>
         <script src='js/interface.js' type='module'></script>
