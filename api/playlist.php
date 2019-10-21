@@ -55,4 +55,90 @@ function remove_playlist_media($playlist_id, $media_id)
     return delete_row("playlist_media", $constraints);
 }
 
+function playlist_url_handler($data)
+{
+
+    $constraint = array();
+
+    switch($data['column'])
+    {
+        case 'id':
+        {
+            if (isset($data['value']) && ("" !== $data['value']))
+            {
+                $constraint = array(
+                    "playlist_id" => $data['value'],
+                );
+            }
+            break;
+        }
+        case null:
+            break;
+        default:
+        {
+            echo "Invalid column specified\n";
+            die();
+        }
+    }
+
+    switch($data['type'])
+    {
+        case 'row':
+        case 'rows':
+        {
+            if ($data['action'] == "get")
+            {
+                $rows = get_rows($data['table'], $constraint);
+                break;
+            }
+        }
+        case null:
+        default:
+        {
+            echo "Invalid request specified\n";
+            die();
+        }
+    }
+
+    if (isset($rows))
+    {
+        $encoded = json_encode($rows, JSON_INVALID_UTF8_SUBSTITUTE);
+
+        if (false != $encoded)
+        {
+            header("Content-Type: application/json");
+            echo $encoded;
+        }
+        else
+        {
+            echo "Could not display data\n";
+        }
+        die();
+    }
+}
+
+$register_handlers = function ()
+{
+    // make sure to order regexp conditions with precedence
+    // to avoid greedy matching, e.g photo_album|photo instead of photo|photo_album
+
+    $regexp =
+    "^[/]*api[/]+"
+    . "(?<action>(get))[/]+"
+    . "(?<type>row([s]{0,1}))[/]*"
+    . "(?<table>(playlist_media|playlist))[/]*"
+    . "((?<column>(id))[/]*){0,1}"
+    //. "((?<like>like)[/]+){0,1}"
+    . "(?<value>[^/]*)"
+    . "$";
+
+    $func = "playlist_url_handler";
+
+    register_api_url_handler($regexp, $func);
+
+};
+
+$register_handlers();
+
+
 ?>

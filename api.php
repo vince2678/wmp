@@ -169,7 +169,7 @@ $register_handlers = function ()
     "^[/]*api[/]+"
     . "(?<action>(get|delete))[/]+"
     . "(?<type>row([s]{0,1}))[/]*"
-    . "(?<table>(genre|library|artist|playlist|track|"
+    . "(?<table>(genre|library|artist|track|"
      . "music_album|photo_album|photo|video|media))[/]*"
     . "((?<column>(id|title|name))[/]*){0,1}"
     //. "((?<like>like)[/]+){0,1}"
