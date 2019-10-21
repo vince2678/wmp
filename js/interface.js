@@ -647,9 +647,15 @@ function playMedia(media_id)
         }
     }
 
-    var media_controls = document.querySelector('#media_controls');
+    var media_overlay = document.querySelector('#media_overlay');
 
-    clearChildren(media_controls);
+    showMediaOverlay();
+
+    for (let child of media_overlay.children)
+    {
+        if (child.className != 'overlay_controls')
+            media_overlay.removeChild(child);
+    }
 
     var media_element = document.createElement(element);
     var media_src = document.createElement('source');
@@ -669,7 +675,7 @@ function playMedia(media_id)
     };
 
     media_element.appendChild(media_src);
-    media_controls.appendChild(media_element);
+    media_overlay.appendChild(media_element);
 
     media_src.setAttribute('src', 'api/get/raw/media/id/' + media_id);
 }
