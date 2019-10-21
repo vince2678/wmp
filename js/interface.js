@@ -6,6 +6,7 @@ const MEDIA_PLAYER_WIDTH = '100%';
 
 const TOP_NAV_HEIGHT = '50px';
 const MEDIA_PLAYER_HEIGHT = '72px';
+const SEEK_BAR_HEIGHT = '10px';
 
 function isMobile()
 {
@@ -55,6 +56,7 @@ function resizeElems()
     var top_nav = document.querySelector('#top_nav');
     var media_player = document.querySelector('#media_player');
     var media_content = document.querySelector('#content');
+    var seek_bar = document.querySelector('#seek_bar');
 
     top_nav.style.height = TOP_NAV_HEIGHT;
     media_player.style.height = MEDIA_PLAYER_HEIGHT;
@@ -66,6 +68,9 @@ function resizeElems()
 
     top_nav.style.width = TOP_NAV_WIDTH;
     media_player.style.width = MEDIA_PLAYER_WIDTH;
+
+    seek_bar.style.width = media_player.style.width;
+    seek_bar.style.height = SEEK_BAR_HEIGHT;
 
     left_nav.style.height = window.innerHeight 
         - parseInt(top_nav.style.height)
@@ -381,6 +386,56 @@ function getMusicList(media_ids)
     return null;
 }
 
+function updateSeekBar(currentTime, duration)
+{
+    if (duration < 1)
+        return;
+
+    function pcToPx(size, max)
+    {
+        let pcRegexp = /^[0-9]{1,3}%$/;
+        let pxRegexp = /^[0-9]*px$/;
+
+        if (pxRegexp.exec(size))
+        {
+            return parseInt(size);
+        }
+        else if (pcRegexp.exec(size))
+        {
+            return (parseInt(size) / 100.0) * max;
+        }
+        else
+            return parseInt(size);
+    }
+
+    const seek_bar = document.querySelector('#seek_bar');
+
+    clearChildren(seek_bar);
+
+    var canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+
+    seek_bar.appendChild(canvas);
+
+    canvas.width = pcToPx(seek_bar.style.width, window.innerWidth);
+    canvas.height = pcToPx(seek_bar.style.height, window.innerWidth);
+
+    const percent_done = (currentTime/duration);
+    const width = parseInt(canvas.width  * percent_done);
+
+    ctx.lineWidth = canvas.height;
+    ctx.strokeStyle = 'red';
+    ctx.lineCap = 'round';
+
+    const x = 0;
+    const y = 0;
+
+    ctx.moveTo(x, y);
+    ctx.lineTo(x + width, y);
+    ctx.closePath();
+    ctx.stroke();
+}
+
 function playMedia(media_id)
 {
     var media_json = syncGetUrlResponse("api/get/row/media/id/" + media_id);
@@ -420,6 +475,10 @@ function playMedia(media_id)
     media_element.setAttribute('id', element + '_controls');
     media_element.controls = true;
     media_element.autoplay = true;
+
+    media_element.ontimeupdate = function () {
+        updateSeekBar(media_element.currentTime, media_element.duration);
+    };
 
     media_element.onratechange = function() {
         console.log('The playback rate changed.');

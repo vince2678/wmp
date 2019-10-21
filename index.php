@@ -55,6 +55,8 @@ include "api.php";
             <div id='content_preview'>
                 <p class='placeholder'>Media preview</p>
             </div>
+            <div id='seek_bar'>
+            </div>
             <div id='media_controls'>
                 <p class='placeholder'>Media controls</p>
             </div>
