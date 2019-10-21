@@ -52,6 +52,10 @@ include "api.php";
         <div id='content'>
         </div>
 
+        <div id='media_overlay' hidden='true'>
+            <a href="javascript:void(0)" class="closebtn">&times;</a>
+        </div>
+
         <div id='media_player' class='nav'>
             <div id='content_preview'>
                 <p class='placeholder'>Media preview</p>

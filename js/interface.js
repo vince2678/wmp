@@ -38,6 +38,18 @@ function closeLeftNav()
     resizeElems();
 }
 
+function showMediaOverlay()
+{
+    var overlay = document.querySelector('#media_overlay');
+    overlay.hidden = false;
+}
+
+function hideMediaOverlay()
+{
+    var overlay = document.querySelector('#media_overlay');
+    overlay.hidden = true;
+}
+
 function resizeElems()
 {
     var left_nav = document.querySelector('#left_nav');
@@ -45,6 +57,9 @@ function resizeElems()
     var media_player = document.querySelector('#media_player');
     var media_content = document.querySelector('#content');
     var seek_bar = document.querySelector('#seek_bar');
+
+    var media_overlay = document.querySelector('#media_overlay');
+    var overlay_close = document.querySelector('#media_overlay .closebtn');
 
     top_nav.style.height = TOP_NAV_HEIGHT;
     media_player.style.height = MEDIA_PLAYER_HEIGHT;
@@ -69,6 +84,13 @@ function resizeElems()
 
     media_content.style.height = left_nav.style.height;
 
+    media_overlay.style.top = media_content.style.top;
+    media_overlay.style.left = media_content.style.left;
+    media_overlay.style.height = media_content.style.height;
+    media_overlay.style.width = media_content.style.width;
+
+    overlay_close.style.top = top_nav.style.height;
+    overlay_close.style.right = 0;
 }
 
 /* populate the media and library sections */
@@ -656,6 +678,10 @@ function playMedia(media_id)
         closeLeftNav();
     else
         openLeftNav();
+
+    media_overlay = document.querySelector('#media_overlay');
+
+    media_overlay.onclick = hideMediaOverlay;
 
     window.onresize = resizeElems;
 
