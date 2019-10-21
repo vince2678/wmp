@@ -63,7 +63,13 @@ include "api.php";
             <div id='seek_bar'>
             </div>
             <div id='media_controls'>
-                <p class='placeholder'>Media controls</p>
+                <button id="media_previous">Previous</button>
+                <button id="media_play_pause">Play/Pause</button>
+                <button id="media_next">Next</button>
+                <button id="media_mute">Mute</button>
+                <button id="media_size_large">Big</button>
+                <button id="media_size_small">Small</button>
+                <button id="media_size_normal">Normal</button>
             </div>
         </div>
     </body>
