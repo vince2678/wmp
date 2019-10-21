@@ -120,7 +120,7 @@ body {
     background-color: var(--overlay-color);
 }
 
-#media_overlay .closebtn {
+#media_overlay .overlay_controls {
     text-decoration: none;
     border: none;
     background-color: transparent;
