@@ -289,7 +289,7 @@ function populateContentArea(group, value)
 
 function getMusicContent(media_ids)
 {
-    console.log("getMusicContent: Unimplemented");
+    return getMusicList(media_ids);
 }
 
 function getVideoContent(ids)
@@ -300,6 +300,85 @@ function getVideoContent(ids)
 function getPhotoContent(ids)
 {
     console.log("getPhotoContent: Unimplemented");
+}
+
+function getMusicList(media_ids)
+{
+    var music_json = syncGetUrlResponse("api/get/row/track");
+    var music = JSON.parse(music_json);
+
+    var column_map = {
+                   'title': 'Title',
+                   'artist': 'Artist',
+                   'album_artist': 'Album&nbsp;Artist',
+                   'album': 'Album',
+                   'genre': 'Genre',
+                   'play_count': 'Play Count',
+                   'duration': 'Length'
+                };
+
+    var columns = ['title', 'artist', 'album_artist', 'album', 'genre', 'duration'];
+
+    var media_table = document.createElement('table');
+    var header = document.createElement('tr');
+
+    media_table.setAttribute('class', 'content_table');
+    header.setAttribute('class', 'content_table_header');
+
+    media_table.appendChild(header);
+
+    /* play button */
+    let heading = document.createElement('th');
+    header.appendChild(heading);
+
+    for (let column of columns)
+    {
+        let heading = document.createElement('th');
+        heading.innerHTML = column_map[column];
+        header.appendChild(heading);
+    }
+
+    for (let track of music)
+    {
+        if (!media_ids.has(track["media_id"]))
+            continue;
+
+        let row = document.createElement('tr');
+        row.setAttribute('class', 'content_table_row');
+
+        /* play button */
+        let link = document.createElement('a');
+        link.innerHTML = 'Play';
+        link.setAttribute('href', 'javascript:void(0)');
+
+        link.onclick = function(){
+            playMedia(track['media_id']);
+        };
+
+        row.appendChild(link);
+
+        for (let column of columns)
+        {
+            let data = document.createElement('td');
+
+            if (track[column] != null)
+            {
+                if (column == "duration")
+                    data.innerHTML = formatTime(track[column]);
+                else
+                    data.innerHTML = track[column];
+            }
+            row.appendChild(data);
+        }
+        media_table.appendChild(row);
+    }
+
+    /* return table only if there are tracks to list */
+    if (media_table.childElementCount > 1)
+        return media_table;
+
+    media_table.remove();
+    return null;
 }
 
 (function()
