@@ -654,7 +654,9 @@ function playMedia(media_id)
     var media_element = document.createElement(element);
     var media_src = document.createElement('source');
 
-    media_element.setAttribute('id', element + '_controls');
+    media_element.setAttribute('class', 'media_element');
+    media_element.setAttribute('id', element + '_element');
+
     media_element.controls = true;
     media_element.autoplay = true;
 
