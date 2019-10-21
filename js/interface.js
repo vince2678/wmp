@@ -95,6 +95,10 @@ function populateMediaLibraries(libraryJSON)
         entry.setAttribute('class', 'library');
         entry.innerHTML = library['name'];
 
+        entry.onclick = function() {
+            populateContentArea('library', library['library_id']);
+        };
+
         libraryListing.appendChild(entry);
 
         types.add(library['type']);
@@ -113,6 +117,10 @@ function populateMediaLibraries(libraryJSON)
 
         entry.setAttribute('class', 'media');
         entry.innerHTML = type;
+
+        entry.onclick = function() {
+            populateContentArea('type', type);
+        };
 
         mediaListing.appendChild(entry);
     }
@@ -137,6 +145,10 @@ function populatePlaylists(playlistJSON)
         entry.setAttribute('class', 'playlist');
         entry.innerHTML = playlist['name'];
 
+        entry.onclick = function() {
+            populateContentArea('playlist', playlist['playlist_id']);
+        };
+
         playlistListing.appendChild(entry);
     }
 
@@ -146,6 +158,148 @@ function populatePlaylists(playlistJSON)
     entry.innerHTML = "&plus; Add playlist";
 
     playlistListing.appendChild(entry);
+}
+
+function populateContentArea(group, value)
+{
+
+    var media_json = syncGetUrlResponse("api/get/rows/media");
+    var media = JSON.parse(media_json);
+    var ids = new Set();
+
+    var type;
+
+    function filterMedia(constraint) {
+        for (let medium of media)
+        {
+            let match = true;
+
+            for (let key in constraint)
+            {
+                if (medium[key] != constraint[key])
+                {
+                    match = false;
+                    break;
+                }
+            }
+
+            if (match)
+                ids.add(medium['media_id']);
+        }
+    }
+
+    switch(group)
+    {
+        case 'playlist':
+        {
+            var playlist_json = syncGetUrlResponse("api/get/rows/playlist/id/" + value);
+            var playlist = JSON.parse(playlist_json);
+
+            if (playlist[0]['playlist_id'] !== undefined)
+                type = playlist[0]['type'];
+
+            var playlist_media_json = syncGetUrlResponse("api/get/rows/playlist_media/id/" + value);
+            var playlist_media = JSON.parse(playlist_media_json);
+
+            //TODO: Incorporate rank into table ordering
+            for (let playlist_item of playlist_media)
+            {
+                ids.add(playlist_item['media_id']);
+            }
+
+            break;
+        }
+        case 'library':
+        {
+            var library_json = syncGetUrlResponse("api/get/rows/library/id/" + value);
+            var library = JSON.parse(library_json);
+
+            if (library[0]['library_id'] !== undefined)
+                type = library[0]['type'];
+
+            filterMedia({'library_id':value});
+            break;
+        }
+        case 'type':
+        {
+            filterMedia({'library_type':value});
+            type = value;
+            break;
+        }
+        default:
+        {
+            console.log("Unknown group selected");
+            break;
+        }
+    }
+
+    var content_area = document.querySelector('#content');
+
+    clearChildren(content_area);
+
+    var content;
+
+    if (ids.size == 0)
+    {
+        //no matching media, no media in playlist/media group/library
+        content = document.createElement('p');
+        content.setAttribute('id', 'no_content_msg');
+
+        if (group == "playlist")
+        {
+            content.innerHTML = "This playlist is currently empty";
+        }
+        else
+        {
+            content.innerHTML = "It's lonely here. Add some files"
+                + " to the library to get started."
+        }
+    }
+    else
+    {
+        switch(type)
+        {
+            case 'music':
+            {
+                content = getMusicContent(ids);
+                break;
+            }
+            case 'video':
+            {
+                content = getVideoContent(ids);
+                break;
+            }
+            case 'photo':
+            {
+                content = getPhotoContent(ids);
+                break;
+            }
+            default:
+            {
+                console.log("Invalid type");
+                break;
+            }
+        }
+    }
+
+    if (content)
+        content_area.appendChild(content);
+
+}
+
+function getMusicContent(media_ids)
+{
+    console.log("getMusicContent: Unimplemented");
+}
+
+function getVideoContent(ids)
+{
+    console.log("getVideoContent: Unimplemented");
+}
+
+function getPhotoContent(ids)
+{
+    console.log("getPhotoContent: Unimplemented");
 }
 
 (function()
