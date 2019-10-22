@@ -131,6 +131,10 @@ body {
     padding-right: 5px;
 }
 
+#media_overlay {
+    background-color: rgb(0, 0 ,0);
+}
+
 #content #media_list {
     padding-top: 5px;
     padding-left: 5px;
