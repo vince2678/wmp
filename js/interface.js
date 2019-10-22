@@ -717,6 +717,10 @@ function playMedia(media_id)
         media_element.setAttribute('src', 'api/get/raw/media/id/' + media_id);
         media_element.style.width = '100%';
         media_element.style.height = '100%';
+
+        hideTopNav();
+        hideMediaNav();
+        closeLeftNav();
     }
     else
     {
@@ -744,7 +748,14 @@ function playMedia(media_id)
 
     var close_overlay = document.querySelector('#media_overlay #media_close');
 
-    close_overlay.onclick = hideMediaOverlay;
+    close_overlay.onclick = function() {
+        hideMediaOverlay();
+        showTopNav();
+        showMediaNav();
+
+        if (!isMobile())
+            openLeftNav();
+    }
 
     window.onresize = resizeElems;
 
