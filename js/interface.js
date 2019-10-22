@@ -91,7 +91,7 @@ function resizeElems()
     media_overlay.style.height = media_content.style.height;
     media_overlay.style.width = media_content.style.width;
 
-    if (media_element)
+    if (media_element && (media_element.id != "img_element"))
     {
         media_element.style.width = media_overlay.style.width;
         media_element.style.height = media_overlay.style.height;
@@ -646,7 +646,8 @@ function playMedia(media_id)
         }
         case "photo":
         {
-            //TODO: Implement this
+            element = 'img';
+            break;
         }
         default:
         {
@@ -666,13 +667,9 @@ function playMedia(media_id)
     }
 
     var media_element = document.createElement(element);
-    var media_src = document.createElement('source');
 
     media_element.setAttribute('class', 'media_element');
     media_element.setAttribute('id', element + '_element');
-
-    media_element.style.width = media_overlay.style.width;
-    media_element.style.height = media_overlay.style.height;
 
     media_element.controls = true;
     media_element.autoplay = true;
@@ -685,10 +682,25 @@ function playMedia(media_id)
         console.log('The playback rate changed.');
     };
 
-    media_element.appendChild(media_src);
+
+    if (element == 'img')
+    {
+        media_element.setAttribute('src', 'api/get/raw/media/id/' + media_id);
+        media_element.style.width = '100%';
+        media_element.style.height = '100%';
+    }
+    else
+    {
+        let media_src = document.createElement('source');
+        media_src.setAttribute('src', 'api/get/raw/media/id/' + media_id);
+        media_element.appendChild(media_src);
+
+        media_element.style.width = media_overlay.style.width;
+        media_element.style.height = media_overlay.style.height;
+    }
+
     media_overlay.appendChild(media_element);
 
-    media_src.setAttribute('src', 'api/get/raw/media/id/' + media_id);
 }
 
 (function()
