@@ -715,8 +715,6 @@ function playMedia(media_id)
     if (element == 'img')
     {
         media_element.setAttribute('src', 'api/get/raw/media/id/' + media_id);
-        media_element.style.width = '100%';
-        media_element.style.height = '100%';
 
         hideTopNav();
         hideMediaNav();
