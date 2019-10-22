@@ -688,6 +688,8 @@ function playMedia(media_id)
     var media_overlay = document.querySelector('#media_overlay');
 
     showMediaOverlay();
+    hideTopNav();
+    closeLeftNav();
 
     for (let child of media_overlay.children)
     {
@@ -711,14 +713,11 @@ function playMedia(media_id)
         console.log('The playback rate changed.');
     };
 
-
     if (element == 'img')
     {
         media_element.setAttribute('src', 'api/get/raw/media/id/' + media_id);
 
-        hideTopNav();
         hideMediaNav();
-        closeLeftNav();
     }
     else
     {
