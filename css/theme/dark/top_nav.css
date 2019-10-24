@@ -1,0 +1,45 @@
+:root {
+    --nav-bg-color: rgba(53, 53, 53, 0.952);
+
+    --left-nav-btn-color: rgba(255, 255, 255, 0.5);
+}
+
+/* top navigation / header area */
+#top_nav {
+    z-index: 1; /* Stay on top */
+    position: fixed; /* Stay in place */
+    overflow-x: hidden; /* Disable horizontal scroll */
+    overflow-y: hidden; /* Disable vertical scroll */
+    background-color: var(--nav-bg-color);
+    top: 0;
+    left: 0;
+}
+
+#top_nav .leftnavbtn {
+    text-decoration: none;
+    border: none;
+    background-color: transparent;
+    color: var(--left-nav-btn-color);
+    font-size: 40px;
+    top: 0;
+    left: 0;
+    padding-left: 5px;
+    padding-right: 5px;
+    position: fixed;
+}
+
+#top_nav #search {
+    position: fixed;
+    padding-top: 15px;
+    padding-right: 5px;
+    top: 0;
+    left: 40%;
+}
+
+#top_nav #user_area {
+    position: fixed;
+    padding-top: 15px;
+    padding-right: 10px;
+    top: 0;
+    right: 0;
+}

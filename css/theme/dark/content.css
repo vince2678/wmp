@@ -1,0 +1,70 @@
+:root {
+    --content-color: rgba(50, 50, 50, 0.678);
+
+    --table-bg-color: rgba(50, 50, 50, 0);
+    --table-border-color: rgba(194, 194, 194, 0.164);
+    --table-text-color: rgba(255, 255, 255, 0.781);
+    --table-text-hover-color: rgba(255, 255, 255, 0.95);
+    --tr-even-bg-color: rgba(50, 50, 50, 0.068);
+    --tr-bg-hover-color: rgba(255, 255, 255, 0.246);
+
+    --table-font-size: 14px;
+}
+
+/* content / middle area */
+#content {
+    z-index: 1; /* Stay on top */
+    position: fixed;
+    background-color: var(--content-color);
+}
+
+#content #media_list {
+    padding-top: 5px;
+    padding-left: 5px;
+}
+
+.content_table {
+    width: 100%;
+    border-collapse: collapse;
+    border-top: 1px hidden;
+    border-left: 1px hidden;
+    border-right: 1px hidden;
+    border-bottom: 1px solid var(--table-border-color);
+    table-layout: auto;
+    font-size: var(--table-font-size);
+    color: var(--table-text-color);
+    text-align: left;
+}
+
+.content_table_header {
+    text-transform: uppercase;
+    font-weight: normal;
+}
+
+.content_table_header, .content_table_row {
+    background-color: var(--table-bg-color);
+    border: 1px solid var(--table-border-color);
+}
+
+.content_table_header th, .content_table_row td {
+    padding-top: 6px;
+    padding-bottom: 6px;
+}
+
+.content_table_row:nth-child(even) {
+    background-color: var(--tr-even-bg-color);
+}
+
+.content_table_row:hover {
+    background-color: var(--tr-bg-hover-color);
+    color: var(--table-text-hover-color);
+    border: 0px none;
+    transition: 0.3s;
+}
+
+.content_table_header th:hover {
+    font-weight: bold;
+    color: var(--table-text-hover-color);
+    transition: 0.3s;
+}
+/* END TABLE STUFF */

@@ -1,0 +1,40 @@
+:root {
+    --sidenav-bg-color: rgba(53, 53, 53, 0.863);
+
+    --left-nav-btn-color: rgba(255, 255, 255, 0.5);
+    --left-nav-hover-color: rgba(255, 255, 255, 0.308);
+}
+
+/* left navigation / side bar */
+#left_nav {
+    z-index: 2;
+    position: fixed; /* Stay in place */
+    overflow-x: hidden; /* Disable horizontal scroll */
+    background-color: var(--sidenav-bg-color);
+    left: 0;
+}
+
+#left_nav div p {
+    padding-top: 2px;
+    padding-left: 10px;
+    /*text-align: center;*/
+}
+
+#left_nav .title {
+    color: var(--left-nav-btn-color);
+    font-size: 14px;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+#left_nav div#listing span {
+    display: block;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 15px;
+}
+
+#left_nav div#listing span:hover {
+    background-color: var(--left-nav-hover-color);
+    transition: 0.2s;
+}
