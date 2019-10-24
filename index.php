@@ -51,7 +51,9 @@ include "theme.php";
         </div>
 
         <div id='media_overlay' hidden='true'>
-            <button id="media_close" class="overlay_controls">&times;</button>
+            <div id='media_overlay_controls' class="overlay_controls">
+                <button id="media_close" class="overlay_controls">&times;</button>
+            </div>
         </div>
 
         <div id='media_player' class='nav'>

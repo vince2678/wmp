@@ -91,7 +91,7 @@ function resizeElems()
     var seek_bar = document.querySelector('#seek_bar');
 
     var media_overlay = document.querySelector('#media_overlay');
-    var overlay_close = document.querySelector('#media_overlay #media_close');
+    var overlay_close = document.querySelector('#media_close');
 
     var media_element = document.querySelector('.media_element');
 
@@ -743,7 +743,7 @@ function playMedia(media_id)
     showTopNav();
     showMediaNav();
 
-    var close_overlay = document.querySelector('#media_overlay #media_close');
+    var close_overlay = document.querySelector('#media_close');
 
     close_overlay.onclick = function() {
         hideMediaOverlay();
