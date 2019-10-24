@@ -49,29 +49,6 @@ include "theme.php";
 
         <div id='content'>
         </div>
-
-        <div id='media_overlay' hidden='true'>
-            <div id='media_overlay_controls' class="overlay_controls">
-                <button id="media_close" class="overlay_controls">&times;</button>
-            </div>
-        </div>
-
-        <div id='media_player' class='nav'>
-            <div id='content_preview'>
-                <p class='placeholder'>Media preview</p>
-            </div>
-            <div id='seek_bar'>
-            </div>
-            <div id='media_controls'>
-                <button id="media_previous">Previous</button>
-                <button id="media_play_pause">Play/Pause</button>
-                <button id="media_next">Next</button>
-                <button id="media_mute">Mute</button>
-                <button id="media_size_large">Big</button>
-                <button id="media_size_small">Small</button>
-                <button id="media_size_normal">Normal</button>
-            </div>
-        </div>
     </body>
 
 </html>

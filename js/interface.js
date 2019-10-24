@@ -54,46 +54,12 @@ function hideTopNav()
     resizeElems();
 }
 
-function showMediaNav()
-{
-    var nav = document.querySelector('#media_player');
-    nav.style.height = MEDIA_PLAYER_HEIGHT;
-
-    resizeElems();
-}
-
-function hideMediaNav()
-{
-    var nav = document.querySelector('#media_player');
-    nav.style.height = '0px';
-
-    resizeElems();
-}
-
-function showMediaOverlay()
-{
-    var overlay = document.querySelector('#media_overlay');
-    overlay.hidden = false;
-}
-
-function hideMediaOverlay()
-{
-    var overlay = document.querySelector('#media_overlay');
-    overlay.hidden = true;
-}
-
 function resizeElems()
 {
     var left_nav = document.querySelector('#left_nav');
     var top_nav = document.querySelector('#top_nav');
-    var media_player = document.querySelector('#media_player');
+
     var media_content = document.querySelector('#content');
-    var seek_bar = document.querySelector('#seek_bar');
-
-    var media_overlay = document.querySelector('#media_overlay');
-    var overlay_close = document.querySelector('#media_close');
-
-    var media_element = document.querySelector('.media_element');
 
     left_nav.style.top = top_nav.style.height;
 
@@ -101,33 +67,14 @@ function resizeElems()
     media_content.style.left = left_nav.style.width;
 
     top_nav.style.width = TOP_NAV_WIDTH;
-    media_player.style.width = MEDIA_PLAYER_WIDTH;
-
-    seek_bar.style.width = media_player.style.width;
-    seek_bar.style.height = SEEK_BAR_HEIGHT;
 
     left_nav.style.height = window.innerHeight 
-        - parseInt(top_nav.style.height)
-        - parseInt(media_player.style.height) + 'px';
+        - parseInt(top_nav.style.height) + 'px';
 
     media_content.style.width = (window.innerWidth
         - parseInt(left_nav.style.width)) + 'px';
 
     media_content.style.height = left_nav.style.height;
-
-    media_overlay.style.top = media_content.style.top;
-    media_overlay.style.left = media_content.style.left;
-    media_overlay.style.height = media_content.style.height;
-    media_overlay.style.width = media_content.style.width;
-
-    if (media_element && (media_element.id != "img_element"))
-    {
-        media_element.style.width = media_overlay.style.width;
-        media_element.style.height = media_overlay.style.height;
-    }
-
-    overlay_close.style.top = top_nav.style.height;
-    overlay_close.style.right = 0;
 }
 
 /* populate the media and library sections */
@@ -684,53 +631,6 @@ function playMedia(media_id)
             return;
         }
     }
-
-    var media_overlay = document.querySelector('#media_overlay');
-
-    showMediaOverlay();
-    hideTopNav();
-    closeLeftNav();
-
-    for (let child of media_overlay.children)
-    {
-        if (child.className != 'overlay_controls')
-            media_overlay.removeChild(child);
-    }
-
-    var media_element = document.createElement(element);
-
-    media_element.setAttribute('class', 'media_element');
-    media_element.setAttribute('id', element + '_element');
-
-    media_element.controls = true;
-    media_element.autoplay = true;
-
-    media_element.ontimeupdate = function () {
-        updateSeekBar(media_element.currentTime, media_element.duration);
-    };
-
-    media_element.onratechange = function() {
-        console.log('The playback rate changed.');
-    };
-
-    if (element == 'img')
-    {
-        media_element.setAttribute('src', 'api/get/raw/media/id/' + media_id);
-
-        hideMediaNav();
-    }
-    else
-    {
-        let media_src = document.createElement('source');
-        media_src.setAttribute('src', 'api/get/raw/media/id/' + media_id);
-        media_element.appendChild(media_src);
-
-        media_element.style.width = media_overlay.style.width;
-        media_element.style.height = media_overlay.style.height;
-    }
-
-    media_overlay.appendChild(media_element);
-
 }
 
 (function()
@@ -741,18 +641,6 @@ function playMedia(media_id)
         openLeftNav();
 
     showTopNav();
-    showMediaNav();
-
-    var close_overlay = document.querySelector('#media_close');
-
-    close_overlay.onclick = function() {
-        hideMediaOverlay();
-        showTopNav();
-        showMediaNav();
-
-        if (!isMobile())
-            openLeftNav();
-    }
 
     window.onresize = resizeElems;
 
