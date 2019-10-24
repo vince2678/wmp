@@ -22,7 +22,7 @@ include "theme.php";
     </head>
 
     <body>
-        <div id='left_nav' class='sidenav'>
+        <div id='left_nav'>
             <div id='media_groups'>
                 <p class='title'>Media</p>
                 <div id='listing'></div>
@@ -37,7 +37,7 @@ include "theme.php";
             </div>
         </div>
 
-        <div id='top_nav' class='nav'>
+        <div id='top_nav'>
             <button class="leftnavbtn"></button>
             <div id='search'>
                 <p class='placeholder'>Search</p>

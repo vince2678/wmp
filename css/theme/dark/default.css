@@ -29,18 +29,12 @@ body {
     font-family: 'Ubuntu', sans-serif;
 }
 
-.sidenav, .nav {
-    position: fixed; /* Stay in place */
-    overflow-x: hidden; /* Disable horizontal scroll */
-}
-
-.nav {
-    overflow-y: hidden; /* Disable vertical scroll */
-}
-
 /* top navigation / header area */
 #top_nav {
     z-index: 1; /* Stay on top */
+    position: fixed; /* Stay in place */
+    overflow-x: hidden; /* Disable horizontal scroll */
+    overflow-y: hidden; /* Disable vertical scroll */
     background-color: var(--nav-bg-color);
     top: 0;
     left: 0;
@@ -78,6 +72,8 @@ body {
 /* left navigation / side bar */
 #left_nav {
     z-index: 2;
+    position: fixed; /* Stay in place */
+    overflow-x: hidden; /* Disable horizontal scroll */
     background-color: var(--sidenav-bg-color);
     left: 0;
 }
