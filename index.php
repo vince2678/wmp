@@ -38,7 +38,7 @@ include "theme.php";
         </div>
 
         <div id='top_nav'>
-            <button class="leftnavbtn"></button>
+            <button class="leftnavbtn">&times;</button>
             <div id='search'>
                 <p class='placeholder'>Search</p>
             </div>
