@@ -10,6 +10,16 @@ function syncGetUrlResponse(url)
     return response.responseText;
 }
 
+function syncGetUrlResponseHeader(url, header)
+{
+    var response = new XMLHttpRequest();
+
+    response.open('HEAD', url, false);
+    response.send();
+
+    return response.getResponseHeader(header);
+}
+
 function asyncGetUrlResponse(url, callback)
 {
     var response = new XMLHttpRequest();
