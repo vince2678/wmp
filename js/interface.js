@@ -821,6 +821,21 @@ function playMedia(media_id)
         let media_src = document.createElement('source');
         media_src.setAttribute('src', 'api/get/raw/media/id/' + media_id);
         media_element.appendChild(media_src);
+
+        if (element == 'audio')
+        {
+            // get album art;
+            let url = 'api/get/album_art/id/' + media_id;
+            let mime = syncGetUrlResponseHeader(url, 'Content-Type');
+
+            if (mime != "text/html")
+            {
+                let image = document.createElement('img');
+                image.setAttribute('src', url);
+                image.setAttribute('alt', 'Album art');
+                media_preview.appendChild(image);
+            }
+        }
     }
 
     media_preview.appendChild(media_element);
