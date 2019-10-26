@@ -15,7 +15,6 @@
     background-color: var(--sidenav-bg-color);
     top: var(--top-nav-height);
     width: var(--left-nav-width);
-    height: 100%;
     left: 0;
 }
 
