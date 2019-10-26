@@ -92,4 +92,138 @@ function add_music($media_id)
     return true;
 }
 
+function get_album_art($media_id)
+{
+    $meta = get_media_metadata($media_id)[$media_id];
+
+    $picture = $meta['comments']['picture'][0];
+
+    /* try for embedded art first */
+    if (isset($picture) AND isset($picture['data']))
+    {
+        header("Content-Type: " . $picture['image_mime']);
+        header("Content-Length: " . $picture['datalength']);
+
+        echo $picture['data'];
+        die();
+    }
+
+    /* look for media on disk in track directory */
+    if (null == ($row = get_row("media", array("media_id" => $media_id))))
+    {
+        echo "Failed to get media information";
+        die();
+    }
+
+    if (false == ($dh = opendir(dirname($row['full_path']))))
+    {
+        echo "Failed to open cover art directory";
+        die();
+    }
+
+    $regexp = '([aA][lL][bB][uU][mM]|'
+        . '[cC][oO][vV][eE][rR])\.[jJ][pP][eE]{0,1}[gG]$';
+
+    $cover_art_file = null;
+
+
+    while (false !== ($file = readdir($dh)))
+    {
+        if (1 == ($ret = preg_match("#$regexp#", $file, $matches)))
+        {
+            $cover_art_file = $file;
+            break;
+        }
+    }
+
+    if (null == $cover_art_file)
+    {
+        echo "Failed to find cover art";
+        die();
+    }
+
+    $art_path = dirname($row['full_path']) . "/" . $cover_art_file;
+
+    if (false == ($fh = fopen($art_path, "r")))
+    {
+        echo "Failed to open cover art";
+        die();
+    }
+
+    header("Content-Type: " . 'image/jpeg');
+    header("Content-Length: " . filesize($art_path));
+
+    $bs = 256;
+
+    while (!feof($fh))
+    {
+        $data = fread($fh, $bs);
+        echo $data;
+    }
+    die();
+}
+
+function music_url_handler($data)
+{
+
+    $constraint = array();
+
+    switch($data['column'])
+    {
+        case 'id':
+        {
+            if (isset($data['value']) && ("" !== $data['value']))
+            {
+                $constraint = array(
+                    "media_id" => $data['value'],
+                );
+            }
+            break;
+        }
+        case null:
+        {
+            echo "No id specified\n";
+            die();
+        }
+        default:
+        {
+            echo "Invalid column specified\n";
+            die();
+        }
+    }
+
+    switch($data['type'])
+    {
+        case 'album_art':
+        {
+            get_album_art($constraint['media_id']);
+        }
+        case null:
+        default:
+        {
+            echo "Invalid request specified\n";
+            die();
+        }
+    }
+}
+
+$register_handlers = function ()
+{
+    $regexp =
+    "^[/]*api[/]+"
+    . "(?<action>(get))[/]+"
+    . "(?<type>album_art)[/]*"
+    . "((?<column>(id))[/]*){0,1}"
+    //. "((?<like>like)[/]+){0,1}"
+    . "(?<value>[^/]*)"
+    . "$";
+
+    $func = "music_url_handler";
+
+    register_api_url_handler($regexp, $func);
+
+};
+
+$register_handlers();
+
 ?>
