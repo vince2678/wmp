@@ -305,14 +305,13 @@ function populatePlaylists(playlistJSON)
     playlistListing.appendChild(entry);
 }
 
-function populateContentArea(group, value)
+function getMediaQueue(group, value)
 {
-
     var media_json = syncGetUrlResponse("api/get/rows/media");
     var media = JSON.parse(media_json);
-    var ids = new Set();
 
-    var type;
+    var ids = new Set();
+    var type = null;
 
     function filterMedia(constraint) {
         for (let medium of media)
@@ -377,6 +376,16 @@ function populateContentArea(group, value)
             break;
         }
     }
+
+    return {'ids': ids, 'type': type};
+}
+
+function populateContentArea(group, value)
+{
+    var id_set_type = getMediaQueue(group, value);
+
+    var ids = id_set_type['ids'];
+    var type= id_set_type['type'];
 
     var content_area = document.querySelector('#content');
 
