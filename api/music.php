@@ -163,6 +163,97 @@ function get_album_art($media_id)
     die();
 }
 
+function get_album_art_metadata($media_id)
+{
+    header("Content-Type: application/json");
+
+    $meta = get_media_metadata($media_id)[$media_id];
+
+    $picture = $meta['comments']['picture'][0];
+
+    $data = array("status" => "failure");
+
+    /* try for embedded art first */
+    if (isset($picture) AND isset($picture['data']))
+    {
+        header("Content-Type: application/json");
+
+        $data["status"] = "success";
+
+        $data["mime"] = $picture["image_mime"];
+        $data["description"] = $picture["description"];
+        $data["type"] = $picture["picturetype"];
+        $data["width"] = $picture["image_width"];
+        $data["height"] = $picture["image_height"];
+        $data["length"] = $picture["datalength"];
+
+        echo json_encode($data);
+        die();
+    }
+
+    /* look for media on disk in track directory */
+    if (null == ($row = get_row("media", array("media_id" => $media_id))))
+    {
+        $data["message"] = "Failed to get media information";
+        echo json_encode($data);
+        die();
+    }
+
+    if (false == ($dh = opendir(dirname($row['full_path']))))
+    {
+        $data["message"] = "Failed to open cover art directory";
+        echo json_encode($data);
+        die();
+    }
+
+    $regexp = '([aA][lL][bB][uU][mM]|'
+        . '[cC][oO][vV][eE][rR])\.[jJ][pP][eE]{0,1}[gG]$';
+
+    $cover_art_file = null;
+
+
+    while (false !== ($file = readdir($dh)))
+    {
+        if (1 == ($ret = preg_match("#$regexp#", $file, $matches)))
+        {
+            $cover_art_file = $file;
+            break;
+        }
+    }
+
+    if (null == $cover_art_file)
+    {
+        $data["message"] = "Failed to find cover art";
+        echo json_encode($data);
+        die();
+    }
+
+    $art_path = dirname($row['full_path']) . "/" . $cover_art_file;
+
+    if (false == ($fh = fopen($art_path, "r")))
+    {
+        $data["message"] = "Failed to open cover art";
+        echo json_encode($data);
+        die();
+    }
+
+    $data["status"] = "success";
+    $data["mime"] = "image/jpeg";
+    $data["description"] = $matches[1]; //first part of regexp
+    $data["length"] = filesize($art_path);
+
+    $id3 = new getID3;
+
+    $meta = $id3->analyze($art_path);
+
+    $data["width"] = $meta["video"]["resolution_x"];
+    $data["height"] = $meta["video"]["resolution_y"];
+
+    echo json_encode($data);
+
+    die();
+}
+
 function music_url_handler($data)
 {
 
@@ -196,6 +287,9 @@ function music_url_handler($data)
     {
         case 'album_art':
         {
+            if (isset($data['section']))
+                get_album_art_metadata($constraint['media_id']);
+            else
             get_album_art($constraint['media_id']);
         }
         case null:
@@ -213,6 +307,7 @@ $register_handlers = function ()
     "^[/]*api[/]+"
     . "(?<action>(get))[/]+"
     . "(?<type>album_art)[/]*"
+    . "((?<section>(metadata))[/]*){0,1}"
     . "((?<column>(id))[/]*){0,1}"
     //. "((?<like>like)[/]+){0,1}"
     . "(?<value>[^/]*)"
