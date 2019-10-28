@@ -28,7 +28,7 @@ function asyncGetUrlResponse(url, callback)
 
     response.onreadystatechange = function()
     {
-        if (this.status == 200)
+        if (this.readyState == 4 && this.status == 200)
         {
             callback(this.responseText);
             this.onreadystatechange = null;
