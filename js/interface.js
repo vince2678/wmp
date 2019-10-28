@@ -156,8 +156,11 @@ function toggleMediaPlayerSize(target = undefined)
 
             break;
         }
-        case PLAYER_SIZE_NORMAL:
         case PLAYER_SIZE_HIDDEN:
+        {
+            stopMediaPlayback();
+        }
+        case PLAYER_SIZE_NORMAL:
         case PLAYER_SIZE_SMALL:
         {
             openLeftNav();
@@ -778,14 +781,9 @@ function playMedia(media_id)
         }
     }
 
+    stopMediaPlayback();
+
     var media_preview = document.querySelector('#media_player #content_preview');
-
-    for (let child of media_preview.children)
-    {
-        if (child.id != 'top_controls')
-            media_preview.removeChild(child);
-    }
-
     var media_element = document.createElement(element);
 
     media_element.setAttribute('class', 'media_element');
