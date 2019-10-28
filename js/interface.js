@@ -893,6 +893,42 @@ function stopMediaPlayback()
         toggleMediaPlayerSize();
     }
 
+    /* set up play button handler */
+    document.querySelector('#bottom_controls #media_play_pause').onclick = function() {
+        let media_element = document.querySelector('#content_preview .media_element');
+
+        if (media_element.paused)
+        {
+            if (media_element.play)
+            {
+                media_element.play();
+                this.innerHTML = "Pause";
+            }
+        }
+       else if (media_element.pause)
+        {
+            media_element.pause();
+                this.innerHTML = "Play";
+        }
+    }
+
+    /* set up mute button handler */
+    document.querySelector('#bottom_controls #media_mute').onclick = function() {
+        let media_element = document.querySelector('#content_preview .media_element');
+
+        if (media_element.muted)
+        {
+            media_element.muted = false;
+            this.innerHTML = "Mute";
+        }
+        else if (media_element.muted == false)
+        {
+            media_element.muted = true;
+            this.innerHTML = "Unmute";
+        }
+    }
+
+
     asyncGetUrlResponse("api/get/row/library", populateMediaLibraries);
     asyncGetUrlResponse("api/get/row/playlist", populatePlaylists);
 
