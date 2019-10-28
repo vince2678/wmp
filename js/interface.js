@@ -842,6 +842,38 @@ function playMedia(media_id)
 
 }
 
+function stopMediaPlayback()
+{
+    var media_preview = document.querySelector('#media_player #content_preview');
+    var seek_bar = document.querySelector('#media_player #seek_bar');
+
+    var i = 0;
+    var length = media_preview.children["length"];
+
+    /* removal of elements from children affects item indices,
+       so some trickery is needed to loop through all elements
+       while modifying the collection
+    */
+    while (i < length)
+    {
+        let child = media_preview.children[i];
+
+        if (child == undefined)
+            break;
+        else if (child.id !== "top_controls")
+        {
+            media_preview.removeChild(child);
+            length = length - 1;
+        }
+        else
+        {
+            i = i + 1;
+        }
+    }
+
+    clearChildren(seek_bar);
+}
+
 (function()
 {
     window.onresize = resizeElems;
