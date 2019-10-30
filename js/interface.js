@@ -10,6 +10,8 @@ const PLAYER_SIZE_FULL = "fullscreen";
 const NAV_OPEN = "open";
 const NAV_CLOSED = "closed";
 
+var global_player_state = { };
+
 function toggleLeftNav()
 {
     var open;
@@ -224,14 +226,14 @@ function resizeElems()
 }
 
 /* populate the media and library sections */
-function populateMediaLibraries(libraryJSON)
+function populateMediaLibraries()
 {
     var libraryListing = document.querySelector('#left_nav #libraries #listing');
     var mediaListing = document.querySelector('#left_nav #media_groups #listing');
 
     var types = new Set();
 
-    var libraries = JSON.parse(libraryJSON);
+    var libraries = global_player_state['library'];
 
     for (let library of libraries)
     {
@@ -277,11 +279,11 @@ function populateMediaLibraries(libraryJSON)
 }
 
 /* populate the playlist sections */
-function populatePlaylists(playlistJSON)
+function populatePlaylists()
 {
     var playlistListing = document.querySelector('#left_nav #playlists #listing');
 
-    var playlists = JSON.parse(playlistJSON);
+    var playlists = global_player_state['playlist'];
 
     for(let playlist of playlists)
     {
@@ -307,8 +309,7 @@ function populatePlaylists(playlistJSON)
 
 function getMediaQueue(group, value)
 {
-    var media_json = syncGetUrlResponse("api/get/rows/media");
-    var media = JSON.parse(media_json);
+    var media = global_player_state['media'];
 
     var ids = new Set();
     var type = null;
@@ -336,14 +337,18 @@ function getMediaQueue(group, value)
     {
         case 'playlist':
         {
-            var playlist_json = syncGetUrlResponse("api/get/rows/playlist/id/" + value);
-            var playlist = JSON.parse(playlist_json);
+            let playlist = global_player_state['playlist'].filter(
+                function(e, i, a)
+                { return (e['playlist_id'] == value); }
+            )[0];
 
-            if (playlist[0]['playlist_id'] !== undefined)
-                type = playlist[0]['type'];
+            if (playlist['playlist_id'] !== undefined)
+                type = playlist['type'];
 
-            var playlist_media_json = syncGetUrlResponse("api/get/rows/playlist_media/id/" + value);
-            var playlist_media = JSON.parse(playlist_media_json);
+            let playlist_media = global_player_state['playlist_media'].filter(
+                function(e, i, a)
+                { return (e['playlist_id'] == value); }
+            );
 
             //TODO: Incorporate rank into table ordering
             for (let playlist_item of playlist_media)
@@ -355,11 +360,14 @@ function getMediaQueue(group, value)
         }
         case 'library':
         {
-            var library_json = syncGetUrlResponse("api/get/rows/library/id/" + value);
-            var library = JSON.parse(library_json);
+            let library = global_player_state['library'].filter(
+                function(e, i, a)
+                { return (e['library_id'] == value); }
+            )[0];
 
-            if (library[0]['library_id'] !== undefined)
-                type = library[0]['type'];
+
+            if (library['library_id'] !== undefined)
+                type = library['type'];
 
             filterMedia({'library_id':value});
             break;
@@ -458,8 +466,7 @@ function getPhotoContent(ids)
 
 function getMusicList(media_ids)
 {
-    var music_json = syncGetUrlResponse("api/get/row/track");
-    var music = JSON.parse(music_json);
+    var music = global_player_state['track'];
 
     var column_map = {
                    'title': 'Title',
@@ -537,8 +544,7 @@ function getMusicList(media_ids)
 
 function getVideoList(media_ids)
 {
-    var video_json = syncGetUrlResponse("api/get/row/video");
-    var videos = JSON.parse(video_json);
+    var videos = global_player_state['video'];
 
     var column_map = {
                    'title': 'Title',
@@ -603,8 +609,10 @@ function getVideoList(media_ids)
                     if (!video['genre_id'])
                         continue;
 
-                    let genre_json = syncGetUrlResponse("api/get/row/genre/id/" + video['genre_id']);
-                    let genre = JSON.parse(genre_json);
+                    let genre = global_player_state['genre'].filter(
+                        function(e, i, a)
+                        { return (e['genre_id'] == video['genre_id']); }
+                    )[0];
 
                     data.innerHTML = formatTime(genre['name']);
                 }
@@ -626,8 +634,7 @@ function getVideoList(media_ids)
 
 function getPhotoList(media_ids)
 {
-    var photo_json = syncGetUrlResponse("api/get/row/photo");
-    var photos = JSON.parse(photo_json);
+    var photos = global_player_state['photo'];
 
     var column_map = {
                    'title': 'Title',
@@ -685,8 +692,10 @@ function getPhotoList(media_ids)
                     if (!photo['album_id'])
                         continue;
 
-                    let album_json = syncGetUrlResponse("api/get/row/photo_album/id/" + photo['album_id']);
-                    let album = JSON.parse(album_json);
+                    let album = global_player_state['photo_album'].filter(
+                        function(e, i, a)
+                        { return (e['album_id'] == photo['album_id']); }
+                    )[0];
 
                     data.innerHTML = formatTime(album['name']);
                 }
@@ -758,12 +767,14 @@ function updateSeekBar(currentTime, duration)
 
 function playMedia(media_id)
 {
-    var media_json = syncGetUrlResponse("api/get/row/media/id/" + media_id);
-    var media = JSON.parse(media_json);
+    let media = global_player_state['media'].filter(
+        function(e, i, a)
+        { return (e['media_id'] == media_id); }
+    )[0];
 
     var element;
 
-    switch (media[0]['library_type'])
+    switch (media['library_type'])
     {
         case "music":
         {
@@ -813,9 +824,7 @@ function playMedia(media_id)
     {
         media_element.setAttribute('src', 'api/get/raw/media/id/' + media_id);
 
-        let photo_json = syncGetUrlResponse('api/get/row/photo');
-
-        let photos = JSON.parse(photo_json);
+        let photos = global_player_state['photo'];
 
         for (let photo of photos)
         {
@@ -881,6 +890,33 @@ function stopMediaPlayback()
     clearChildren(seek_bar);
 }
 
+function fetchDBData()
+{
+    let tables = ["media", "library", "playlist", "playlist_media", "genre", "track", "photo", "video", "photo_album"];
+    let callbacks = {"library": populateMediaLibraries, "playlist": populatePlaylists};
+
+    for (let table of tables)
+    {
+        let callback = function(result) {
+            try
+            {
+                global_player_state[table] = JSON.parse(result);
+            }
+            catch(err)
+            {
+                global_player_state[table] = null;
+                console.log("Failed to parse JSON: " + err.message);
+            }
+            finally
+            {
+                if (callbacks[table])
+                    callbacks[table]();
+            }
+        }
+        asyncGetUrlResponse("api/get/row/" + table, callback);
+    }
+}
+
 (function()
 {
     window.onresize = resizeElems;
@@ -937,8 +973,6 @@ function stopMediaPlayback()
         }
     }
 
-
-    asyncGetUrlResponse("api/get/row/library", populateMediaLibraries);
-    asyncGetUrlResponse("api/get/row/playlist", populatePlaylists);
+    fetchDBData();
 
 })();
