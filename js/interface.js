@@ -614,7 +614,7 @@ function getVideoList(media_ids)
                         { return (e['genre_id'] == video['genre_id']); }
                     )[0];
 
-                    data.innerHTML = formatTime(genre['name']);
+                    data.innerHTML = genre['name'];
                 }
                 else
                     data.innerHTML = video[column];
