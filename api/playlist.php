@@ -60,6 +60,8 @@ function playlist_url_handler($data)
 
     $constraint = array();
 
+    header("Content-Type: application/json");
+
     switch($data['column'])
     {
         case 'id':
@@ -76,7 +78,8 @@ function playlist_url_handler($data)
             break;
         default:
         {
-            echo "Invalid column specified\n";
+            echo '{"status" : "failure",'
+                .' "message": "Invalid column"}' . PHP_EOL;
             die();
         }
     }
@@ -95,7 +98,8 @@ function playlist_url_handler($data)
         case null:
         default:
         {
-            echo "Invalid request specified\n";
+            echo '{"status" : "failure",'
+                .' "message": "Invalid request"}' . PHP_EOL;
             die();
         }
     }
@@ -106,12 +110,12 @@ function playlist_url_handler($data)
 
         if (false != $encoded)
         {
-            header("Content-Type: application/json");
             echo $encoded;
         }
         else
         {
-            echo "Could not display data\n";
+            echo '{"status" : "failure",'
+                .' "message": "Could not display data"}' . PHP_EOL;
         }
         die();
     }

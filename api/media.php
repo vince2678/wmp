@@ -227,6 +227,8 @@ function media_url_handler($data)
 
     $media_id= -1;
 
+    header("Content-Type: application/json");
+
     switch($data['column'])
     {
         case 'id':
@@ -238,7 +240,8 @@ function media_url_handler($data)
             //elseif (0 !== strncmp($data['type'],"row", 3))
             elseif (($data['type'] == "raw") || ($data['action'] == "delete"))
             {
-                echo "No id value specified\n";
+                echo '{"status" : "failure",'
+                    .' "message": "No id specified"}' . PHP_EOL;
                 die();
             }
             break;
@@ -251,7 +254,8 @@ function media_url_handler($data)
         }
         default:
         {
-            echo "Invalid column specified\n";
+            echo '{"status" : "failure",'
+                .' "message": "Invalid column"}' . PHP_EOL;
             die();
         }
     }
@@ -289,8 +293,6 @@ function media_url_handler($data)
             {
                 $res = delete_media($media_id);
 
-                header("Content-Type: application/json");
-
                 if ($res)
                     echo '{"status" : "success"}' . PHP_EOL;
                 else
@@ -302,7 +304,8 @@ function media_url_handler($data)
         case null:
         default:
         {
-            echo "Invalid request specified\n";
+            echo '{"status" : "failure",'
+                .' "message": "Invalid request"}' . PHP_EOL;
             die();
         }
     }
@@ -313,12 +316,12 @@ function media_url_handler($data)
 
         if (false != $encoded)
         {
-            header("Content-Type: application/json");
             echo $encoded;
         }
         else
         {
-            echo "Could not display data\n";
+            echo '{"status" : "failure",'
+                .' "message": "Could not display data"}' . PHP_EOL;
         }
         die();
     }

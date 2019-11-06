@@ -53,7 +53,10 @@ function api_request_handler()
 
     if (!$matched)
     {
-        echo "Invalid api request\n";
+        header("Content-Type: application/json");
+
+        echo '{"status" : "failure",'
+            .' "message": "Invalid request"}' . PHP_EOL;
     }
 
     die();
@@ -63,6 +66,8 @@ function row_url_handler($data)
 {
 
     $constraint = array();
+
+    header("Content-Type: application/json");
 
     switch($data['column'])
     {
@@ -99,14 +104,16 @@ function row_url_handler($data)
                 break;
             }
 
-            echo "Requested column does not exist in table\n";
+            echo '{"status" : "failure",'
+                .' "message": "Invalid column"}' . PHP_EOL;
             die();
         }
         case null:
             break;
         default:
         {
-            echo "Invalid column specified\n";
+            echo '{"status" : "failure",'
+                .' "message": "Invalid column"}' . PHP_EOL;
             die();
         }
     }
@@ -125,8 +132,6 @@ function row_url_handler($data)
             {
                 $res = delete_row($data['table'], $constraint);
 
-                header("Content-Type: application/json");
-
                 if ($res)
                     echo '{"status" : "success"}' . PHP_EOL;
                 else
@@ -138,7 +143,8 @@ function row_url_handler($data)
         case null:
         default:
         {
-            echo "Invalid request specified\n";
+            echo '{"status" : "failure",'
+                .' "message": "Invalid request"}' . PHP_EOL;
             die();
         }
     }
@@ -149,12 +155,12 @@ function row_url_handler($data)
 
         if (false != $encoded)
         {
-            header("Content-Type: application/json");
             echo $encoded;
         }
         else
         {
-            echo "Could not display data\n";
+            echo '{"status" : "failure",'
+                .' "message": "Could not display data"}' . PHP_EOL;
         }
         die();
     }

@@ -132,6 +132,8 @@ function library_url_handler($data)
 
     $library_id = -1;
 
+    header("Content-Type: application/json");
+
     switch($data['column'])
     {
         case 'id':
@@ -153,7 +155,9 @@ function library_url_handler($data)
                     $library_id = $row['library_id'];
                 else
                 {
-                    echo "No library with name " . $data['value'] . " found\n";
+                    echo '{"status" : "failure",'
+                        .' "message": "Invalid id/name"}' . PHP_EOL;
+
                     die();
                 }
             }
@@ -163,7 +167,8 @@ function library_url_handler($data)
             break;
         default:
         {
-            echo "Invalid column specified\n";
+            echo '{"status" : "failure",'
+                .' "message": "Invalid column"}' . PHP_EOL;
             die();
         }
     }
@@ -173,8 +178,6 @@ function library_url_handler($data)
         case 'force-scan':
         case 'scan':
         {
-            header("Content-Type: application/json");
-
             if ($data['action'] == "force-scan")
                 $force = true;
             else
@@ -191,7 +194,8 @@ function library_url_handler($data)
         case null:
         default:
         {
-            echo "Invalid request specified\n";
+            echo '{"status" : "failure",'
+                .' "message": "Invalid request"}' . PHP_EOL;
             die();
         }
     }

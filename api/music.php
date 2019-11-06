@@ -273,12 +273,18 @@ function music_url_handler($data)
         }
         case null:
         {
-            echo "No id specified\n";
+            header("Content-Type: application/json");
+
+            echo '{"status" : "failure",'
+                .' "message": "No id specified"}' . PHP_EOL;
             die();
         }
         default:
         {
-            echo "Invalid column specified\n";
+            header("Content-Type: application/json");
+
+            echo '{"status" : "failure",'
+                .' "message": "Invalid column"}' . PHP_EOL;
             die();
         }
     }
@@ -295,7 +301,10 @@ function music_url_handler($data)
         case null:
         default:
         {
-            echo "Invalid request specified\n";
+            header("Content-Type: application/json");
+
+            echo '{"status" : "failure",'
+                .' "message": "Invalid request"}' . PHP_EOL;
             die();
         }
     }
