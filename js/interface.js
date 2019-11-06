@@ -311,7 +311,7 @@ function getMediaQueue(group, value)
 {
     var media = global_player_state['media'];
 
-    var ids = new Set();
+    var queue = [];
     var type = null;
 
     function filterMedia(constraint) {
@@ -329,7 +329,7 @@ function getMediaQueue(group, value)
             }
 
             if (match)
-                ids.add(medium['media_id']);
+                queue.push(medium['media_id']);
         }
     }
 
@@ -353,7 +353,7 @@ function getMediaQueue(group, value)
             //TODO: Incorporate rank into table ordering
             for (let playlist_item of playlist_media)
             {
-                ids.add(playlist_item['media_id']);
+                queue.push(playlist_item['media_id']);
             }
 
             break;
@@ -385,15 +385,15 @@ function getMediaQueue(group, value)
         }
     }
 
-    return {'ids': ids, 'type': type};
+    return {'queue': queue, 'type': type};
 }
 
 function populateContentArea(group, value)
 {
-    var id_set_type = getMediaQueue(group, value);
+    var play_queue = getMediaQueue(group, value);
 
-    var ids = id_set_type['ids'];
-    var type= id_set_type['type'];
+    var queue = play_queue['queue'];
+    var type = play_queue['type'];
 
     var content_area = document.querySelector('#content');
 
@@ -401,7 +401,7 @@ function populateContentArea(group, value)
 
     var content;
 
-    if (ids.size == 0)
+    if (queue.length == 0)
     {
         //no matching media, no media in playlist/media group/library
         content = document.createElement('p');
@@ -423,17 +423,17 @@ function populateContentArea(group, value)
         {
             case 'music':
             {
-                content = getMusicContent(ids);
+                content = getMusicContent(queue);
                 break;
             }
             case 'video':
             {
-                content = getVideoContent(ids);
+                content = getVideoContent(queue);
                 break;
             }
             case 'photo':
             {
-                content = getPhotoContent(ids);
+                content = getPhotoContent(queue);
                 break;
             }
             default:
@@ -449,9 +449,9 @@ function populateContentArea(group, value)
 
 }
 
-function getMusicContent(media_ids)
+function getMusicContent(queue)
 {
-    return getMusicList(media_ids);
+    return getMusicList(queue);
 }
 
 function getVideoContent(ids)
@@ -464,7 +464,7 @@ function getPhotoContent(ids)
     return getPhotoList(ids);
 }
 
-function getMusicList(media_ids)
+function getMusicList(queue)
 {
     var music = global_player_state['track'];
 
@@ -501,7 +501,7 @@ function getMusicList(media_ids)
 
     for (let track of music)
     {
-        if (!media_ids.has(track["media_id"]))
+        if (queue.indexOf(track["media_id"]) == -1)
             continue;
 
         let row = document.createElement('tr');
@@ -542,7 +542,7 @@ function getMusicList(media_ids)
     return null;
 }
 
-function getVideoList(media_ids)
+function getVideoList(queue)
 {
     var videos = global_player_state['video'];
 
@@ -576,7 +576,7 @@ function getVideoList(media_ids)
 
     for (let video of videos)
     {
-        if (!media_ids.has(video["media_id"]))
+        if (queue.indexOf(video["media_id"]) == -1)
             continue;
 
         let row = document.createElement('tr');
@@ -632,7 +632,7 @@ function getVideoList(media_ids)
     return null;
 }
 
-function getPhotoList(media_ids)
+function getPhotoList(queue)
 {
     var photos = global_player_state['photo'];
 
@@ -664,7 +664,7 @@ function getPhotoList(media_ids)
 
     for (let photo of photos)
     {
-        if (!media_ids.has(photo["media_id"]))
+        if (queue.indexOf(photo["media_id"]) == -1)
             continue;
 
         let row = document.createElement('tr');
