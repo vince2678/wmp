@@ -10,7 +10,7 @@
 
     --table-font-size: 14px;
 
-    --content-header-color: rgba(54, 54, 54, 0.383);
+    --content-header-color: rgb(39, 39, 39);
     --content-header-border-color: rgba(194, 194, 194, 0.096);
     --content-header-height: 40px;
 }
@@ -49,13 +49,14 @@
 }
 
 div.content_page_header {
-    position: absolute;
-    background: var(--content-header-color);
+    position: sticky;
+    z-index: 3;
     border: 1px hidden;
     top: 0;
     left: 0;
     width: 100%;
     height: var(--content-header-height);
+    background: var(--content-header-color);
 }
 
 div.content_page_header button {
@@ -84,9 +85,11 @@ button#library_rescan[class~=scan-failure] {
 
 .content_table {
     position: absolute;
-    top: var(--content-header-height);
+    z-index: 2;
+    top: 0;
     left: 0;
     width: 100%;
+    margin-top: var(--content-header-height);
     border-collapse: collapse;
     border-top: 1px hidden;
     border-left: 1px hidden;
