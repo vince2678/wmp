@@ -388,7 +388,21 @@ function getMediaQueue(group, value)
     return {'queue': queue, 'type': type};
 }
 
-function createContentHeader(group)
+function rescanLibrary(id)
+{
+    let callback = function(json)
+    {
+        let result = JSON.parse(json);
+
+        let btn = document.querySelector("button#library_rescan");
+
+        btn.setAttribute("class", "scan-" + result['status']);
+    }
+
+    asyncGetUrlResponse("api/force-scan/library/id/" + id, callback);
+}
+
+function createContentHeader(group, value)
 {
     let actions = [];
 
@@ -398,6 +412,12 @@ function createContentHeader(group)
         actions = ["add", "edit", "delete", "view", "sort"];
     else //type
         actions = ["view", "sort"];
+
+    let callbacks = {
+        "rescan": function() {
+            rescanLibrary(value);
+        }
+    }
 
 
     let header = document.createElement('div');
@@ -409,6 +429,10 @@ function createContentHeader(group)
         let btn = document.createElement('button');
         btn.setAttribute("id", group + "_" + action);
         btn.innerText = action;
+
+        if (callbacks[action])
+            btn.onclick = callbacks[action];
+
         header.appendChild(btn);
     }
 
@@ -428,7 +452,7 @@ function populateContentArea(group, value)
 
     var content;
 
-    let header = createContentHeader(group);
+    let header = createContentHeader(group, value);
 
     if (header)
         content_area.appendChild(header);

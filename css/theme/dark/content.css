@@ -74,6 +74,14 @@ div.content_page_header button:hover {
     color: var(--table-text-hover-color);
 }
 
+button#library_rescan[class~=scan-success] {
+    background: rgba(90, 156, 101, 0.411);
+}
+
+button#library_rescan[class~=scan-failure] {
+    background: rgba(156, 92, 92, 0.445);
+}
+
 .content_table {
     position: absolute;
     top: var(--content-header-height);
