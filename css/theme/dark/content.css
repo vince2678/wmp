@@ -113,30 +113,30 @@ button#library_rescan[class~=scan-failure] {
     font-weight: normal;
 }
 
-.content_table_header, .content_table_row {
+.content_table_header, #content_table_row {
     background-color: var(--table-bg-color);
     border: 1px solid var(--table-border-color);
+    transition: 0.2s;
 }
 
-.content_table_header th, .content_table_row td {
+.content_table_header th, #content_table_row td {
     padding-top: 6px;
     padding-bottom: 6px;
 }
 
-.content_table_row:nth-child(even) {
+#content_table_row:nth-child(even) {
     background-color: var(--tr-even-bg-color);
 }
 
-.content_table_row:hover {
+#content_table_row:hover, #content_table_row.active {
     background-color: var(--tr-bg-hover-color);
     color: var(--table-text-hover-color);
     border: 0px none;
-    transition: 0.3s;
 }
 
 .content_table_header th:hover {
     font-weight: bold;
     color: var(--table-text-hover-color);
-    transition: 0.3s;
 }
+
 /* END TABLE STUFF */

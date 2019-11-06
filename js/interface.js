@@ -239,12 +239,19 @@ function populateMediaLibraries()
     {
         let entry = document.createElement('span');
 
-        entry.setAttribute('class', 'library');
+        entry.setAttribute('id', 'library');
         entry.innerHTML = library['name'];
 
         entry.onclick = function() {
             populateContentArea('library', library['library_id']);
-        };
+
+            let active = document.querySelector("#listing > span.active");
+
+            if (active)
+                active.className = "";
+
+            this.setAttribute("class", "active");
+        }, entry;
 
         libraryListing.appendChild(entry);
 
@@ -262,12 +269,19 @@ function populateMediaLibraries()
     {
         let entry = document.createElement('span');
 
-        entry.setAttribute('class', 'media');
+        entry.setAttribute('id', 'media');
         entry.innerHTML = type;
 
         entry.onclick = function() {
             populateContentArea('type', type);
-        };
+
+            let active = document.querySelector("#listing > span.active");
+
+            if (active)
+                active.className = "";
+
+            this.setAttribute("class", "active");
+        }, entry;
 
         mediaListing.appendChild(entry);
     }
@@ -289,12 +303,19 @@ function populatePlaylists()
     {
         let entry = document.createElement('span');
 
-        entry.setAttribute('class', 'playlist');
+        entry.setAttribute('id', 'playlist');
         entry.innerHTML = playlist['name'];
 
         entry.onclick = function() {
             populateContentArea('playlist', playlist['playlist_id']);
-        };
+
+            let active = document.querySelector("#listing > span.active");
+
+            if (active)
+                active.className = "";
+
+            this.setAttribute("class", "active");
+        }, entry;
 
         playlistListing.appendChild(entry);
     }
@@ -561,7 +582,16 @@ function getMusicList(queue)
             continue;
 
         let row = document.createElement('tr');
-        row.setAttribute('class', 'content_table_row');
+        row.setAttribute('id', 'content_table_row');
+
+        row.onclick = function() {
+            let active = document.querySelector("#content_table_row.active");
+
+            if (active)
+                active.className = "";
+
+            this.setAttribute("class", "active");
+        }, row;
 
         /* play button */
         let link = document.createElement('a');
@@ -636,7 +666,16 @@ function getVideoList(queue)
             continue;
 
         let row = document.createElement('tr');
-        row.setAttribute('class', 'content_table_row');
+        row.setAttribute('id', 'content_table_row');
+
+        row.onclick = function() {
+            let active = document.querySelector("#content_table_row.active");
+
+            if (active)
+                active.className = "";
+
+            this.setAttribute("class", "active");
+        }, row;
 
         /* play button */
         let link = document.createElement('a');
@@ -724,7 +763,16 @@ function getPhotoList(queue)
             continue;
 
         let row = document.createElement('tr');
-        row.setAttribute('class', 'content_table_row');
+        row.setAttribute('id', 'content_table_row');
+
+        row.onclick = function() {
+            let active = document.querySelector("#content_table_row.active");
+
+            if (active)
+                active.className = "";
+
+            this.setAttribute("class", "active");
+        }, row;
 
         /* play button */
         let link = document.createElement('a');
