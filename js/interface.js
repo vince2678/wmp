@@ -513,7 +513,7 @@ function getMusicList(queue)
         link.setAttribute('href', 'javascript:void(0)');
 
         link.onclick = function(){
-            playMedia(track['media_id']);
+            playMedia(track['media_id'], queue);
         };
 
         row.appendChild(link);
@@ -588,7 +588,7 @@ function getVideoList(queue)
         link.setAttribute('href', 'javascript:void(0)');
 
         link.onclick = function(){
-            playMedia(video['media_id']);
+            playMedia(video['media_id'], queue);
         };
 
         row.appendChild(link);
@@ -676,7 +676,7 @@ function getPhotoList(queue)
         link.setAttribute('href', 'javascript:void(0)');
 
         link.onclick = function(){
-            playMedia(photo['media_id']);
+            playMedia(photo['media_id'], queue);
         };
 
         row.appendChild(link);
@@ -765,7 +765,7 @@ function updateSeekBar(currentTime, duration)
     ctx.stroke();
 }
 
-function playMedia(media_id)
+function playMedia(media_id, queue = null)
 {
     let media = global_player_state['media'].filter(
         function(e, i, a)
@@ -800,6 +800,11 @@ function playMedia(media_id)
             return;
         }
     }
+
+    if (queue)
+        global_player_state['queue'] = queue;
+
+    global_player_state['playing'] = media['media_id'];
 
     stopMediaPlayback();
 
@@ -838,6 +843,8 @@ function playMedia(media_id)
         media_src.setAttribute('src', 'api/get/raw/media/id/' + media_id);
         media_element.appendChild(media_src);
 
+        media_element.onended = playNext;
+
         if (element == 'audio')
         {
             // get album art;
@@ -857,6 +864,60 @@ function playMedia(media_id)
     media_preview.appendChild(media_element);
 
 }
+
+function playPrevious()
+{
+    var prev;
+
+    if (global_player_state['playing'])
+        prev = global_player_state['playing'];
+
+    if (global_player_state['queue'])
+    {
+        let queue = global_player_state['queue'];
+        let index = queue.length - 1;
+
+        if (prev && (index = queue.indexOf(prev)) !== -1)
+        {
+            index = (index - 1) % queue.length;
+
+            // loop around queue
+            if (index < 0)
+                index = queue.length + index;
+        }
+
+        prev = queue[index];
+    }
+
+    if (prev)
+        playMedia(prev);
+}
+
+function playNext()
+{
+    var next;
+
+    if (global_player_state['playing'])
+        next = global_player_state['playing'];
+
+
+    if (global_player_state['queue'])
+    {
+        let queue = global_player_state['queue'];
+        let index = 0;
+
+        // loop around queue
+        if (next && (index = queue.indexOf(next)) !== -1)
+            index = (index + 1) % queue.length;
+
+        next = queue[index];
+    }
+
+    if (next)
+        playMedia(next);
+}
+
+
 
 function stopMediaPlayback()
 {
@@ -972,6 +1033,9 @@ function fetchDBData()
             this.innerHTML = "Unmute";
         }
     }
+
+    document.querySelector('#bottom_controls #media_previous').onclick = playPrevious;
+    document.querySelector('#bottom_controls #media_next').onclick = playNext;
 
     fetchDBData();
 
