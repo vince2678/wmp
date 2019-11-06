@@ -388,6 +388,33 @@ function getMediaQueue(group, value)
     return {'queue': queue, 'type': type};
 }
 
+function createContentHeader(group)
+{
+    let actions = [];
+
+    if (group == "library")
+        actions = ["rescan", "edit", "delete", "view", "sort"];
+    else if (group == "playlist")
+        actions = ["add", "edit", "delete", "view", "sort"];
+    else //type
+        actions = ["view", "sort"];
+
+
+    let header = document.createElement('div');
+    header.setAttribute("class", "content_page_header");
+    header.setAttribute("id", group + "_page_header");
+
+    for (let action of actions)
+    {
+        let btn = document.createElement('button');
+        btn.setAttribute("id", group + "_" + action);
+        btn.innerText = action;
+        header.appendChild(btn);
+    }
+
+    return header;
+}
+
 function populateContentArea(group, value)
 {
     var play_queue = getMediaQueue(group, value);
@@ -400,6 +427,11 @@ function populateContentArea(group, value)
     clearChildren(content_area);
 
     var content;
+
+    let header = createContentHeader(group);
+
+    if (header)
+        content_area.appendChild(header);
 
     if (queue.length == 0)
     {
