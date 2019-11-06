@@ -90,6 +90,13 @@ div.content_page_header button:hover {
     text-align: left;
 }
 
+#no_content_msg {
+    padding: 25%;
+    font-size: 140%;
+    text-align: center;
+    color: var(--table-text-color);
+}
+
 .content_table_header {
     text-transform: uppercase;
     font-weight: normal;
