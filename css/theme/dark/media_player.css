@@ -115,6 +115,7 @@
 
 #media_player #top_controls {
     height: 50px;
+    z-index: 2;
     left: 0;
     position: absolute;
     top: 0;
