@@ -62,10 +62,10 @@ include "theme.php";
                 </div>
             </div>
             <div id='bottom_controls' class="media_controls">
-                <button id="media_previous">Previous</button>
-                <button id="media_play_pause">Play/Pause</button>
-                <button id="media_next">Next</button>
-                <button id="media_mute">Mute</button>
+                <button id="media_previous"><i class="material-icons">skip_previous</i></button>
+                <button id="media_play_pause"><i class="material-icons">pause_circle_outline</i></button>
+                <button id="media_next"><i class="material-icons">skip_next</i></button>
+                <button id="media_mute"><i class="material-icons">volume_up</i></button>
             </div>
         </div>
     </body>

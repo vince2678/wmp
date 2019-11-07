@@ -1136,13 +1136,13 @@ function fetchDBData()
             if (media_element.play)
             {
                 media_element.play();
-                this.innerHTML = "Pause";
+                this.innerHTML = '<i class="material-icons">pause_circle_outline</i>';
             }
         }
        else if (media_element.pause)
         {
             media_element.pause();
-                this.innerHTML = "Play";
+            this.innerHTML = '<i class="material-icons">play_circle_outline</i>';
         }
     }
 
@@ -1153,12 +1153,12 @@ function fetchDBData()
         if (media_element.muted)
         {
             media_element.muted = false;
-            this.innerHTML = "Mute";
+            this.innerHTML = '<i class="material-icons">volume_up</i>';
         }
         else if (media_element.muted == false)
         {
             media_element.muted = true;
-            this.innerHTML = "Unmute";
+            this.innerHTML = '<i class="material-icons">volume_off</i>';
         }
     }
 

@@ -1,6 +1,8 @@
 :root {
     --player-height: 120px;
     --seek-bar-height: 10px;
+
+    --btn-hover-color: rgb(51, 166, 200);
 }
 
 /* media player / bottom area */
@@ -169,6 +171,29 @@
 #media_player #bottom_controls {
     position: absolute;
     z-index: 3;
-    bottom: 30%;
     left: 40%;
+    bottom: 0;
+    height: 100%;
+}
+
+#bottom_controls button {
+    background: none;
+    border: 0px none;
+    transition: 0.3s;
+    color: whitesmoke;
+    outline: none;
+}
+
+#bottom_controls button[id~='media_play_pause'] i {
+    font-size: 80px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+#bottom_controls button i {
+    font-size: 60px;
+}
+
+#bottom_controls button:hover {
+    color: var(--btn-hover-color);
 }
