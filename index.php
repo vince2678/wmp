@@ -42,7 +42,10 @@ include "theme.php";
         <div id='top_nav'>
             <button class="leftnavbtn">&times;</button>
             <div id='search'>
-                <p class='placeholder'>Search</p>
+                <form id='search_form'>
+                    <i class="material-icons">search</i>
+                    <input class="search_input" type="text">
+                </form>
             </div>
             <div id='user_area'>
                 <p class='placeholder'>User area</p>
