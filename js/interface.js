@@ -979,7 +979,11 @@ function playMedia(media_id, queue = null)
         for (let photo of photos)
         {
             if (photo['media_id'] == media_id)
+            {
                 media_element.setAttribute('alt', photo['title']);
+                document.title = photo['title'];
+                break;
+            }
         }
     }
     else
@@ -1002,6 +1006,26 @@ function playMedia(media_id, queue = null)
                 image.setAttribute('src', url);
                 image.setAttribute('alt', 'Album art');
                 media_preview.appendChild(image);
+            }
+
+            for (let track of global_player_state['track'])
+            {
+                if (track['media_id'] == media_id)
+                {
+                    document.title = track['artist'] + " - " + track['title'];
+                    break;
+                }
+            }
+        }
+        else
+        {
+            for (let video of global_player_state['video'])
+            {
+                if (video['media_id'] == media_id)
+                {
+                    document.title = video['title'];
+                    break;
+                }
             }
         }
     }
@@ -1086,6 +1110,8 @@ function stopMediaPlayback()
 
     if (media_element)
         media_element.ontimeupdate = undefined;
+
+    document.title = "";
 
     var i = 0;
     var length = media_preview.children["length"];
