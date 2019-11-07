@@ -897,6 +897,19 @@ function updateSeekBar(currentTime, duration)
     total.innerText = formatTime(duration);
 }
 
+function seekTo(event)
+{
+    var media_element = document.querySelector('#content_preview .media_element');
+
+    if ((!media_element) || (!media_element.currentTime))
+        return;
+
+    let width = percentToPixel(this.clientWidth, window.innerWidth);
+    let progress = (event.clientX / width);
+
+    media_element.currentTime = (progress * media_element.duration);
+}
+
 function playMedia(media_id, queue = null)
 {
     let media = global_player_state['media'].filter(
@@ -1202,6 +1215,8 @@ function fetchDBData()
 
     document.querySelector('#bottom_controls #media_previous').onclick = playPrevious;
     document.querySelector('#bottom_controls #media_next').onclick = playNext;
+
+    document.querySelector('#media_player #seek_bar').onclick = seekTo;
 
     fetchDBData();
 
