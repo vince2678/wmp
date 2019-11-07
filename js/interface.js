@@ -878,17 +878,11 @@ function updateSeekBar(currentTime, duration)
     const percent_done = (currentTime/duration);
     const width = parseInt(canvas.width  * percent_done);
 
-    ctx.lineWidth = canvas.height;
-    ctx.strokeStyle = 'red';
-    ctx.lineCap = 'round';
+    let x = 0;
+    let y = 0;
 
-    const x = 0;
-    const y = 0;
-
-    ctx.moveTo(x, y);
-    ctx.lineTo(x + width, y);
-    ctx.closePath();
-    ctx.stroke();
+    ctx.fillStyle = 'red';
+    ctx.fillRect(x, y, width, canvas.height);
 
     let elapsed = document.querySelector("#bottom_controls #media_time_elapsed");
     let total = document.querySelector("#bottom_controls #media_time_duration");
