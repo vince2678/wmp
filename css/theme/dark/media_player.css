@@ -48,7 +48,7 @@
     background-color: transparent;
     border: 1px solid rgba(0, 0, 0, 0.5);
     top: var(--seek-bar-height);
-    left: (var(--seek-bar-height));
+    left: var(--seek-bar-height);
     margin-top: 0px;
     margin-left: var(--seek-bar-height);
     margin-right: var(--seek-bar-height);
