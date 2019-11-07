@@ -17,7 +17,7 @@ function formatTime(seconds)
     seconds = seconds % 3600;
 
     minutes = parseInt(seconds/60);
-    seconds = seconds % 60;
+    seconds = parseInt(seconds % 60);
 
     if (hours > 0)
         ret = ret + hours + ":";
