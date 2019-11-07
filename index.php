@@ -66,6 +66,7 @@ include "theme.php";
                 <button id="media_play_pause"><i class="material-icons">pause_circle_outline</i></button>
                 <button id="media_next"><i class="material-icons">skip_next</i></button>
                 <button id="media_mute"><i class="material-icons">volume_up</i></button>
+                <button id="media_shuffle"><i class="material-icons">shuffle</i></button>
             </div>
         </div>
     </body>

@@ -1020,7 +1020,12 @@ function playPrevious()
         let queue = global_player_state['queue'];
         let index = queue.length - 1;
 
-        if (prev && (index = queue.indexOf(prev)) !== -1)
+        if (global_player_state['shuffle'])
+        {
+            index = Math.floor(Math.random() * queue.length);
+            console.log("Shuffle set, picked media_id: " + queue[index]);
+        }
+        else if (prev && (index = queue.indexOf(prev)) !== -1)
         {
             index = (index - 1) % queue.length;
 
@@ -1050,7 +1055,12 @@ function playNext()
         let index = 0;
 
         // loop around queue
-        if (next && (index = queue.indexOf(next)) !== -1)
+        if (global_player_state['shuffle'])
+        {
+            index = Math.floor(Math.random() * queue.length);
+            console.log("Shuffle set, picked media_id: " + queue[index]);
+        }
+        else if (next && (index = queue.indexOf(next)) !== -1)
             index = (index + 1) % queue.length;
 
         next = queue[index];
@@ -1158,6 +1168,19 @@ function fetchDBData()
         {
             media_element.pause();
             this.innerHTML = '<i class="material-icons">play_circle_outline</i>';
+        }
+    }
+
+    document.querySelector("#bottom_controls #media_shuffle").onclick = function() {
+        if (global_player_state['shuffle'])
+        {
+            global_player_state['shuffle'] = false;
+            this.classList.remove("shuffle-active");
+        }
+        else
+        {
+            global_player_state['shuffle'] = true;
+            this.classList.add("shuffle-active");
         }
     }
 
