@@ -13,6 +13,8 @@
     --content-header-color: rgb(39, 39, 39);
     --content-header-border-color: rgba(194, 194, 194, 0.096);
     --content-header-height: 40px;
+
+    --play-btn-hover-color: rgb(51, 166, 200);
 }
 
 /* content / middle area */
@@ -132,6 +134,18 @@ button#library_rescan[class~=scan-failure] {
     background-color: var(--tr-bg-hover-color);
     color: var(--table-text-hover-color);
     border: 0px none;
+}
+
+#content_table_row button {
+    background: transparent;
+    border: 0px none;
+    color: var(--table-text-color);
+    font-size: var(--table-font-size);
+    transition: 0.3s;
+}
+
+#content_table_row button:hover {
+    color: var(--play-btn-hover-color);
 }
 
 .content_table_header th:hover {

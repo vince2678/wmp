@@ -618,15 +618,15 @@ function getMusicList(queue)
         }, row;
 
         /* play button */
-        let link = document.createElement('a');
-        link.innerHTML = 'Play';
-        link.setAttribute('href', 'javascript:void(0)');
+        let play_btn = document.createElement('button');
 
-        link.onclick = function(){
+        play_btn.innerHTML = '<i class="material-icons">play_arrow</i>';
+
+        play_btn.onclick = function(){
             playMedia(track['media_id'], queue);
         };
 
-        row.appendChild(link);
+        row.appendChild(play_btn);
 
         for (let column of columns)
         {
@@ -702,15 +702,15 @@ function getVideoList(queue)
         }, row;
 
         /* play button */
-        let link = document.createElement('a');
-        link.innerHTML = 'Play';
-        link.setAttribute('href', 'javascript:void(0)');
+        let play_btn = document.createElement('button');
 
-        link.onclick = function(){
+        play_btn.innerHTML = '<i class="material-icons">play_arrow</i>';
+
+        play_btn.onclick = function(){
             playMedia(video['media_id'], queue);
         };
 
-        row.appendChild(link);
+        row.appendChild(play_btn);
 
         for (let column of columns)
         {
@@ -799,15 +799,15 @@ function getPhotoList(queue)
         }, row;
 
         /* play button */
-        let link = document.createElement('a');
-        link.innerHTML = 'Play';
-        link.setAttribute('href', 'javascript:void(0)');
+        let play_btn = document.createElement('button');
 
-        link.onclick = function(){
+        play_btn.innerHTML = '<i class="material-icons">play_arrow</i>';
+
+        play_btn.onclick = function(){
             playMedia(photo['media_id'], queue);
         };
 
-        row.appendChild(link);
+        row.appendChild(play_btn);
 
         for (let column of columns)
         {
