@@ -975,7 +975,6 @@ function playMedia(media_id, queue = null)
     media_element.setAttribute('class', 'media_element');
     media_element.setAttribute('id', element + '_element');
 
-    media_element.controls = true;
     media_element.autoplay = true;
 
     media_element.ontimeupdate = updateSeekBar;
