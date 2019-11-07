@@ -865,6 +865,8 @@ function updateSeekBar(currentTime, duration)
 
     const seek_bar = document.querySelector('#media_player #seek_bar');
 
+    let media_element = document.querySelector('#content_preview .media_element');
+
     clearChildren(seek_bar);
 
     var canvas = document.createElement('canvas');
@@ -883,6 +885,20 @@ function updateSeekBar(currentTime, duration)
 
     ctx.fillStyle = 'red';
     ctx.fillRect(x, y, width, canvas.height);
+
+    if (media_element)
+    {
+        const percent_seekable = (media_element.seekable.end(0)/duration);
+        const width_seekable = parseInt(canvas.width * percent_seekable);
+
+        if (width_seekable > width)
+        {
+            x = width;
+
+            ctx.fillStyle = 'grey';
+            ctx.fillRect(x, y, width_seekable - width, canvas.height);
+        }
+    }
 
     let elapsed = document.querySelector("#bottom_controls #media_time_elapsed");
     let total = document.querySelector("#bottom_controls #media_time_duration");
