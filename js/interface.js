@@ -906,6 +906,12 @@ function updateSeekBar(currentTime, duration)
     ctx.lineTo(x + width, y);
     ctx.closePath();
     ctx.stroke();
+
+    let elapsed = document.querySelector("#bottom_controls #media_time_elapsed");
+    let total = document.querySelector("#bottom_controls #media_time_duration");
+
+    elapsed.innerText = formatTime(currentTime);
+    total.innerText = formatTime(duration);
 }
 
 function playMedia(media_id, queue = null)
@@ -1077,6 +1083,9 @@ function stopMediaPlayback()
     var media_preview = document.querySelector('#media_player #content_preview');
     var seek_bar = document.querySelector('#media_player #seek_bar');
 
+    var elapsed = document.querySelector("#bottom_controls #media_time_elapsed");
+    var duration = document.querySelector("#bottom_controls #media_time_duration");
+
     var media_element = document.querySelector('#content_preview .media_element');
 
     if (media_element)
@@ -1107,6 +1116,9 @@ function stopMediaPlayback()
     }
 
     clearChildren(seek_bar);
+
+    elapsed.innerHTML = "";
+    duration.innerHTML = "";
 }
 
 function fetchDBData()
