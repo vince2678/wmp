@@ -152,6 +152,7 @@
 
 #media_player #seek_bar {
     position: absolute;
+    z-index: 2;
     height: var(--seek-bar-height);
     width: 100%;
     left: 0;
