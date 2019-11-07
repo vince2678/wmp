@@ -35,6 +35,25 @@ function formatTime(seconds)
     return ret;
 }
 
+/* Convert size from percent to pixels,
+   using max as reference for 100% */
+function percentToPixel(size, max)
+{
+    let percentRegexp = /^[0-9]{1,3}%$/;
+    let pixelRegexp = /^[0-9]*px$/;
+
+    if (pixelRegexp.exec(size))
+    {
+        return parseInt(size);
+    }
+    else if (percentRegexp.exec(size))
+    {
+        return (parseInt(size) / 100.0) * max;
+    }
+    else
+        return parseInt(size);
+}
+
 function isMobile()
 {
     var mobile = false;

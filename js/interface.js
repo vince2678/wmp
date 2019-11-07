@@ -863,23 +863,6 @@ function updateSeekBar(currentTime, duration)
     if (duration < 1)
         return;
 
-    function pcToPx(size, max)
-    {
-        let pcRegexp = /^[0-9]{1,3}%$/;
-        let pxRegexp = /^[0-9]*px$/;
-
-        if (pxRegexp.exec(size))
-        {
-            return parseInt(size);
-        }
-        else if (pcRegexp.exec(size))
-        {
-            return (parseInt(size) / 100.0) * max;
-        }
-        else
-            return parseInt(size);
-    }
-
     const seek_bar = document.querySelector('#media_player #seek_bar');
 
     clearChildren(seek_bar);
@@ -889,8 +872,8 @@ function updateSeekBar(currentTime, duration)
 
     seek_bar.appendChild(canvas);
 
-    canvas.width = pcToPx(seek_bar.clientWidth, window.innerWidth);
-    canvas.height = pcToPx(seek_bar.clientHeight, window.innerWidth);
+    canvas.width = percentToPixel(seek_bar.clientWidth, window.innerWidth);
+    canvas.height = percentToPixel(seek_bar.clientHeight, window.innerWidth);
 
     const percent_done = (currentTime/duration);
     const width = parseInt(canvas.width  * percent_done);
