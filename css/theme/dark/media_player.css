@@ -132,12 +132,17 @@
 #media_player #top_controls > button {
     position: fixed;
     background-color: transparent;
-    background-color: transparent;
     border: none;
     color: var(--left-nav-btn-color);
     font-size: 40px;
     padding-left: 5px;
     padding-right: 5px;
+    transition: 0.3s;
+    outline: none;
+}
+
+#media_player #top_controls > button:hover {
+    color: whitesmoke;
 }
 
 #media_player #top_controls #media_resize {

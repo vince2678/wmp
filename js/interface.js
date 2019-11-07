@@ -122,6 +122,9 @@ function toggleMediaPlayerSize(target = undefined)
         target = PLAYER_SIZE_SMALL;
     }
 
+    let fullscreen_icon = document.querySelector('#media_player #media_fullscreen i');
+    let resize_icon = document.querySelector('#media_player #media_resize i');
+
     switch(target)
     {
         case PLAYER_SIZE_FULL:
@@ -139,6 +142,9 @@ function toggleMediaPlayerSize(target = undefined)
             closeLeftNav();
             closeTopNav();
 
+            resize_icon.innerHTML = 'keyboard_arrow_down';
+            fullscreen_icon.innerHTML = 'fullscreen_exit';
+
             break;
         }
         case PLAYER_SIZE_LARGE:
@@ -149,12 +155,18 @@ function toggleMediaPlayerSize(target = undefined)
             closeLeftNav();
             closeTopNav();
 
+            resize_icon.innerHTML = 'keyboard_arrow_down';
+            fullscreen_icon.innerHTML = 'fullscreen';
+
             break;
         }
         case PLAYER_SIZE_WIDE:
         {
             closeLeftNav();
             openTopNav();
+
+            resize_icon.innerHTML = 'keyboard_arrow_down';
+            fullscreen_icon.innerHTML = 'fullscreen';
 
             break;
         }
@@ -167,6 +179,9 @@ function toggleMediaPlayerSize(target = undefined)
         {
             openLeftNav();
             openTopNav();
+
+            resize_icon.innerHTML = 'close';
+            fullscreen_icon.innerHTML = 'fullscreen';
 
             break;
         }

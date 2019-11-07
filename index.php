@@ -57,8 +57,8 @@ include "theme.php";
             </div>
             <div id='content_preview'>
                 <div id='top_controls' class="media_controls">
-                    <button id="media_resize" class="media_controls">&times;</button>
-                    <button id="media_fullscreen" class="media_controls">&gt;&lt;</button>
+                    <button id="media_resize" class="media_controls"><i class="material-icons">close</i></button>
+                    <button id="media_fullscreen" class="media_controls"><i class="material-icons">fullscreen</i></button>
                 </div>
             </div>
             <div id='bottom_controls' class="media_controls">
