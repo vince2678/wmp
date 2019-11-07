@@ -14,6 +14,7 @@ include "theme.php";
         <meta charset="utf8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
         <?php import_font('Ubuntu') ?> 
         <?php import_theme() ?>
         <script src='js/misc.js'></script>
