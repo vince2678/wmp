@@ -49,6 +49,7 @@
 
 div.content_page_header {
     position: sticky;
+    z-index: 2;
     border: 1px hidden;
     top: 0;
     left: 0;
