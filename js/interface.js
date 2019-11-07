@@ -231,6 +231,9 @@ function populateMediaLibraries()
     var libraryListing = document.querySelector('#left_nav #libraries #listing');
     var mediaListing = document.querySelector('#left_nav #media_groups #listing');
 
+    clearChildren(libraryListing);
+    clearChildren(mediaListing);
+
     var types = new Set();
 
     var libraries = global_player_state['library'];
@@ -296,6 +299,8 @@ function populateMediaLibraries()
 function populatePlaylists()
 {
     var playlistListing = document.querySelector('#left_nav #playlists #listing');
+
+    clearChildren(playlistListing);
 
     var playlists = global_player_state['playlist'];
 
