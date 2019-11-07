@@ -195,7 +195,17 @@
     padding-bottom: 20px;
 }
 
-#bottom_controls button i {
+#bottom_controls span {
+    position: relative;
+    bottom: 35px;
+}
+
+#bottom_controls button[id='media_previous'] i,
+#bottom_controls button[id='media_shuffle'] i,
+#bottom_controls button[id='media_mute'] i,
+#bottom_controls button[id='media_next'] i {
+    position: relative;
+    bottom: 10px;
     font-size: 60px;
 }
 
