@@ -7,4 +7,5 @@ body {
     background-color: var(--bg-color);
     color: var(--text-color);
     font-family: 'Ubuntu', sans-serif;
+    z-index: 1;
 }

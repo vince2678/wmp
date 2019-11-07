@@ -19,7 +19,6 @@
 
 /* content / middle area */
 #content, #content[class='normal'] {
-    z-index: 1; /* Stay on top */
     position: fixed;
     background-color: var(--content-color);
     overflow: auto;
@@ -28,7 +27,6 @@
 }
 
  #content[class='wide'] {
-    z-index: 1; /* Stay on top */
     position: fixed;
     background-color: var(--content-color);
     overflow: auto;
@@ -37,7 +35,6 @@
 }
 
 #content[class='large'], #content[class='fullscreen'] {
-    z-index: 1; /* Stay on top */
     position: fixed;
     background-color: var(--content-color);
     overflow: auto;
@@ -52,7 +49,6 @@
 
 div.content_page_header {
     position: sticky;
-    z-index: 3;
     border: 1px hidden;
     top: 0;
     left: 0;
@@ -87,7 +83,6 @@ button#library_rescan[class~=scan-failure] {
 
 .content_table {
     position: absolute;
-    z-index: 2;
     top: 0;
     left: 0;
     width: 100%;

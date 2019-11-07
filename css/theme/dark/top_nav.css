@@ -11,7 +11,6 @@
 
 /* top navigation / header area */
 #top_nav[class='closed'] {
-    z-index: 1; /* Stay on top */
     position: fixed; /* Stay in place */
     overflow-x: hidden; /* Disable horizontal scroll */
     overflow-y: hidden; /* Disable vertical scroll */
@@ -22,7 +21,6 @@
 }
 
 #top_nav, #top_nav[class='open'] {
-    z-index: 1; /* Stay on top */
     position: fixed; /* Stay in place */
     overflow-x: hidden; /* Disable horizontal scroll */
     overflow-y: hidden; /* Disable vertical scroll */
