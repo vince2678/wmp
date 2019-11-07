@@ -243,7 +243,11 @@ function populateMediaLibraries()
         let entry = document.createElement('span');
 
         entry.setAttribute('id', 'library');
-        entry.innerHTML = library['name'];
+
+        if ((library['type'] == "photo") || (library['type'] == "video"))
+            entry.innerHTML = '<i class="material-icons">'+ library['type'] + '_library</i> ' + library['name'];
+        else
+            entry.innerHTML = '<i class="material-icons">library_music</i> ' + library['name'];
 
         entry.onclick = function() {
             populateContentArea('library', library['library_id']);
@@ -264,7 +268,8 @@ function populateMediaLibraries()
     let entry = document.createElement('span');
 
     entry.setAttribute('id', 'add_library');
-    entry.innerHTML = "&plus; Add Library";
+
+    entry.innerHTML = '<i class="material-icons">playlist_add</i> Add Library';
 
     libraryListing.appendChild(entry);
 
@@ -274,6 +279,11 @@ function populateMediaLibraries()
 
         entry.setAttribute('id', 'media');
         entry.innerHTML = type;
+
+        if ((type == "photo") || (type == "video"))
+            entry.innerHTML = '<i class="material-icons">'+ type + '_library</i> ' + type;
+        else
+            entry.innerHTML = '<i class="material-icons">library_music</i> ' + type;
 
         entry.onclick = function() {
             populateContentArea('type', type);
@@ -309,12 +319,13 @@ function populatePlaylists()
         let entry = document.createElement('span');
 
         entry.setAttribute('id', 'playlist');
-        entry.innerHTML = playlist['name'];
+        entry.innerHTML = '<i class="material-icons">playlist_play</i> ' + playlist['name'];
 
         entry.onclick = function() {
             populateContentArea('playlist', playlist['playlist_id']);
 
             let active = document.querySelector("#listing > span.active");
+
 
             if (active)
                 active.className = "";
@@ -328,7 +339,7 @@ function populatePlaylists()
     let entry = document.createElement('span');
 
     entry.setAttribute('id', 'add_playlist');
-    entry.innerHTML = "&plus; Add playlist";
+    entry.innerHTML = '<i class="material-icons">playlist_add</i> ' + "Add playlist";
 
     playlistListing.appendChild(entry);
 }

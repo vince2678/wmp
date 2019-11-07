@@ -47,6 +47,10 @@
     padding-left: 15px;
 }
 
+#left_nav div#listing span i {
+    font-size: 14px;
+}
+
 #left_nav div#listing span:hover {
     background-color: var(--left-nav-hover-color);
     transition: 0.2s;
