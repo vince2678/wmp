@@ -858,14 +858,23 @@ function getPhotoList(queue)
     return null;
 }
 
-function updateSeekBar(currentTime, duration)
+function updateSeekBar(event)
 {
-    if (duration < 1)
-        return;
-
     const seek_bar = document.querySelector('#media_player #seek_bar');
-
     let media_element = document.querySelector('#content_preview .media_element');
+
+    if (media_element)
+    {
+        var currentTime = media_element.currentTime;
+        var duration = media_element.duration;
+
+        if (duration < 1)
+            return;
+    }
+    else
+    {
+        return;
+    }
 
     clearChildren(seek_bar);
 
@@ -878,7 +887,10 @@ function updateSeekBar(currentTime, duration)
     canvas.height = percentToPixel(seek_bar.clientHeight, window.innerWidth);
 
     const percent_done = (currentTime/duration);
+    const percent_seekable = (media_element.seekable.end(0)/duration);
+
     const width = parseInt(canvas.width  * percent_done);
+    const width_seekable = parseInt(canvas.width * percent_seekable);
 
     let x = 0;
     let y = 0;
@@ -886,18 +898,12 @@ function updateSeekBar(currentTime, duration)
     ctx.fillStyle = 'red';
     ctx.fillRect(x, y, width, canvas.height);
 
-    if (media_element)
+    if (width_seekable > width)
     {
-        const percent_seekable = (media_element.seekable.end(0)/duration);
-        const width_seekable = parseInt(canvas.width * percent_seekable);
+        x = width;
 
-        if (width_seekable > width)
-        {
-            x = width;
-
-            ctx.fillStyle = 'grey';
-            ctx.fillRect(x, y, width_seekable - width, canvas.height);
-        }
+        ctx.fillStyle = 'grey';
+        ctx.fillRect(x, y, width_seekable - width, canvas.height);
     }
 
     let elapsed = document.querySelector("#bottom_controls #media_time_elapsed");
@@ -972,9 +978,7 @@ function playMedia(media_id, queue = null)
     media_element.controls = true;
     media_element.autoplay = true;
 
-    media_element.ontimeupdate = function () {
-        updateSeekBar(media_element.currentTime, media_element.duration);
-    };
+    media_element.ontimeupdate = updateSeekBar;
 
     media_element.onratechange = function() {
         console.log('The playback rate changed.');
