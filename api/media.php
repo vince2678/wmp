@@ -94,14 +94,17 @@ function clean_media_records($library_id)
     }
 
     /* go through library's associated media records */
-    while (null !== $m_row = get_row("r_media", $constraint, true))
+    while (null !== $m_row = get_row("media", $constraint, true))
     {
         $row_update_time = new \DateTime($m_row['last_update']);
 
         $diff = $library_update_time->getTimestamp()
             - $row_update_time->getTimestamp();
 
-        if ($diff > $interval)
+
+        /* remove file if either file dne on disk or record was not updated
+           last rescan */
+        if (($diff > $interval) || !file_exists($m_row['full_path']))
         {
             delete_row("r_media", array("media_id" => $m_row['media_id']));
         }
