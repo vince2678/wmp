@@ -418,11 +418,19 @@ function rescanLibrary(id)
 {
     let callback = function(json)
     {
-        let result = JSON.parse(json);
+        let result;
 
-        let btn = document.querySelector("button#library_rescan");
-
-        btn.setAttribute("class", "scan-" + result['status']);
+        try {
+            result = JSON.parse(json);
+        }
+        catch(err) {
+            console.log("Failed to parse: " + json);
+        }
+        finally
+        {
+            let btn = document.querySelector("button#library_rescan");
+            btn.setAttribute("class", "scan-" + result['status']);
+        }
     }
 
     asyncGetUrlResponse("api/force-scan/library/id/" + id, callback);
