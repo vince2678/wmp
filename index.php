@@ -48,7 +48,7 @@ include "theme.php";
                 </form>
             </div>
             <div id='user_area'>
-                <p class='placeholder'>User area</p>
+                <span><i class="material-icons">person</i></span>
             </div>
         </div>
 
