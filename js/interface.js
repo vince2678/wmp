@@ -1077,6 +1077,11 @@ function stopMediaPlayback()
     var media_preview = document.querySelector('#media_player #content_preview');
     var seek_bar = document.querySelector('#media_player #seek_bar');
 
+    var media_element = document.querySelector('#content_preview .media_element');
+
+    if (media_element)
+        media_element.ontimeupdate = undefined;
+
     var i = 0;
     var length = media_preview.children["length"];
 
