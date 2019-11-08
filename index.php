@@ -20,6 +20,7 @@ include "theme.php";
         <script src='js/globals.js'></script>
         <script src='js/misc.js'></script>
         <script src='js/queue.js'></script>
+        <script src='js/media_player.js'></script>
         <script src='js/ajax.js'></script>
         <script src='js/interface.js' type='module'></script>
     </head>
