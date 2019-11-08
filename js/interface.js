@@ -969,7 +969,12 @@ function playMedia(media_id, queue = null)
     }
 
     if (queue)
+    {
         global_player_state['queue'] = queue;
+
+        if (global_player_state['shuffle'])
+            global_player_state['queue'] = getNewShuffle();
+    }
 
     global_player_state['playing'] = media['media_id'];
 
@@ -1258,11 +1263,12 @@ function fetchDBData()
     document.querySelector("#bottom_controls #media_shuffle").onclick = function() {
         if (global_player_state['shuffle'])
         {
+            global_player_state['shuffle'] = false;
             this.classList.remove("shuffle-active");
         }
         else
         {
-            global_player_state['queue'] = getNewShuffle();
+            global_player_state['shuffle'] = true;
             this.classList.add("shuffle-active");
         }
     }
