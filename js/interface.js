@@ -11,12 +11,6 @@ function toggleMediaPlayerSize(target = undefined)
 
     let index;
 
-    let openLeftNav = function() { while(!toggleLeftNav()); resizeElems() };
-    let closeLeftNav = function() { while(toggleLeftNav()); resizeElems() };
-
-    let openTopNav = function() { while(!toggleTopNav()); resizeElems() };
-    let closeTopNav = function() { while(toggleTopNav()); resizeElems() };
-
     if (target)
     {
         console.log("Target specified: " + target);

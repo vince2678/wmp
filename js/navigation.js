@@ -1,5 +1,11 @@
 'use strict';
 
+const openLeftNav = function() { while(!toggleLeftNav()); };
+const closeLeftNav = function() { while(toggleLeftNav()); };
+
+const openTopNav = function() { while(!toggleTopNav()); };
+const closeTopNav = function() { while(toggleTopNav()); };
+
 function toggleLeftNav()
 {
     var open;
