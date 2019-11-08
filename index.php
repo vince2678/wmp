@@ -22,6 +22,7 @@ include "theme.php";
         <script src='js/queue.js'></script>
         <script src='js/media_player.js'></script>
         <script src='js/content.js'></script>
+        <script src='js/navigation.js'></script>
         <script src='js/ajax.js'></script>
         <script src='js/interface.js' type='module'></script>
     </head>
