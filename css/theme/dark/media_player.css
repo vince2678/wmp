@@ -194,6 +194,7 @@
 }
 
 #bottom_controls button[id='media_previous'] i,
+#bottom_controls button[id='media_repeat'] i,
 #bottom_controls button[id='media_shuffle'] i,
 #bottom_controls button[id='media_mute'] i,
 #bottom_controls button[id='media_next'] i {
@@ -202,6 +203,8 @@
     font-size: 60px;
 }
 
+#bottom_controls button[class~="repeat-one"],
+#bottom_controls button[class~="repeat-all"],
 #bottom_controls button:hover, #bottom_controls button[class~="shuffle-active"] {
     color: var(--btn-hover-color);
 }

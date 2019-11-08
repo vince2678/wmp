@@ -12,6 +12,12 @@ const NAV_CLOSED = "closed";
 
 var global_player_state = { };
 
+const REPEAT_NONE = 0;
+const REPEAT_ALL = 1;
+const REPEAT_ONE = 2;
+
+const REPEAT_MODES = ["none", "all", "one"];
+
 function toggleLeftNav()
 {
     var open;
@@ -1251,6 +1257,26 @@ function fetchDBData()
             this.innerHTML = '<i class="material-icons">volume_off</i>';
         }
     }
+
+    document.querySelector('#bottom_controls #media_repeat i').onclick = function() {
+        let mode = global_player_state['repeat'];
+
+        if (mode == undefined)
+            mode = REPEAT_NONE;
+
+        this.parentElement.classList.remove("repeat-" + REPEAT_MODES[mode]);
+
+        mode = (mode + 1) % REPEAT_MODES.length;
+        global_player_state['repeat'] = mode;
+
+        this.parentElement.classList.add("repeat-" + REPEAT_MODES[mode]);
+
+        if (mode == REPEAT_ONE)
+            this.innerText = "repeat_one";
+        else
+            this.innerText = "repeat";
+    };
+
 
     document.querySelector('#bottom_controls #media_previous').onclick = playPrevious;
     document.querySelector('#bottom_controls #media_next').onclick = playNext;
