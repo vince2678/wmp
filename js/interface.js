@@ -1057,29 +1057,33 @@ function playPrevious()
 {
     var prev;
 
-    if (global_player_state['playing'])
-        prev = global_player_state['playing'];
+    let repeat_mode = global_player_state['repeat'];
+    let queue = global_player_state['queue'];
+    let current = global_player_state['playing'];
+    let index = 0;
 
-    if (global_player_state['queue'])
+    if (current)
+        index = queue.indexOf(current);
+
+    if (repeat_mode == REPEAT_ALL)
     {
-        let queue = global_player_state['queue'];
-        let index = queue.length - 1;
+        index = (index - 1) % queue.length;
 
-        if (global_player_state['shuffle'])
-        {
-            index = Math.floor(Math.random() * queue.length);
-            console.log("Shuffle set, picked media_id: " + queue[index]);
-        }
-        else if (prev && (index = queue.indexOf(prev)) !== -1)
-        {
-            index = (index - 1) % queue.length;
-
-            // loop around queue
-            if (index < 0)
-                index = queue.length + index;
-        }
+        if (index < 0)
+            index = queue.length + index;
 
         prev = queue[index];
+    }
+    else if (repeat_mode == REPEAT_ONE)
+    {
+        prev = queue[index];
+    }
+    else
+    {
+        index = index - 1;
+
+        if (index >= 0)
+            prev = queue[index];
     }
 
     if (prev)
@@ -1090,25 +1094,29 @@ function playNext()
 {
     var next;
 
-    if (global_player_state['playing'])
-        next = global_player_state['playing'];
+    let repeat_mode = global_player_state['repeat'];
+    let queue = global_player_state['queue'];
+    let current = global_player_state['playing'];
+    let index = 0;
 
+    if (current)
+        index = queue.indexOf(current);
 
-    if (global_player_state['queue'])
+    if (repeat_mode == REPEAT_ALL)
     {
-        let queue = global_player_state['queue'];
-        let index = 0;
-
-        // loop around queue
-        if (global_player_state['shuffle'])
-        {
-            index = Math.floor(Math.random() * queue.length);
-            console.log("Shuffle set, picked media_id: " + queue[index]);
-        }
-        else if (next && (index = queue.indexOf(next)) !== -1)
-            index = (index + 1) % queue.length;
-
+        index = (index + 1) % queue.length;
         next = queue[index];
+    }
+    else if (repeat_mode == REPEAT_ONE)
+    {
+        next = queue[index];
+    }
+    else
+    {
+        index = index + 1;
+
+        if (index < queue.length)
+            next = queue[index];
     }
 
     if (next)
