@@ -1115,7 +1115,25 @@ function playNext()
         playMedia(next);
 }
 
+function getNewShuffle()
+{
+    var shuffle = [];
+    var queue = global_player_state['queue'];
+    var visited = new Set();
 
+    while (shuffle.length < queue.length)
+    {
+        let index = Math.floor(Math.random() * queue.length);
+
+        if (visited.has(index))
+            continue;
+
+        visited.add(index);
+        shuffle.push(queue[index]);
+    }
+
+    return shuffle;
+}
 
 function stopMediaPlayback()
 {
@@ -1232,12 +1250,11 @@ function fetchDBData()
     document.querySelector("#bottom_controls #media_shuffle").onclick = function() {
         if (global_player_state['shuffle'])
         {
-            global_player_state['shuffle'] = false;
             this.classList.remove("shuffle-active");
         }
         else
         {
-            global_player_state['shuffle'] = true;
+            global_player_state['queue'] = getNewShuffle();
             this.classList.add("shuffle-active");
         }
     }
