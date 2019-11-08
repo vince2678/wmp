@@ -1,6 +1,6 @@
 'use strict';
 
-function seekTo(event)
+function seekHandler(event)
 {
     var media_element = document.querySelector('#content_preview .media_element');
 

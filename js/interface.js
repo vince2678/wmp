@@ -943,7 +943,7 @@ function fetchDBData()
     document.querySelector('#bottom_controls #media_previous').onclick = playPrevious;
     document.querySelector('#bottom_controls #media_next').onclick = playNext;
 
-    document.querySelector('#media_player #seek_bar').onclick = seekTo;
+    document.querySelector('#media_player #seek_bar').onclick = seekHandler;
 
     fetchDBData();
 
