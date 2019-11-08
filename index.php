@@ -24,7 +24,7 @@ include "theme.php";
         <script src='js/content.js'></script>
         <script src='js/navigation.js'></script>
         <script src='js/ajax.js'></script>
-        <script src='js/interface.js' type='module'></script>
+        <script src='js/main.js' type='module'></script>
     </head>
 
     <body>
