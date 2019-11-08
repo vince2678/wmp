@@ -31,8 +31,6 @@ function toggleLeftNav()
         btn.innerHTML = "&plus;";
     }
 
-    resizeElems();
-
     return open;
 }
 
@@ -62,8 +60,6 @@ function toggleTopNav()
         media_content.className = PLAYER_SIZE_LARGE;
     }
 
-    resizeElems();
-
     return open;
 }
 
@@ -78,11 +74,11 @@ function toggleMediaPlayerSize(target = undefined)
 
     let index;
 
-    let openLeftNav = function() { while(!toggleLeftNav()); };
-    let closeLeftNav = function() { while(toggleLeftNav()); };
+    let openLeftNav = function() { while(!toggleLeftNav()); resizeElems() };
+    let closeLeftNav = function() { while(toggleLeftNav()); resizeElems() };
 
-    let openTopNav = function() { while(!toggleTopNav()); };
-    let closeTopNav = function() { while(toggleTopNav()); };
+    let openTopNav = function() { while(!toggleTopNav()); resizeElems() };
+    let closeTopNav = function() { while(toggleTopNav()); resizeElems() };
 
     if (target)
     {
@@ -928,7 +924,10 @@ function fetchDBData()
     //set content area dimensions
     resizeElems();
 
-    document.querySelector('.leftnavbtn').onclick = toggleLeftNav;
+    document.querySelector('.leftnavbtn').onclick = function() {
+        toggleLeftNav();
+        resizeElems();
+    }
 
     /* set handlers for media player buttons */
     document.querySelector('#media_player #media_fullscreen').onclick = function() {
