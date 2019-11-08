@@ -67,14 +67,6 @@ function toggleTopNav()
     return open;
 }
 
-function isFullScreen()
-{
-    if (document.fullscreenElement == document.querySelector('body'))
-        return true;
-
-    return false;
-}
-
 function toggleMediaPlayerSize(target = undefined)
 {
     var media_player = document.querySelector('#media_player');

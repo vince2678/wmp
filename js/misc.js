@@ -54,6 +54,14 @@ function percentToPixel(size, max)
         return parseInt(size);
 }
 
+function isFullScreen()
+{
+    if (document.fullscreenElement == document.querySelector('body'))
+        return true;
+
+    return false;
+}
+
 function isMobile()
 {
     var mobile = false;
