@@ -17,6 +17,7 @@ include "theme.php";
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
         <?php import_font('Ubuntu') ?> 
         <?php import_theme() ?>
+        <script src='js/globals.js'></script>
         <script src='js/misc.js'></script>
         <script src='js/ajax.js'></script>
         <script src='js/interface.js' type='module'></script>
