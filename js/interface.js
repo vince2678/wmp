@@ -872,73 +872,11 @@ function fetchDBData()
         toggleMediaPlayerSize();
     }
 
-    /* set up play button handler */
-    document.querySelector('#bottom_controls #media_play_pause').onclick = function() {
-        let media_element = document.querySelector('#content_preview .media_element');
-
-        if (media_element.paused)
-        {
-            if (media_element.play)
-            {
-                media_element.play();
-                this.innerHTML = '<i class="material-icons">pause_circle_outline</i>';
-            }
-        }
-       else if (media_element.pause)
-        {
-            media_element.pause();
-            this.innerHTML = '<i class="material-icons">play_circle_outline</i>';
-        }
-    }
-
-    document.querySelector("#bottom_controls #media_shuffle").onclick = function() {
-        if (global_player_state['shuffle'])
-        {
-            global_player_state['shuffle'] = false;
-            this.classList.remove("shuffle-active");
-        }
-        else
-        {
-            global_player_state['shuffle'] = true;
-            this.classList.add("shuffle-active");
-        }
-    }
-
-    /* set up mute button handler */
-    document.querySelector('#bottom_controls #media_mute').onclick = function() {
-        let media_element = document.querySelector('#content_preview .media_element');
-
-        if (media_element.muted)
-        {
-            media_element.muted = false;
-            this.innerHTML = '<i class="material-icons">volume_up</i>';
-        }
-        else if (media_element.muted == false)
-        {
-            media_element.muted = true;
-            this.innerHTML = '<i class="material-icons">volume_off</i>';
-        }
-    }
-
-    document.querySelector('#bottom_controls #media_repeat i').onclick = function() {
-        let mode = global_player_state['repeat'];
-
-        if (mode == undefined)
-            mode = REPEAT_NONE;
-
-        this.parentElement.classList.remove("repeat-" + REPEAT_MODES[mode]);
-
-        mode = (mode + 1) % REPEAT_MODES.length;
-        global_player_state['repeat'] = mode;
-
-        this.parentElement.classList.add("repeat-" + REPEAT_MODES[mode]);
-
-        if (mode == REPEAT_ONE)
-            this.innerText = "repeat_one";
-        else
-            this.innerText = "repeat";
-    };
-
+    /* set up media player area handlers */
+    document.querySelector('#bottom_controls #media_play_pause').onclick = playPauseHandler;
+    document.querySelector("#bottom_controls #media_shuffle").onclick = shuffleHandler;
+    document.querySelector('#bottom_controls #media_mute').onclick = muteHandler;
+    document.querySelector('#bottom_controls #media_repeat i').onclick = repeatHandler;
 
     document.querySelector('#bottom_controls #media_previous').onclick = playPrevious;
     document.querySelector('#bottom_controls #media_next').onclick = playNext;
