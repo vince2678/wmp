@@ -2,7 +2,7 @@
 
 function getShuffle(array)
 {
-    var shuffle = Array;
+    var shuffle = new Array();
     var visited = new Set();
 
     while (shuffle.length < array.length)
