@@ -10,10 +10,10 @@ function toggleLeftNav()
 {
     var open;
 
-    var left_nav = document.querySelector('#left_nav');
-    var media_content = document.querySelector('#content');
+    var left_nav = document.querySelector(SELECTOR_LEFT_NAV);
+    var media_content = document.querySelector(SELECTOR_CONTENT);
 
-    var btn = document.querySelector('.leftnavbtn');
+    var btn = document.querySelector(SELECTOR_LEFT_NAV_TOGGLE);
 
     if(left_nav.className == NAV_CLOSED)
     {
@@ -44,9 +44,9 @@ function toggleTopNav()
 {
     var open;
 
-    var top_nav = document.querySelector('#top_nav');
-    var left_nav = document.querySelector('#left_nav');
-    var media_content = document.querySelector('#content');
+    var top_nav = document.querySelector(SELECTOR_TOP_NAV);
+    var left_nav = document.querySelector(SELECTOR_LEFT_NAV);
+    var media_content = document.querySelector(SELECTOR_CONTENT);
 
     if (top_nav.className == NAV_CLOSED)
     {
@@ -71,12 +71,12 @@ function toggleTopNav()
 
 function resizeElems()
 {
-    var top_nav = document.querySelector('#top_nav');
-    var left_nav = document.querySelector('#left_nav');
+    var top_nav = document.querySelector(SELECTOR_TOP_NAV);
+    var left_nav = document.querySelector(SELECTOR_LEFT_NAV);
 
-    var media_content = document.querySelector('#content');
-    var media_player = document.querySelector('#media_player');
-    var media_preview = document.querySelector('#media_player #content_preview');
+    var media_content = document.querySelector(SELECTOR_CONTENT);
+    var media_player = document.querySelector(SELECTOR_MEDIA_PLAYER);
+    var media_preview = document.querySelector(SELECTOR_CONTENT_PREVIEW);
 
     left_nav.style.height = (window.innerHeight - top_nav.offsetHeight - media_player.offsetHeight) + 'px';
 
@@ -87,7 +87,7 @@ function resizeElems()
     {
         case PLAYER_SIZE_SMALL:
         {
-            let seek_bar = document.querySelector('#media_player #seek_bar');
+            let seek_bar = document.querySelector(SELECTOR_SEEK_BAR);
 
             /* set 16:9 ratio for preview dimensions and make clearance for seek bar on height */
             let preview_height = parseInt(media_player.clientHeight - (2 * seek_bar.clientHeight));
@@ -114,8 +114,8 @@ function resizeElems()
 
 function toggleMediaPlayerSize(target = undefined)
 {
-    var media_player = document.querySelector('#media_player');
-    var media_preview = document.querySelector('#media_player #content_preview');
+    var media_player = document.querySelector(SELECTOR_MEDIA_PLAYER);
+    var media_preview = document.querySelector(SELECTOR_CONTENT_PREVIEW);
 
     let all = [ PLAYER_SIZE_SMALL, PLAYER_SIZE_NORMAL, PLAYER_SIZE_WIDE, PLAYER_SIZE_LARGE, PLAYER_SIZE_FULL ];
 
@@ -141,8 +141,8 @@ function toggleMediaPlayerSize(target = undefined)
         target = PLAYER_SIZE_SMALL;
     }
 
-    let fullscreen_icon = document.querySelector('#media_player #media_fullscreen i');
-    let resize_icon = document.querySelector('#media_player #media_resize i');
+    let fullscreen_icon = document.querySelector(SELECTOR_MEDIA_PLAYER_FULLSCREEN + ' i');
+    let resize_icon = document.querySelector(SELECTOR_MEDIA_PLAYER_RESIZE + ' i');
 
     switch(target)
     {
@@ -219,8 +219,8 @@ function toggleMediaPlayerSize(target = undefined)
 /* populate the media and library sections */
 function populateMediaLibraries()
 {
-    var libraryListing = document.querySelector('#left_nav #libraries #listing');
-    var mediaListing = document.querySelector('#left_nav #media_groups #listing');
+    var libraryListing = document.querySelector(SELECTOR_LIBRARY_LIST);
+    var mediaListing = document.querySelector(SELECTOR_MEDIA_TYPE_LIST);
 
     clearChildren(libraryListing);
     clearChildren(mediaListing);
@@ -243,7 +243,7 @@ function populateMediaLibraries()
         entry.onclick = function() {
             populateContentArea('library', library['library_id']);
 
-            let active = document.querySelector("#listing > span.active");
+            let active = document.querySelector(SELECTOR_ACTIVE_LIST_ITEM);
 
             if (active)
                 active.className = "";
@@ -279,7 +279,7 @@ function populateMediaLibraries()
         entry.onclick = function() {
             populateContentArea('type', type);
 
-            let active = document.querySelector("#listing > span.active");
+            let active = document.querySelector(SELECTOR_ACTIVE_LIST_ITEM);
 
             if (active)
                 active.className = "";
@@ -299,7 +299,7 @@ function populateMediaLibraries()
 /* populate the playlist sections */
 function populatePlaylists()
 {
-    var playlistListing = document.querySelector('#left_nav #playlists #listing');
+    var playlistListing = document.querySelector(SELECTOR_PLAYLIST_LIST);
 
     clearChildren(playlistListing);
 
@@ -315,7 +315,7 @@ function populatePlaylists()
         entry.onclick = function() {
             populateContentArea('playlist', playlist['playlist_id']);
 
-            let active = document.querySelector("#listing > span.active");
+            let active = document.querySelector(SELECTOR_ACTIVE_LIST_ITEM);
 
 
             if (active)
@@ -342,7 +342,7 @@ function populateContentArea(group, value)
     var queue = play_queue['queue'];
     var type = play_queue['type'];
 
-    var content_area = document.querySelector('#content');
+    var content_area = document.querySelector(SELECTOR_CONTENT);
 
     clearChildren(content_area);
 
@@ -460,7 +460,7 @@ function getMusicList(queue)
         row.setAttribute('id', 'content_table_row');
 
         row.onclick = function() {
-            let active = document.querySelector("#content_table_row.active");
+            let active = document.querySelector(SELECTOR_ACTIVE_CONTENT_ITEM);
 
             if (active)
                 active.className = "";
@@ -544,7 +544,7 @@ function getVideoList(queue)
         row.setAttribute('id', 'content_table_row');
 
         row.onclick = function() {
-            let active = document.querySelector("#content_table_row.active");
+            let active = document.querySelector(SELECTOR_ACTIVE_CONTENT_ITEM);
 
             if (active)
                 active.className = "";
@@ -641,7 +641,7 @@ function getPhotoList(queue)
         row.setAttribute('id', 'content_table_row');
 
         row.onclick = function() {
-            let active = document.querySelector("#content_table_row.active");
+            let active = document.querySelector(SELECTOR_ACTIVE_CONTENT_ITEM);
 
             if (active)
                 active.className = "";

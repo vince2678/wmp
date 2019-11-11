@@ -14,7 +14,7 @@ function rescanLibrary(id)
         }
         finally
         {
-            let btn = document.querySelector("button#library_rescan");
+            let btn = document.querySelector(SELECTOR_RESCAN_BTN);
             btn.setAttribute("class", "scan-" + result['status']);
         }
     }

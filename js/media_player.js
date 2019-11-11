@@ -16,7 +16,7 @@ function mediaPlayerSizeHandler() {
 /* set up play button handler */
 function playPauseHandler()
 {
-    let media_element = document.querySelector('#content_preview .media_element');
+    let media_element = document.querySelector(SELECTOR_MEDIA_ELEMENT);
 
     if (media_element.paused)
     {
@@ -51,7 +51,7 @@ function shuffleHandler()
 /* set up mute button handler */
 function muteHandler()
 {
-    let media_element = document.querySelector('#content_preview .media_element');
+    let media_element = document.querySelector(SELECTOR_MEDIA_ELEMENT);
 
     if (media_element.muted)
     {
@@ -88,7 +88,7 @@ function repeatHandler()
 
 function seekHandler(event)
 {
-    var media_element = document.querySelector('#content_preview .media_element');
+    var media_element = document.querySelector(SELECTOR_MEDIA_ELEMENT);
 
     if ((!media_element) || (!media_element.currentTime))
         return;
@@ -101,8 +101,8 @@ function seekHandler(event)
 
 function updateSeekBar(event)
 {
-    const seek_bar = document.querySelector('#media_player #seek_bar');
-    let media_element = document.querySelector('#content_preview .media_element');
+    const seek_bar = document.querySelector(SELECTOR_SEEK_BAR);
+    let media_element = document.querySelector(SELECTOR_MEDIA_ELEMENT);
 
     if (media_element)
     {
@@ -147,8 +147,8 @@ function updateSeekBar(event)
         ctx.fillRect(x, y, width_seekable - width, canvas.height);
     }
 
-    let elapsed = document.querySelector("#bottom_controls #media_time_elapsed");
-    let total = document.querySelector("#bottom_controls #media_time_duration");
+    let elapsed = document.querySelector(SELECTOR_MEDIA_TIME_ELAPSED);
+    let total = document.querySelector(SELECTOR_MEDIA_DURATION);
 
     elapsed.innerText = formatTime(currentTime);
     total.innerText = formatTime(duration);
@@ -156,13 +156,13 @@ function updateSeekBar(event)
 
 function stopMediaPlayback()
 {
-    var media_preview = document.querySelector('#media_player #content_preview');
-    var seek_bar = document.querySelector('#media_player #seek_bar');
+    var media_preview = document.querySelector(SELECTOR_CONTENT_PREVIEW);
+    var seek_bar = document.querySelector(SELECTOR_SEEK_BAR);
 
-    var elapsed = document.querySelector("#bottom_controls #media_time_elapsed");
-    var duration = document.querySelector("#bottom_controls #media_time_duration");
+    var elapsed = document.querySelector(SELECTOR_MEDIA_TIME_ELAPSED);
+    var duration = document.querySelector(SELECTOR_MEDIA_DURATION);
 
-    var media_element = document.querySelector('#content_preview .media_element');
+    var media_element = document.querySelector(SELECTOR_MEDIA_ELEMENT);
 
     if (media_element)
         media_element.ontimeupdate = undefined;
@@ -318,7 +318,7 @@ function playMedia(media_id, queue = null)
 
     stopMediaPlayback();
 
-    var media_preview = document.querySelector('#media_player #content_preview');
+    var media_preview = document.querySelector(SELECTOR_CONTENT_PREVIEW);
     var media_element = document.createElement(element);
 
     media_element.setAttribute('class', 'media_element');

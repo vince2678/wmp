@@ -34,24 +34,24 @@ function fetchDBData()
     //set content area dimensions
     resizeElems();
 
-    document.querySelector('.leftnavbtn').onclick = function() {
+    document.querySelector(SELECTOR_LEFT_NAV_TOGGLE).onclick = function() {
         toggleLeftNav();
         resizeElems();
     }
 
     /* set up media player area handlers */
-    document.querySelector('#media_player #media_fullscreen').onclick = fullScreenHandler;
-    document.querySelector('#media_player #media_resize').onclick = mediaPlayerSizeHandler;
+    document.querySelector(SELECTOR_MEDIA_PLAYER_FULLSCREEN).onclick = fullScreenHandler;
+    document.querySelector(SELECTOR_MEDIA_PLAYER_RESIZE).onclick = mediaPlayerSizeHandler;
 
-    document.querySelector('#bottom_controls #media_play_pause').onclick = playPauseHandler;
-    document.querySelector("#bottom_controls #media_shuffle").onclick = shuffleHandler;
-    document.querySelector('#bottom_controls #media_mute').onclick = muteHandler;
-    document.querySelector('#bottom_controls #media_repeat i').onclick = repeatHandler;
+    document.querySelector(SELECTOR_MEDIA_PLAY_PAUSE).onclick = playPauseHandler;
+    document.querySelector(SELECTOR_MEDIA_SHUFFLE).onclick = shuffleHandler;
+    document.querySelector(SELECTOR_MEDIA_MUTE).onclick = muteHandler;
+    document.querySelector(SELECTOR_MEDIA_REPEAT + " i").onclick = repeatHandler;
 
-    document.querySelector('#bottom_controls #media_previous').onclick = playPrevious;
-    document.querySelector('#bottom_controls #media_next').onclick = playNext;
+    document.querySelector(SELECTOR_MEDIA_PREVIOUS).onclick = playPrevious;
+    document.querySelector(SELECTOR_MEDIA_NEXT).onclick = playNext;
 
-    document.querySelector('#media_player #seek_bar').onclick = seekHandler;
+    document.querySelector(SELECTOR_SEEK_BAR).onclick = seekHandler;
 
     fetchDBData();
 
