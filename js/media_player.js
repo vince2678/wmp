@@ -17,19 +17,20 @@ function mediaPlayerSizeHandler() {
 function playPauseHandler()
 {
     let media_element = document.querySelector(SELECTOR_MEDIA_ELEMENT);
+    let icon = this.children[0];
 
     if (media_element.paused)
     {
         if (media_element.play)
         {
             media_element.play();
-            this.innerHTML = '<i class="material-icons">pause_circle_outline</i>';
+            icon.innerText = 'pause_circle_outline';
         }
     }
     else if (media_element.pause)
     {
         media_element.pause();
-        this.innerHTML = '<i class="material-icons">play_circle_outline</i>';
+        icon.innerText = 'play_circle_outline';
     }
 }
 
@@ -52,16 +53,17 @@ function shuffleHandler()
 function muteHandler()
 {
     let media_element = document.querySelector(SELECTOR_MEDIA_ELEMENT);
+    let icon = this.children[0];
 
     if (media_element.muted)
     {
         media_element.muted = false;
-        this.innerHTML = '<i class="material-icons">volume_up</i>';
+        icon.innerText = 'volume_up';
     }
     else if (media_element.muted == false)
     {
         media_element.muted = true;
-        this.innerHTML = '<i class="material-icons">volume_off</i>';
+        icon.innerText = 'volume_off';
     }
 }
 
