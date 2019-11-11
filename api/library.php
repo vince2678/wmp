@@ -191,6 +191,43 @@ function library_url_handler($data)
 
             die();
         }
+        case 'get':
+        {
+            if ($library_id == -1)
+                $constraint = array();
+            else
+                $constraint = array('library_id' => $library_id);
+
+            $rows = get_rows($data['table'], $constraint);
+
+            for ($i = 0; $i < count($rows); $i++)
+            {
+                $constraint['library_id'] = $rows[$i]['library_id'];
+                $media_rows = get_rows('r_media', $constraint);
+
+                for ($j = 0; $j < count($media_rows); $j++)
+                {
+                    $id = $media_rows[$j]['media_id'];
+                    $rows[$i]['media'][] = $id;
+                }
+            }
+
+            if (isset($rows))
+            {
+                $encoded = json_encode($rows, JSON_INVALID_UTF8_SUBSTITUTE);
+
+                if (false != $encoded)
+                {
+                    echo $encoded;
+                }
+                else
+                {
+                    echo '{"status" : "failure",'
+                        .' "message": "Could not display data"}' . PHP_EOL;
+                }
+                die();
+            }
+        }
         case null:
         default:
         {
@@ -208,7 +245,8 @@ $register_handlers = function ()
 
     $regexp =
     "^[/]*api[/]+"
-    . "(?<action>(force-scan|scan))[/]+"
+    . "(?<action>(get|force-scan|scan))[/]+"
+    . "((?<type>row([s]{0,1}))[/]*){0,1}"
     . "(?<table>library)[/]*"
     . "((?<column>(id|name))[/]*){0,1}"
     //. "((?<like>like)[/]+){0,1}"

@@ -21,29 +21,8 @@ function getShuffle(array)
 
 function getMediaQueue(group, value)
 {
-    var media = global_player_state['media'];
-
     var queue = [];
     var type = null;
-
-    function filterMedia(constraint) {
-        for (let medium of media)
-        {
-            let match = true;
-
-            for (let key in constraint)
-            {
-                if (medium[key] != constraint[key])
-                {
-                    match = false;
-                    break;
-                }
-            }
-
-            if (match)
-                queue.push(medium['media_id']);
-        }
-    }
 
     switch(group)
     {
@@ -70,17 +49,29 @@ function getMediaQueue(group, value)
                 { return (e['library_id'] == value); }
             )[0];
 
-
             if (library['library_id'] !== undefined)
                 type = library['type'];
 
-            filterMedia({'library_id':value});
+            if (library['media'])
+                queue = library['media'];
+
             break;
         }
         case 'type':
         {
-            filterMedia({'library_type':value});
             type = value;
+
+            let libraries = global_player_state['library'].filter(
+                function(e, i, a)
+                { return (e['type'] == value); }
+            );
+
+            for (let library of libraries)
+            {
+                if (library['media'])
+                    queue = queue.concat(library['media']);
+            }
+
             break;
         }
         default:
