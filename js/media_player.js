@@ -185,3 +185,200 @@ function stopMediaPlayback()
     elapsed.innerHTML = "";
     duration.innerHTML = "";
 }
+
+function playPrevious()
+{
+    var prev;
+
+    let repeat_mode = global_player_state['repeat'];
+    let queue = global_player_state['queue'];
+    let current = global_player_state['playing'];
+    let index = 0;
+
+    if (current)
+        index = queue.indexOf(current);
+
+    if (repeat_mode == REPEAT_ALL)
+    {
+        index = (index - 1) % queue.length;
+
+        if (index < 0)
+            index = queue.length + index;
+
+        prev = queue[index];
+    }
+    else if (repeat_mode == REPEAT_ONE)
+    {
+        prev = queue[index];
+    }
+    else
+    {
+        index = index - 1;
+
+        if (index >= 0)
+            prev = queue[index];
+    }
+
+    if (prev)
+        playMedia(prev);
+}
+
+function playNext()
+{
+    var next;
+
+    let repeat_mode = global_player_state['repeat'];
+    let queue = global_player_state['queue'];
+    let current = global_player_state['playing'];
+    let index = 0;
+
+    if (current)
+        index = queue.indexOf(current);
+
+    if (repeat_mode == REPEAT_ALL)
+    {
+        index = (index + 1) % queue.length;
+        next = queue[index];
+    }
+    else if (repeat_mode == REPEAT_ONE)
+    {
+        next = queue[index];
+    }
+    else
+    {
+        index = index + 1;
+
+        if (index < queue.length)
+            next = queue[index];
+    }
+
+    if (next)
+        playMedia(next);
+}
+
+
+function playMedia(media_id, queue = null)
+{
+    let media = global_player_state['media'].filter(
+        function(e, i, a)
+        { return (e['media_id'] == media_id); }
+    )[0];
+
+    var element;
+
+    switch (media['library_type'])
+    {
+        case "music":
+        {
+            element = 'audio';
+            toggleMediaPlayerSize(PLAYER_SIZE_SMALL);
+            break;
+        }
+        case "video":
+        {
+            element = 'video';
+            toggleMediaPlayerSize(PLAYER_SIZE_LARGE);
+            break;
+        }
+        case "photo":
+        {
+            element = 'img';
+            toggleMediaPlayerSize(PLAYER_SIZE_LARGE);
+            break;
+        }
+        default:
+        {
+            console.log("Unimplemented support for type");
+            return;
+        }
+    }
+
+    if (queue)
+    {
+        global_player_state['queue'] = queue;
+
+        if (global_player_state['shuffle'])
+            global_player_state['queue'] = getShuffle(queue);
+    }
+
+    global_player_state['playing'] = media['media_id'];
+
+    stopMediaPlayback();
+
+    var media_preview = document.querySelector('#media_player #content_preview');
+    var media_element = document.createElement(element);
+
+    media_element.setAttribute('class', 'media_element');
+    media_element.setAttribute('id', element + '_element');
+
+    media_element.autoplay = true;
+
+    media_element.ontimeupdate = updateSeekBar;
+
+    media_element.onratechange = function() {
+        console.log('The playback rate changed.');
+    };
+
+    if (element == 'img')
+    {
+        media_element.setAttribute('src', 'api/get/raw/media/id/' + media_id);
+
+        let photos = global_player_state['photo'];
+
+        for (let photo of photos)
+        {
+            if (photo['media_id'] == media_id)
+            {
+                media_element.setAttribute('alt', photo['title']);
+                document.title = photo['title'];
+                break;
+            }
+        }
+    }
+    else
+    {
+        let media_src = document.createElement('source');
+        media_src.setAttribute('src', 'api/get/raw/media/id/' + media_id);
+        media_element.appendChild(media_src);
+
+        media_element.onended = playNext;
+
+        if (element == 'audio')
+        {
+            // get album art;
+            let url = 'api/get/album_art/id/' + media_id;
+            let mime = syncGetUrlResponseHeader(url, 'Content-Type');
+
+            if (mime != "text/html")
+            {
+                let image = document.createElement('img');
+                image.setAttribute('src', url);
+                image.setAttribute('alt', 'Album art');
+                media_preview.appendChild(image);
+            }
+
+            for (let track of global_player_state['track'])
+            {
+                if (track['media_id'] == media_id)
+                {
+                    document.title = track['artist'] + " - " + track['title'];
+                    break;
+                }
+            }
+        }
+        else
+        {
+            for (let video of global_player_state['video'])
+            {
+                if (video['media_id'] == media_id)
+                {
+                    document.title = video['title'];
+                    break;
+                }
+            }
+        }
+    }
+
+    media_preview.appendChild(media_element);
+
+}
