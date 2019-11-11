@@ -57,16 +57,9 @@ function getMediaQueue(group, value)
             if (playlist['playlist_id'] !== undefined)
                 type = playlist['type'];
 
-            let playlist_media = global_player_state['playlist_media'].filter(
-                function(e, i, a)
-                { return (e['playlist_id'] == value); }
-            );
-
             //TODO: Incorporate rank into table ordering
-            for (let playlist_item of playlist_media)
-            {
-                queue.push(playlist_item['media_id']);
-            }
+            if (playlist['media'])
+                queue = playlist['media'];
 
             break;
         }

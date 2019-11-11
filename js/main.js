@@ -2,7 +2,7 @@
 
 function fetchDBData()
 {
-    let tables = ["media", "library", "playlist", "playlist_media", "genre", "track", "photo", "video", "photo_album"];
+    let tables = ["media", "library", "playlist", "genre", "track", "photo", "video", "photo_album"];
     let callbacks = {"library": populateMediaLibraries, "playlist": populatePlaylists};
 
     for (let table of tables)

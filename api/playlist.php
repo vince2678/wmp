@@ -84,23 +84,21 @@ function playlist_url_handler($data)
         }
     }
 
-    switch($data['type'])
+    $rows = get_rows($data['table'], $constraint);
+
+    for ($i = 0; $i < count($rows); $i++)
     {
-        case 'row':
-        case 'rows':
+        $constraint = array('playlist_id' => $rows[$i]['playlist_id']);
+
+        $media_rows = get_rows('playlist_media', $constraint);
+
+        for ($j = 0; $j < count($media_rows); $j++)
         {
-            if ($data['action'] == "get")
-            {
-                $rows = get_rows($data['table'], $constraint);
-                break;
-            }
-        }
-        case null:
-        default:
-        {
-            echo '{"status" : "failure",'
-                .' "message": "Invalid request"}' . PHP_EOL;
-            die();
+            $id = $media_rows[$j]['media_id'];
+            //$rank = $media_rows[$j]['rank'];
+            //$playlists[$i]['media'][$rank][] = $id;
+
+            $rows[$i]['media'][] = $id;
         }
     }
 
@@ -129,8 +127,8 @@ $register_handlers = function ()
     $regexp =
     "^[/]*api[/]+"
     . "(?<action>(get))[/]+"
-    . "(?<type>row([s]{0,1}))[/]*"
-    . "(?<table>(playlist_media|playlist))[/]*"
+    . "((?<type>row([s]{0,1}))[/]*){0,1}"
+    . "(?<table>(playlist))[/]*"
     . "((?<column>(id))[/]*){0,1}"
     //. "((?<like>like)[/]+){0,1}"
     . "(?<value>[^/]*)"
