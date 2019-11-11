@@ -623,7 +623,7 @@ function playMedia(media_id, queue = null)
         global_player_state['queue'] = queue;
 
         if (global_player_state['shuffle'])
-            global_player_state['queue'] = getNewShuffle();
+            global_player_state['queue'] = getShuffle(queue);
     }
 
     global_player_state['playing'] = media['media_id'];

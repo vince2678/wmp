@@ -1,20 +1,19 @@
 'use strict';
 
-function getNewShuffle()
+function getShuffle(array)
 {
-    var shuffle = [];
-    var queue = global_player_state['queue'];
+    var shuffle = Array;
     var visited = new Set();
 
-    while (shuffle.length < queue.length)
+    while (shuffle.length < array.length)
     {
-        let index = Math.floor(Math.random() * queue.length);
+        let index = Math.floor(Math.random() * array.length);
 
         if (visited.has(index))
             continue;
 
         visited.add(index);
-        shuffle.push(queue[index]);
+        shuffle.push(array[index]);
     }
 
     return shuffle;
