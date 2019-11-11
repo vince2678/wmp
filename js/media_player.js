@@ -1,5 +1,18 @@
 'use strict';
 
+/* set up fullscreen button handler */
+function fullScreenHandler() {
+    if (isFullScreen())
+        toggleMediaPlayerSize();
+    else
+        toggleMediaPlayerSize(PLAYER_SIZE_FULL);
+}
+
+/* set up player resize button handler */
+function mediaPlayerSizeHandler() {
+    toggleMediaPlayerSize();
+}
+
 /* set up play button handler */
 function playPauseHandler()
 {

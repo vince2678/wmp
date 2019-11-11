@@ -39,19 +39,10 @@ function fetchDBData()
         resizeElems();
     }
 
-    /* set handlers for media player buttons */
-    document.querySelector('#media_player #media_fullscreen').onclick = function() {
-       if (isFullScreen())
-            toggleMediaPlayerSize();
-        else
-            toggleMediaPlayerSize(PLAYER_SIZE_FULL);
-    }
-
-    document.querySelector('#media_player #media_resize').onclick = function() {
-        toggleMediaPlayerSize();
-    }
-
     /* set up media player area handlers */
+    document.querySelector('#media_player #media_fullscreen').onclick = fullScreenHandler;
+    document.querySelector('#media_player #media_resize').onclick = mediaPlayerSizeHandler;
+
     document.querySelector('#bottom_controls #media_play_pause').onclick = playPauseHandler;
     document.querySelector("#bottom_controls #media_shuffle").onclick = shuffleHandler;
     document.querySelector('#bottom_controls #media_mute').onclick = muteHandler;
