@@ -130,7 +130,10 @@ function row_url_handler($data)
             }
             elseif ($data['action'] == 'delete')
             {
-                $res = delete_row($data['table'], $constraint);
+                if (($data['table'] == 'media') || ($data['table'] == 'track'))
+                    $res = delete_row("r_" . $data['table'], $constraint);
+                else
+                    $res = delete_row($data['table'], $constraint);
 
                 if ($res)
                     echo '{"status" : "success"}' . PHP_EOL;
