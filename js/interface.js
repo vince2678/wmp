@@ -401,36 +401,75 @@ function populateContentArea(group, value)
 
 }
 
+function getFilterFn(table, column)
+{
+    return function(data)
+    {
+        if (!data)
+            return;
+
+        let ret = global_player_state[table].filter(
+            function(e, i, a)
+            { return (e[column] == data); }
+        )[0];
+
+        return ret;
+    }
+}
+
 function getMusicContent(queue)
 {
-    return getMusicList(queue);
-}
-
-function getVideoContent(ids)
-{
-    return getVideoList(ids);
-}
-
-function getPhotoContent(ids)
-{
-    return getPhotoList(ids);
-}
-
-function getMusicList(queue)
-{
-    var music = global_player_state['track'];
-
     var column_map = {
-                   'title': 'Title',
-                   'artist': 'Artist',
-                   'album_artist': 'Album&nbsp;Artist',
-                   'album': 'Album',
-                   'genre': 'Genre',
-                   'play_count': 'Play Count',
-                   'duration': 'Length'
+                   'album_artist': {'name': 'Album&nbsp;Artist'},
+                   'play_count': {'name': 'Play Count'},
+                   'duration': {'name': 'Length', 'callback': formatTime }
+
                 };
 
     var columns = ['title', 'artist', 'album_artist', 'album', 'genre', 'duration'];
+
+    return getContentList(queue, columns, column_map);
+}
+
+function getVideoContent(queue)
+{
+    var column_map = {
+                   'genre': {'callback': getFilterFn('genre', 'genre_id')},
+                   'play_count': {'name': 'Play Count'},
+                   'duration': {'name': 'Length', 'callback': formatTime }
+                };
+
+    var columns = ['title', 'genre', 'play_count', 'duration'];
+
+    return getContentList(queue, columns, column_map);
+}
+
+function getPhotoContent(queue)
+{
+    var column_map = {
+                   'album': {'callback': getFilterFn('photo_album', 'album_id')},
+                };
+
+    var columns = ['title', 'album'];
+
+    return getContentList(queue, columns, column_map);
+}
+
+function getContentList(media_ids, columns, column_map = undefined)
+{
+    if (media_ids.length == 0)
+        return null;
+
+    var media_row = getFilterFn('media', 'media_id')(media_ids[0]);
+
+    var source;
+
+    if (media_row['library_type'] == 'music')
+        source = global_player_state['track'];
+    else if (media_row['library_type'] == 'video')
+        source = global_player_state['video'];
+    else
+        source = global_player_state['photo'];
 
     var media_table = document.createElement('table');
     var header = document.createElement('tr');
@@ -447,14 +486,30 @@ function getMusicList(queue)
     for (let column of columns)
     {
         let heading = document.createElement('th');
-        heading.innerHTML = column_map[column];
+
+        if (column_map && column_map[column] && column_map[column]['name'])
+            heading.innerHTML = column_map[column]['name'];
+        else
+            heading.innerHTML = column;
+
         header.appendChild(heading);
     }
 
-    for (let track of music)
+    for (let i = 0; i < media_ids.length; i++)
     {
-        if (queue.indexOf(track["media_id"]) == -1)
+        let media_id = media_ids[i];
+
+        media_row = source.filter(
+            function(e, i, a) { return (e['media_id'] == media_id); }
+        )[0];
+
+        /* should not happen normally */
+        if (!media_row)
+        {
+            console.log("Failed to create row for media_id: " + media_id);
+            media_ids.splice(i, 1); //remove media_id from queue
             continue;
+        }
 
         let row = document.createElement('tr');
         row.setAttribute('id', 'content_table_row');
@@ -476,7 +531,7 @@ function getMusicList(queue)
         icon.innerText = 'play_arrow';
 
         play_btn.onclick = function(){
-            playMedia(track['media_id'], queue);
+            playMedia(media_id, media_ids);
         };
 
         play_btn.appendChild(icon);
@@ -486,219 +541,25 @@ function getMusicList(queue)
         {
             let data = document.createElement('td');
 
-            if (track[column] != null)
+            let column_data;
+
+            if (media_row[column] != null)
             {
-                if (column == "duration")
-                    data.innerHTML = formatTime(track[column]);
+                if (column_map && column_map[column] && column_map[column]['callback'])
+                    column_data = column_map[column]['callback'](media_row[column]);
                 else
-                    data.innerHTML = track[column];
+                    column_data = media_row[column];
+
+                if (column_data)
+                    data.innerText = column_data;
+                else
+                    data.innerText = "";
+
             }
             row.appendChild(data);
         }
         media_table.appendChild(row);
     }
 
-    /* return table only if there are tracks to list */
-    if (media_table.childElementCount > 1)
-        return media_table;
-
-    media_table.remove();
-    return null;
-}
-
-function getVideoList(queue)
-{
-    var videos = global_player_state['video'];
-
-    var column_map = {
-                   'title': 'Title',
-                   'genre': 'Genre',
-                   'play_count': 'Play Count',
-                   'duration': 'Length'
-                };
-
-    var columns = ['title', 'genre', 'play_count', 'duration'];
-
-    var media_table = document.createElement('table');
-    var header = document.createElement('tr');
-
-    media_table.setAttribute('class', 'content_table');
-    header.setAttribute('class', 'content_table_header');
-
-    media_table.appendChild(header);
-
-    /* play button */
-    let heading = document.createElement('th');
-    header.appendChild(heading);
-
-    for (let column of columns)
-    {
-        let heading = document.createElement('th');
-        heading.innerHTML = column_map[column];
-        header.appendChild(heading);
-    }
-
-    for (let video of videos)
-    {
-        if (queue.indexOf(video["media_id"]) == -1)
-            continue;
-
-        let row = document.createElement('tr');
-        row.setAttribute('id', 'content_table_row');
-
-        row.onclick = function() {
-            let active = document.querySelector(SELECTOR_ACTIVE_CONTENT_ITEM);
-
-            if (active)
-                active.className = "";
-
-            this.setAttribute("class", "active");
-        }, row;
-
-        /* play button */
-        let play_btn = document.createElement('button');
-        let icon = document.createElement('i');
-
-        icon.setAttribute('class', "material-icons");
-        icon.innerText = 'play_arrow';
-
-        play_btn.onclick = function(){
-            playMedia(video['media_id'], queue);
-        };
-
-        play_btn.appendChild(icon);
-        row.appendChild(play_btn);
-
-        for (let column of columns)
-        {
-            let data = document.createElement('td');
-
-            if (video[column] != null)
-            {
-
-                if (column == "duration")
-                {
-                    data.innerHTML = formatTime(video[column]);
-                }
-                else if (column == "genre")
-                {
-                    if (!video['genre_id'])
-                        continue;
-
-                    let genre = global_player_state['genre'].filter(
-                        function(e, i, a)
-                        { return (e['genre_id'] == video['genre_id']); }
-                    )[0];
-
-                    data.innerHTML = genre['name'];
-                }
-                else
-                    data.innerHTML = video[column];
-            }
-            row.appendChild(data);
-        }
-        media_table.appendChild(row);
-    }
-
-    /* return table only if there are tracks to list */
-    if (media_table.childElementCount > 1)
-        return media_table;
-
-    media_table.remove();
-    return null;
-}
-
-function getPhotoList(queue)
-{
-    var photos = global_player_state['photo'];
-
-    var column_map = {
-                   'title': 'Title',
-                   'album': 'Album',
-                };
-
-    var columns = ['title', 'album'];
-
-    var media_table = document.createElement('table');
-    var header = document.createElement('tr');
-
-    media_table.setAttribute('class', 'content_table');
-    header.setAttribute('class', 'content_table_header');
-
-    media_table.appendChild(header);
-
-    /* play button */
-    let heading = document.createElement('th');
-    header.appendChild(heading);
-
-    for (let column of columns)
-    {
-        let heading = document.createElement('th');
-        heading.innerHTML = column_map[column];
-        header.appendChild(heading);
-    }
-
-    for (let photo of photos)
-    {
-        if (queue.indexOf(photo["media_id"]) == -1)
-            continue;
-
-        let row = document.createElement('tr');
-        row.setAttribute('id', 'content_table_row');
-
-        row.onclick = function() {
-            let active = document.querySelector(SELECTOR_ACTIVE_CONTENT_ITEM);
-
-            if (active)
-                active.className = "";
-
-            this.setAttribute("class", "active");
-        }, row;
-
-        /* play button */
-        let play_btn = document.createElement('button');
-        let icon = document.createElement('i');
-
-        icon.setAttribute('class', "material-icons");
-        icon.innerText = 'play_arrow';
-
-        play_btn.onclick = function(){
-            playMedia(photo['media_id'], queue);
-        };
-
-        play_btn.appendChild(icon);
-        row.appendChild(play_btn);
-
-        for (let column of columns)
-        {
-            let data = document.createElement('td');
-
-            if (photo[column] != null)
-            {
-                if (column == "album")
-                {
-                    if (!photo['album_id'])
-                        continue;
-
-                    let album = global_player_state['photo_album'].filter(
-                        function(e, i, a)
-                        { return (e['album_id'] == photo['album_id']); }
-                    )[0];
-
-                    data.innerHTML = formatTime(album['name']);
-                }
-                else
-                    data.innerHTML = photo[column];
-            }
-            row.appendChild(data);
-        }
-        media_table.appendChild(row);
-    }
-
-    /* return table only if there are tracks to list */
-    if (media_table.childElementCount > 1)
-        return media_table;
-
-    media_table.remove();
-    return null;
+    return media_table;
 }
