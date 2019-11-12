@@ -19,25 +19,25 @@ function scan_library($library_id = -1, $force_scan = false)
 {
     $mimes['music'] =
         array(
-            "audio/mpeg",
-            "audio/wav",
-            "audio/ogg"
+            "mp3" => "audio/mpeg",
+            "wav" => "audio/wav",
+            "ogg" => "audio/ogg"
         );
 
     $mimes['video'] =
         array(
-            "video/mp4",
-            "video/webm",
-            "video/ogg"
+            "mp4" => "video/mp4",
+            "webm" => "video/webm",
+            "ogv" => "video/ogg"
         );
 
     $mimes['photo'] =
         array(
-            "image/jpeg",
-            "image/pjpeg",
-            "image/png",
-            "image/svg+xml",
-            "image/gif"
+            "jpeg" => "image/jpeg",
+            "jpg" => "image/pjpeg",
+            "png" => "image/png",
+            "svg" => "image/svg+xml",
+            "gif" => "image/gif"
         );
 
     if ($library_id < 0)
@@ -111,6 +111,21 @@ function scan_library($library_id = -1, $force_scan = false)
                             $rpath = substr($rpath, 1);
 
                         $f_stack[] = $rpath;
+                    }
+                    else // if mime check fails, try extension check
+                    {
+                        $file_components = explode(".", $file);
+                        $extension = strtolower($file_components[count($file_components) - 1]);
+
+                        if (array_key_exists($extension, $mimes[$library['type']]))
+                        {
+                            $rpath = substr($path, strlen($library['path']));
+
+                            while ($rpath[0] == "/")
+                                $rpath = substr($rpath, 1);
+
+                            $f_stack[] = $rpath;
+                        }
                     }
                 }
             }
