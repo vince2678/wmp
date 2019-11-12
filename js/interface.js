@@ -15,11 +15,13 @@ function toggleLeftNav()
 
     var btn = document.querySelector(SELECTOR_LEFT_NAV_TOGGLE);
 
-    if(left_nav.className == NAV_CLOSED)
+    if(left_nav.classList.contains(NAV_CLOSED))
     {
         open = true;
 
-        left_nav.className = NAV_OPEN;
+        left_nav.classList.remove(NAV_CLOSED);
+        left_nav.classList.add(NAV_OPEN);
+
         media_content.className = PLAYER_SIZE_NORMAL;
         btn.innerHTML = "&times;";
     }
@@ -27,7 +29,8 @@ function toggleLeftNav()
     {
         open = false;
 
-        left_nav.className = NAV_CLOSED;
+        left_nav.classList.remove(NAV_OPEN);
+        left_nav.classList.add(NAV_CLOSED);
 
         if (top_nav.clientHeight == 0)
             media_content.className = PLAYER_SIZE_LARGE;
@@ -48,11 +51,12 @@ function toggleTopNav()
     var left_nav = document.querySelector(SELECTOR_LEFT_NAV);
     var media_content = document.querySelector(SELECTOR_CONTENT);
 
-    if (top_nav.className == NAV_CLOSED)
+    if (top_nav.classList.contains(NAV_CLOSED))
     {
         open = true;
 
-        top_nav.className = NAV_OPEN;
+        top_nav.classList.remove(NAV_CLOSED);
+        top_nav.classList.add(NAV_OPEN);
 
         if (left_nav.clientWidth == 0)
             media_content.className = PLAYER_SIZE_WIDE;
@@ -62,7 +66,9 @@ function toggleTopNav()
     else
     {
         open = false;
-        top_nav.className = NAV_CLOSED;
+        top_nav.classList.remove(NAV_OPEN);
+        top_nav.classList.add(NAV_CLOSED);
+
         media_content.className = PLAYER_SIZE_LARGE;
     }
 
@@ -246,9 +252,9 @@ function populateMediaLibraries()
             let active = document.querySelector(SELECTOR_ACTIVE_LIST_ITEM);
 
             if (active)
-                active.className = "";
+                active.classList.remove("active");
 
-            this.setAttribute("class", "active");
+            this.classList.add("active");
         }, entry;
 
         libraryListing.appendChild(entry);
@@ -282,9 +288,9 @@ function populateMediaLibraries()
             let active = document.querySelector(SELECTOR_ACTIVE_LIST_ITEM);
 
             if (active)
-                active.className = "";
+                active.classList.remove("active");
 
-            this.setAttribute("class", "active");
+            this.classList.add("active");
         }, entry;
 
         mediaListing.appendChild(entry);
@@ -317,11 +323,10 @@ function populatePlaylists()
 
             let active = document.querySelector(SELECTOR_ACTIVE_LIST_ITEM);
 
-
             if (active)
-                active.className = "";
+                active.classList.remove("active");
 
-            this.setAttribute("class", "active");
+            this.classList.add("active");
         }, entry;
 
         playlistListing.appendChild(entry);
@@ -518,9 +523,9 @@ function getContentList(media_ids, columns, column_map = undefined)
             let active = document.querySelector(SELECTOR_ACTIVE_CONTENT_ITEM);
 
             if (active)
-                active.className = "";
+                active.classList.remove("active");
 
-            this.setAttribute("class", "active");
+            this.classList.add("active");
         }, row;
 
         /* play button */
