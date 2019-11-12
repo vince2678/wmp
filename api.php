@@ -109,7 +109,15 @@ function row_url_handler($data)
             die();
         }
         case null:
+        {
+            if ($data['action'] == 'delete')
+            {
+                echo '{"status" : "failure",'
+                    .' "message": "Invalid id/name specified"}' . PHP_EOL;
+                die();
+            }
             break;
+        }
         default:
         {
             echo '{"status" : "failure",'
