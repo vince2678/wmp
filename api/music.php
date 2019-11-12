@@ -90,9 +90,15 @@ function add_music($media_id)
     $constraint = array("media_id" => $media_id);
 
     if (count_rows("r_track", $constraint) < 1)
-        return insert_row("r_track", $track_data);
+        $ret = insert_row("r_track", $track_data);
     else
-        return update_row("r_track", $constraint, $track_data);
+        $ret = update_row("r_track", $constraint, $track_data);
+
+    if (!$ret) //delete media if inserting row fails
+    {
+        delete_row("r_media", array("media_id" => $media_id));
+        return false;
+    }
 
     return true;
 }
