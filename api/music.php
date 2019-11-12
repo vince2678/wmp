@@ -23,6 +23,11 @@ function add_music($media_id)
 
     if (isset($meta['playtime_seconds']))
         $track_data['duration'] = (int) $meta['playtime_seconds'];
+    else //if duration cannot be determined, immediately terminate processing
+    {
+        delete_row("r_media", array("media_id" => $media_id));
+        return false;
+    }
 
     if (isset($tags['title'][0]))
         $track_data['title'] = $tags['title'][0];
