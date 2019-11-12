@@ -39,11 +39,21 @@ function shuffleHandler()
 {
     if (global_player_state['shuffle'])
     {
+        let old_queue = global_player_state['old_queue'];
+
+        if (old_queue)
+            global_player_state['queue'] = old_queue;
+
         global_player_state['shuffle'] = false;
         this.classList.remove("shuffle-active");
     }
     else
     {
+        let queue = global_player_state['queue'];
+
+        global_player_state['old_queue'] = queue;
+        global_player_state['queue'] = getShuffle(queue);
+
         global_player_state['shuffle'] = true;
         this.classList.add("shuffle-active");
     }
@@ -310,10 +320,15 @@ function playMedia(media_id, queue = null)
 
     if (queue)
     {
-        global_player_state['queue'] = queue;
-
         if (global_player_state['shuffle'])
+        {
+            global_player_state['old_queue'] = queue;
             global_player_state['queue'] = getShuffle(queue);
+        }
+        else
+        {
+            global_player_state['queue'] = queue;
+        }
     }
 
     global_player_state['playing'] = media['media_id'];
