@@ -47,8 +47,6 @@ function scan_library($library_id = -1, $force_scan = false)
 
     $libraries = get_rows("library", $constraint);
 
-    $finfo = new \finfo(FILEINFO_MIME_TYPE, "/usr/lib/file/magic.mgc");
-
     $db = connect_to_db();
 
     foreach ($libraries as $library)
@@ -105,7 +103,7 @@ function scan_library($library_id = -1, $force_scan = false)
                 }
                 elseif ("file" == $ft)
                 {
-                    if (false !== array_search($finfo->file($path), $mimes[$library['type']]))
+                    if (false !== array_search(mime_content_type($path), $mimes[$library['type']]))
                     {
                         $rpath = substr($path, strlen($library['path']));
 

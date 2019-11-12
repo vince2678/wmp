@@ -15,11 +15,9 @@ function get_raw_media($media_id)
 
     $path = $row['full_path'];
 
-    $finfo = new \finfo(FILEINFO_MIME_TYPE, "/usr/lib/file/magic.mgc");
-
     $fsize = filesize($path);
 
-    header('Content-Type: ' . $finfo->file($path));
+    header('Content-Type: ' . mime_content_type($path));
     header('Content-Length: ' . $fsize);
 
     if (false == ($fh = fopen($path, "r")))
