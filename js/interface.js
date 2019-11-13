@@ -305,6 +305,20 @@ function populateMediaLibraries()
 /* populate the playlist sections */
 function populatePlaylists()
 {
+    function getClickHandler(group, value) {
+        return function()
+        {
+            populateContentArea(group, value);
+
+            let active = document.querySelector(SELECTOR_ACTIVE_LIST_ITEM);
+
+            if (active)
+                active.classList.remove("active");
+
+            this.classList.add("active");
+        };
+    }
+
     var playlistListing = document.querySelector(SELECTOR_PLAYLIST_LIST);
 
     clearChildren(playlistListing);
@@ -318,19 +332,19 @@ function populatePlaylists()
         entry.setAttribute('id', 'playlist');
         entry.innerHTML = '<i class="material-icons">playlist_play</i> ' + playlist['name'];
 
-        entry.onclick = function() {
-            populateContentArea('playlist', playlist['playlist_id']);
-
-            let active = document.querySelector(SELECTOR_ACTIVE_LIST_ITEM);
-
-            if (active)
-                active.classList.remove("active");
-
-            this.classList.add("active");
-        }, entry;
+        entry.onclick = getClickHandler('playlist', playlist['playlist_id']);
 
         playlistListing.appendChild(entry);
     }
+
+    let queue_entry = document.createElement('span');
+
+    queue_entry.setAttribute('id', 'play_queue');
+    queue_entry.innerHTML = '<i class="material-icons">queue_music</i> Play Queue';
+
+    queue_entry.onclick = getClickHandler('queue', null);
+
+    playlistListing.appendChild(queue_entry);
 
     let entry = document.createElement('span');
 
@@ -371,7 +385,7 @@ function populateContentArea(group, value)
         else
         {
             content.innerHTML = "It's lonely here. Add some files"
-                + " to the library to get started."
+                + " to the " + group + " to get started."
         }
     }
     else

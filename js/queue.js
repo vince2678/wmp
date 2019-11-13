@@ -74,6 +74,25 @@ function getMediaQueue(group, value)
 
             break;
         }
+        case 'queue':
+        {
+            if(global_player_state['queue'])
+            {
+                queue = global_player_state['queue'];
+
+                let media = global_player_state['media'].filter(
+                    function(e, i, a) { return (e['media_id'] == queue[0]);}
+                    )[0];
+
+                type = media['library_type'];
+            }
+            else
+            {
+                queue = [];
+            }
+
+            break;
+        }
         default:
         {
             console.log("Unknown group selected");
